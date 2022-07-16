@@ -1,24 +1,17 @@
-/*
- * Accelerometer.cpp
- *
- *  Created on: Jul 12, 2022
- *      Author: Almaz
- */
-
 #include <Accelerometer.h>
 
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t addres)
-{
-	_i2c = I2CDevice(hi2c, addres);
-}
+	Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t addres)
+	{
+		_i2c = I2CDevice(hi2c, addres);
+	}
 #else
-Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t addres)
-{
-	_i2c = I2CDevice(hi2c, addres);
-}
+	Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t addres)
+	{
+		_i2c = I2CDevice(hi2c, addres);
+	}
 #endif
 
 Accelerometer::Accelerometer(const Accelerometer& other)
@@ -26,13 +19,11 @@ Accelerometer::Accelerometer(const Accelerometer& other)
 	*(&_i2c) = other._i2c;
 	_sensivity= other._sensivity;
 }
-
 Accelerometer::Accelerometer(Accelerometer&& other)
 {
 	*(&_i2c) = other._i2c;
 	_sensivity= other._sensivity;
 }
-
 Accelerometer& Accelerometer::operator=(const Accelerometer& other)
 {
 	if (this == &other)
@@ -43,7 +34,6 @@ Accelerometer& Accelerometer::operator=(const Accelerometer& other)
 	_sensivity= other._sensivity;
 	return *this;
 }
-
 Accelerometer& Accelerometer::operator=(Accelerometer&& other)
 {
 	if (this == &other)
@@ -55,44 +45,31 @@ Accelerometer& Accelerometer::operator=(Accelerometer&& other)
 	return *this;
 }
 
-void Accelerometer::Init(MaxAccelScale sensivity, Bandwidth filter)
+void Accelerometer::Init(Scale sensivity, FilterBandwidth filter)
 {
 	SetScale(sensivity);
 	SetFilter(filter);
 }
-
-void Accelerometer::Init(MaxAccelScale sensivity)
+void Accelerometer::Init(Scale sensivity)
 {
-	Init(sensivity, Bandwidth::F0020);
+	Init(sensivity, FilterBandwidth::F0021);
 }
-
 void Accelerometer::Init()
 {
-	Init(_sensivity);
+	Init(Scale::twoG);
 }
 
-void Accelerometer::SetRegister(RegisterMap reg, uint8_t value)
-{
-	_i2c.write(reg, &value, 1);
-}
 
-uint8_t Accelerometer::GetRegister(RegisterMap reg)
-{
-	uint8_t value = 0;
-	_i2c.read(reg, &value, 1);
-	return value;
-}
-
-void Accelerometer::SetScale(MaxAccelScale sensivity)
+void Accelerometer::SetScale(Scale sensivity)
 {
 	uint8_t reg = GetRegister(RegisterMap::ACCEL_CONFIG);
-	reg &= 0xFF ^ (MaxAccelScale::sixteenG << 3);
+	reg &= 0xFF ^ (Scale::sixteenG << 3);
 	reg |= (sensivity << 3);
 	_sensivity = sensivity;
 	SetRegister(RegisterMap::ACCEL_CONFIG, reg);
 }
 
-void Accelerometer::SetFilter(Bandwidth filter)
+void Accelerometer::SetFilter(FilterBandwidth filter)
 {
 	SetRegister(RegisterMap::ACCEL_CONFIG_2, filter);
 }
@@ -133,9 +110,21 @@ float Accelerometer::Z()
 	return e / _rawg;
 }
 
+void Accelerometer::SetRegister(RegisterMap reg, uint8_t value)
+{
+	_i2c.write(reg, &value, 1);
+}
+
+uint8_t Accelerometer::GetRegister(RegisterMap reg)
+{
+	uint8_t value = 0;
+	_i2c.read(reg, &value, 1);
+	return value;
+}
+
 Accelerometer::~Accelerometer()
 {
 	_i2c.~I2CDevice();
 }
 
-} /* namespace IntroSatLib */
+}

@@ -7,6 +7,7 @@
 #######################################
 
 Accelerometer	KEYWORD1
+Gyroscope	KEYWORD1
 I2CDevice	KEYWORD1
 
 #######################################
@@ -20,10 +21,10 @@ rawX	KEYWORD2
 rawY	KEYWORD2
 rawZ	KEYWORD2
 SetScale	KEYWORD2
-SetFilter	KEYWORD2	
+SetFilter	KEYWORD2
 
 #######################################
-# Constants (LITERAL1)
+# Constants (LITERAL1) for Accelerometer
 #######################################
 
 twoG	LITERAL1
@@ -31,12 +32,32 @@ fourG	LITERAL1
 eightG	LITERAL1
 sixteenG	LITERAL1
 
-F1130	LITERAL1
-F0460	LITERAL1
+F1046	LITERAL1
+F0218	LITERAL1
+F0218b	LITERAL1
+F0099	LITERAL1
+F0045	LITERAL1
+F0021	LITERAL1
+F0010	LITERAL1
+F0005	LITERAL1
+F0420	LITERAL1
+
+#######################################
+# Constants (LITERAL1) for Gyroscope
+#######################################
+
+DPS0250	LITERAL1
+DPS0500	LITERAL1
+DPS1000	LITERAL1
+DPS2000	LITERAL1
+
+F8800	LITERAL1
+F3600	LITERAL1
+F0250	LITERAL1
 F0184	LITERAL1
 F0092	LITERAL1
 F0041	LITERAL1
 F0020	LITERAL1
 F0010	LITERAL1
 F0005	LITERAL1
-F0460b	LITERAL1
+F3600b	LITERAL1

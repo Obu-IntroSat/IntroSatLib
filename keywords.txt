@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map SD
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Accelerometer	KEYWORD1
+I2CDevice	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+Init	KEYWORD2
+X	KEYWORD2
+Y	KEYWORD2
+Z	KEYWORD2
+rawX	KEYWORD2
+rawY	KEYWORD2
+rawZ	KEYWORD2
+SetScale	KEYWORD2
+SetFilter	KEYWORD2	
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+twoG	LITERAL1
+fourG	LITERAL1
+eightG	LITERAL1
+sixteenG	LITERAL1
+
+F1130	LITERAL1
+F0460	LITERAL1
+F0184	LITERAL1
+F0092	LITERAL1
+F0041	LITERAL1
+F0020	LITERAL1
+F0010	LITERAL1
+F0005	LITERAL1
+F0460b	LITERAL1

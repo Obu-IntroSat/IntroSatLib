@@ -17,12 +17,12 @@ namespace IntroSatLib {
 Gyroscope::Gyroscope(const Gyroscope &other)
 {
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 }
 Gyroscope::Gyroscope(Gyroscope &&other)
 {
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 }
 Gyroscope& Gyroscope::operator=(const Gyroscope &other)
 {
@@ -31,7 +31,7 @@ Gyroscope& Gyroscope::operator=(const Gyroscope &other)
 		return *this;
 	}
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 	return *this;
 }
 Gyroscope& Gyroscope::operator=(Gyroscope &&other)
@@ -41,30 +41,30 @@ Gyroscope& Gyroscope::operator=(Gyroscope &&other)
 		return *this;
 	}
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 	return *this;
 }
 
-void Gyroscope::Init(Scale sensivity, FilterBandwidth filter)
+void Gyroscope::Init(Scale sensitivity, FilterBandwidth filter)
 {
-	SetScale(sensivity);
+	SetScale(sensitivity);
 	SetFilter(filter);
 }
-void Gyroscope::Init(Scale sensivity)
+void Gyroscope::Init(Scale sensitivity)
 {
-	Init(sensivity, FilterBandwidth::F0005);
+	Init(sensitivity, FilterBandwidth::F0005);
 }
 void Gyroscope::Init()
 {
 	Init(Scale::DPS0250);
 }
 
-void Gyroscope::SetScale(Scale sensivity)
+void Gyroscope::SetScale(Scale sensitivity)
 {
 	uint8_t reg = GetRegister(RegisterMap::GYRO_CONFIG);
 	reg &= 0xFF ^ (Scale::DPS2000 << 3);
-	reg |= (sensivity << 3);
-	_sensivity = sensivity;
+	reg |= (sensitivity << 3);
+	_sensitivity = sensitivity;
 	SetRegister(RegisterMap::GYRO_CONFIG, reg);
 }
 
@@ -102,17 +102,17 @@ int16_t Gyroscope::RawZ()
 
 float Gyroscope::X()
 {
-	float e = RawX() * (1 << _sensivity);
+	float e = RawX() * (1 << _sensitivity);
 	return e / _rawdps;
 }
 float Gyroscope::Y()
 {
-	float e = RawY() * (1 << _sensivity);
+	float e = RawY() * (1 << _sensitivity);
 	return e / _rawdps;
 }
 float Gyroscope::Z()
 {
-	float e = RawZ() * (1 << _sensivity);
+	float e = RawZ() * (1 << _sensitivity);
 	return e / _rawdps;
 }
 

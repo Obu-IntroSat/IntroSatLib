@@ -16,7 +16,7 @@ namespace IntroSatLib {
 class Gyroscope: public BaseDevice {
 private:
 
-	static const uint8_t BASE_ADDRES = 0x68;
+	static const uint8_t BASE_ADDRESS = 0x68;
 	static constexpr float _rawdps = 32768.0f / 250.0f;
 
 	enum RegisterMap
@@ -32,7 +32,7 @@ private:
 	};
 
 	I2CDevice _i2c;
-	uint8_t _sensivity = 0;
+	uint8_t _sensitivity = 0;
 
 	uint8_t GetRegister(RegisterMap reg);
 	void SetRegister(RegisterMap reg, uint8_t value);
@@ -61,9 +61,9 @@ public:
 	};
 
 #ifndef ARDUINO
-	Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres = BASE_ADDRES);
+	Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
-	Gyroscope(TwoWire &hi2c, uint8_t addres = BASE_ADDRES);
+	Gyroscope(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
 #endif
 
 	Gyroscope(const Gyroscope &other);
@@ -72,10 +72,10 @@ public:
 	Gyroscope& operator=(Gyroscope &&other);
 
 	void Init();
-	void Init(Scale sensivity);
-	void Init(Scale sensivity, FilterBandwidth filter);
+	void Init(Scale sensitivity);
+	void Init(Scale sensitivity, FilterBandwidth filter);
 
-	void SetScale(Scale sensivity);
+	void SetScale(Scale sensitivity);
 	void SetFilter(FilterBandwidth filter);
 
 	int16_t RawX();

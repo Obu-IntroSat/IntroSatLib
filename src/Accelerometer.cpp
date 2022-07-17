@@ -3,26 +3,26 @@
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-	Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t addres)
+	Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address)
 	{
-		_i2c = I2CDevice(hi2c, addres);
+		_i2c = I2CDevice(hi2c, address);
 	}
 #else
-	Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t addres)
+	Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address)
 	{
-		_i2c = I2CDevice(hi2c, addres);
+		_i2c = I2CDevice(hi2c, address);
 	}
 #endif
 
 Accelerometer::Accelerometer(const Accelerometer& other)
 {
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 }
 Accelerometer::Accelerometer(Accelerometer&& other)
 {
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 }
 Accelerometer& Accelerometer::operator=(const Accelerometer& other)
 {
@@ -31,7 +31,7 @@ Accelerometer& Accelerometer::operator=(const Accelerometer& other)
 		return *this;
 	}
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 	return *this;
 }
 Accelerometer& Accelerometer::operator=(Accelerometer&& other)
@@ -41,18 +41,18 @@ Accelerometer& Accelerometer::operator=(Accelerometer&& other)
 		return *this;
 	}
 	*(&_i2c) = other._i2c;
-	_sensivity= other._sensivity;
+	_sensitivity= other._sensitivity;
 	return *this;
 }
 
-void Accelerometer::Init(Scale sensivity, FilterBandwidth filter)
+void Accelerometer::Init(Scale sensitivity, FilterBandwidth filter)
 {
-	SetScale(sensivity);
+	SetScale(sensitivity);
 	SetFilter(filter);
 }
-void Accelerometer::Init(Scale sensivity)
+void Accelerometer::Init(Scale sensitivity)
 {
-	Init(sensivity, FilterBandwidth::F0021);
+	Init(sensitivity, FilterBandwidth::F0021);
 }
 void Accelerometer::Init()
 {
@@ -60,12 +60,12 @@ void Accelerometer::Init()
 }
 
 
-void Accelerometer::SetScale(Scale sensivity)
+void Accelerometer::SetScale(Scale sensitivity)
 {
 	uint8_t reg = GetRegister(RegisterMap::ACCEL_CONFIG);
 	reg &= 0xFF ^ (Scale::sixteenG << 3);
-	reg |= (sensivity << 3);
-	_sensivity = sensivity;
+	reg |= (sensitivity << 3);
+	_sensitivity = sensitivity;
 	SetRegister(RegisterMap::ACCEL_CONFIG, reg);
 }
 
@@ -96,17 +96,17 @@ int16_t Accelerometer::RawZ()
 
 float Accelerometer::X()
 {
-	float e = RawX() * (1 << _sensivity);
+	float e = RawX() * (1 << _sensitivity);
 	return e / _rawg;
 }
 float Accelerometer::Y()
 {
-	float e = RawY() * (1 << _sensivity);
+	float e = RawY() * (1 << _sensitivity);
 	return e / _rawg;
 }
 float Accelerometer::Z()
 {
-	float e = RawZ() * (1 << _sensivity);
+	float e = RawZ() * (1 << _sensitivity);
 	return e / _rawg;
 }
 

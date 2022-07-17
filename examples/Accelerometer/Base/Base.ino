@@ -11,9 +11,6 @@ using namespace IntroSatLib;
 /** Создание класса акселерометра*/
 Accelerometer accel(Wire);
 
-/** Переменные для хранения показаний датчика*/
-float ax = 0, ay = 0, az = 0;
-
 void setup() {
 	Serial.begin(9600); // Включения Serial для вывода данных
 	Wire.begin(); // Включение Wire(I2C)

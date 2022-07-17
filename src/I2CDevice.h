@@ -25,23 +25,23 @@ namespace IntroSatLib {
 
 enum class I2CSpeed
 {
-	Standart = 0,
+	Standard = 0,
 	Fast = 1
 };
 
 class I2CDevice {
 private:
-	I2CSpeed _speed = I2CSpeed::Standart;
-	uint8_t _addres = 0;
+	I2CSpeed _speed = I2CSpeed::Standard;
+	uint8_t _address = 0;
 	I2C_HandleTypeDef *_hi2c = 0;
 public:
 	I2CDevice();
 #ifndef ARDUINO
-	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t addres);
-	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t addres, I2CSpeed speed);
+	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address);
+	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address, I2CSpeed speed);
 #else
-	I2CDevice(TwoWire &hi2c, uint8_t addres);
-	I2CDevice(TwoWire &hi2c, uint8_t addres, I2CSpeed speed);
+	I2CDevice(TwoWire &hi2c, uint8_t address);
+	I2CDevice(TwoWire &hi2c, uint8_t address, I2CSpeed speed);
 #endif
 	I2CDevice(const I2CDevice& other);
 	I2CDevice(I2CDevice&& other);

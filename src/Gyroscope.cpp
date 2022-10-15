@@ -3,60 +3,55 @@
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-	Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres)
-	{
-		_i2c = I2CDevice(hi2c, addres);
-	}
+Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres): BaseDevice(hi2c, addres)
+{
+}
 #else
-	Gyroscope::Gyroscope(TwoWire &hi2c, uint8_t addres)
-	{
-		_i2c = I2CDevice(hi2c, addres);
-	}
+Gyroscope::Gyroscope(TwoWire &hi2c, uint8_t addres): BaseDevice(hi2c, addres)
+{
+}
 #endif
 
-Gyroscope::Gyroscope(const Gyroscope &other)
+Gyroscope::Gyroscope(const Gyroscope &other): BaseDevice(other)
 {
-	*(&_i2c) = other._i2c;
 	_sensitivity= other._sensitivity;
 }
-Gyroscope::Gyroscope(Gyroscope &&other)
+Gyroscope::Gyroscope(Gyroscope &&other): BaseDevice(other)
 {
-	*(&_i2c) = other._i2c;
 	_sensitivity= other._sensitivity;
 }
 Gyroscope& Gyroscope::operator=(const Gyroscope &other)
 {
-	if (this == &other)
+	if (this != &other)
 	{
-		return *this;
+		this->BaseDevice::operator = (other);
+		_sensitivity= other._sensitivity;
 	}
-	*(&_i2c) = other._i2c;
-	_sensitivity= other._sensitivity;
 	return *this;
 }
 Gyroscope& Gyroscope::operator=(Gyroscope &&other)
 {
-	if (this == &other)
+	if (this != &other)
 	{
-		return *this;
+		this->BaseDevice::operator = (other);
+		_sensitivity= other._sensitivity;
 	}
-	*(&_i2c) = other._i2c;
-	_sensitivity= other._sensitivity;
 	return *this;
 }
 
-void Gyroscope::Init(Scale sensitivity, FilterBandwidth filter)
+uint8_t Gyroscope::Init(Scale sensitivity, FilterBandwidth filter)
 {
 	SetScale(sensitivity);
 	SetFilter(filter);
+	return 0;
 }
-void Gyroscope::Init(Scale sensitivity)
+uint8_t Gyroscope::Init(Scale sensitivity)
 {
-	Init(sensitivity, FilterBandwidth::F0005);
+	return Init(sensitivity, FilterBandwidth::F0005);
 }
-void Gyroscope::Init()
+uint8_t Gyroscope::Init()
 {
-	Init(Scale::DPS0250);
+	return Init(Scale::DPS0250);
 }
 
 void Gyroscope::SetScale(Scale sensitivity)
@@ -116,20 +111,10 @@ float Gyroscope::Z()
 	return e / _rawdps;
 }
 
-void Gyroscope::SetRegister(RegisterMap reg, uint8_t value)
-{
-	_i2c.write(reg, &value, 1);
-}
-uint8_t Gyroscope::GetRegister(RegisterMap reg)
-{
-	uint8_t value = 0;
-	_i2c.read(reg, &value, 1);
-	return value;
-}
 
 Gyroscope::~Gyroscope()
 {
-	_i2c.~I2CDevice();
+	BaseDevice::~BaseDevice();
 }
 
 }

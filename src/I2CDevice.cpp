@@ -9,10 +9,6 @@
 
 namespace IntroSatLib {
 
-I2CDevice::I2CDevice()
-{
-}
-
 #ifndef ARDUINO
 I2CDevice::I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address)
 {
@@ -82,6 +78,11 @@ I2CDevice& I2CDevice::operator=(I2CDevice&& other)
 	_speed = other._speed;
 	return *this;
 }
+HAL_StatusTypeDef I2CDevice::isReady()
+{
+	return HAL_I2C_IsDeviceReady(_hi2c, _address, 1, 1000);
+}
+
 
 HAL_StatusTypeDef I2CDevice::read(uint8_t* Data, uint8_t Nbytes)
 {
@@ -91,7 +92,7 @@ HAL_StatusTypeDef I2CDevice::read(uint8_t* Data, uint8_t Nbytes)
 HAL_StatusTypeDef I2CDevice::read(uint8_t Register, uint8_t* Data, uint8_t Nbytes)
 {
 	if(!_hi2c) return HAL_StatusTypeDef::HAL_ERROR;
-	return HAL_I2C_Mem_Read(_hi2c, _address, Register, I2C_MEMADD_SIZE_8BIT, Data, Nbytes, 1000);
+	return HAL_I2C_Mem_Read(_hi2c, _address, Register, I2C_MEMADD_SIZE_8BIT, Data, Nbytes, 5000);
 }
 HAL_StatusTypeDef I2CDevice::write(uint8_t* Data, uint8_t Nbytes)
 {

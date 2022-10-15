@@ -14,31 +14,27 @@
 namespace IntroSatLib {
 
 
-class Accelerometer : virtual public BaseDevice {
+class Accelerometer: public BaseDevice {
 
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x68;
 	static constexpr float _rawg = 16384.0;
 
-	enum RegisterMap
-	{
-		ACCEL_CONFIG = 0x1C,
-		ACCEL_CONFIG_2,
-		ACCEL_XOUT_H = 0x3B,
-		ACCEL_XOUT_L,
-		ACCEL_YOUT_H,
-		ACCEL_YOUT_L,
-		ACCEL_ZOUT_H,
-		ACCEL_ZOUT_L,
-	};
-
-	I2CDevice _i2c;
 	uint8_t _sensitivity = 0;
 
-	uint8_t GetRegister(RegisterMap reg);
-	void SetRegister(RegisterMap reg, uint8_t value);
-
+	enum RegisterMap
+		{
+			ACCEL_CONFIG = 0x1C,
+			ACCEL_CONFIG_2,
+			ACCEL_XOUT_H = 0x3B,
+			ACCEL_XOUT_L,
+			ACCEL_YOUT_H,
+			ACCEL_YOUT_L,
+			ACCEL_ZOUT_H,
+			ACCEL_ZOUT_L,
+		};
+protected:
 public:
 
 	enum Scale
@@ -71,9 +67,9 @@ public:
 	Accelerometer(Accelerometer&& other);
 	Accelerometer& operator=(Accelerometer&& other);
 
-	void Init();
-	void Init(Scale sensitivity);
-	void Init(Scale sensitivity, FilterBandwidth filter);
+	uint8_t Init();
+	uint8_t Init(Scale sensitivity);
+	uint8_t Init(Scale sensitivity, FilterBandwidth filter);
 
 	void SetScale(Scale sensitivity);
 	void SetFilter(FilterBandwidth filter);
@@ -86,7 +82,7 @@ public:
 	float Y();
 	float Z();
 
-	~Accelerometer();
+	virtual ~Accelerometer();
 };
 
 } /* namespace IntroSatLib */

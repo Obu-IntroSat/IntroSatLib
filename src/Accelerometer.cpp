@@ -3,60 +3,57 @@
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-	Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address)
-	{
-		_i2c = I2CDevice(hi2c, address);
-	}
+Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
+{
+
+}
 #else
-	Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address)
-	{
-		_i2c = I2CDevice(hi2c, address);
-	}
+Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address)
+{
+	_i2c = I2CDevice(hi2c, address);
+}
 #endif
 
-Accelerometer::Accelerometer(const Accelerometer& other)
+Accelerometer::Accelerometer(const Accelerometer& other): BaseDevice(other)
 {
-	*(&_i2c) = other._i2c;
 	_sensitivity= other._sensitivity;
 }
-Accelerometer::Accelerometer(Accelerometer&& other)
+Accelerometer::Accelerometer(Accelerometer&& other): BaseDevice(other)
 {
-	*(&_i2c) = other._i2c;
 	_sensitivity= other._sensitivity;
 }
 Accelerometer& Accelerometer::operator=(const Accelerometer& other)
 {
-	if (this == &other)
+	if (this != &other)
 	{
-		return *this;
+		this->BaseDevice::operator = (other);
+		_sensitivity= other._sensitivity;
 	}
-	*(&_i2c) = other._i2c;
-	_sensitivity= other._sensitivity;
 	return *this;
 }
 Accelerometer& Accelerometer::operator=(Accelerometer&& other)
 {
-	if (this == &other)
+	if (this != &other)
 	{
-		return *this;
+		this->BaseDevice::operator =(other);
+		_sensitivity= other._sensitivity;
 	}
-	*(&_i2c) = other._i2c;
-	_sensitivity= other._sensitivity;
 	return *this;
 }
 
-void Accelerometer::Init(Scale sensitivity, FilterBandwidth filter)
+uint8_t Accelerometer::Init(Scale sensitivity, FilterBandwidth filter)
 {
 	SetScale(sensitivity);
 	SetFilter(filter);
+	return 0;
 }
-void Accelerometer::Init(Scale sensitivity)
+uint8_t Accelerometer::Init(Scale sensitivity)
 {
-	Init(sensitivity, FilterBandwidth::F0021);
+	return Init(sensitivity, FilterBandwidth::F0021);
 }
-void Accelerometer::Init()
+uint8_t Accelerometer::Init()
 {
-	Init(Scale::twoG);
+	return Init(Scale::twoG);
 }
 
 
@@ -110,21 +107,9 @@ float Accelerometer::Z()
 	return e / _rawg;
 }
 
-void Accelerometer::SetRegister(RegisterMap reg, uint8_t value)
-{
-	_i2c.write(reg, &value, 1);
-}
-
-uint8_t Accelerometer::GetRegister(RegisterMap reg)
-{
-	uint8_t value = 0;
-	_i2c.read(reg, &value, 1);
-	return value;
-}
-
 Accelerometer::~Accelerometer()
 {
-	_i2c.~I2CDevice();
+	BaseDevice::~BaseDevice();
 }
 
 }

@@ -34,9 +34,6 @@
     /** Создание класса акселерометра*/
     Accelerometer accel(Wire);
 
-    /** Переменные для хранения показаний датчика*/
-    float ax = 0, ay = 0, az = 0;
-
     void setup() {
         Serial.begin(9600); // Включения Serial для вывода данных
         Wire.begin(); // Включение Wire(I2C)
@@ -72,6 +69,9 @@
     * [FilterBandwidth](#filterbandwidth)
 * [**Gyroscope**](#gyroscope)
   * [**Methods**](#methods-1)
+    * [*void* Init(*Scale* sensitivity, *FilterBandwidth* filter)]()
+    * [*void* SetScale(*Scale* sensitivity)]()
+    * [*void* SetFilter(*FilterBandwidth* filter)]()
 	* [*float* X()](#float-x-1)
 	* [*float* Y()](#float-y-1)
 	* [*float* Z()](#float-z-1)
@@ -79,6 +79,8 @@
 	* [*int16_t* RawY()](#int16t-rawy-1)
 	* [*int16_t* RawZ()](#int16t-rawz-1)
   * Enums
+	* [Scale]()
+    * [FilterBandwidth]()
 
 - ### Accelerometer
 	Класс позволяющий получать данные из акселерометра
@@ -94,18 +96,21 @@
 	*или*
 	***Accelerometer* Accelerometer(*TwoWire* &hi2c, *uint8_t* address)** *(ArduinoIDE)*
 	Создание объекта класса
+	
 	Для [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
 	```cpp
 	Accelerometer accel = Accelerometer(&hi2c1, 0x68);
 	// или
 	Accelerometer accel = Accelerometer(&hi2c1);
 	```
+
 	Для [ArduinoIDE](https://www.arduino.cc/en/software)
 	```cpp
 	Accelerometer accel = Accelerometer(Wire, 0x68);
 	// или
 	Accelerometer accel = Accelerometer(Wire);
 	```
+
 	- #### Methods
     	- ##### *void* Init(*[Scale](#scale)* sensitivity, *[FilterBandwidth](#filterbandwidth)* filter)
 			Инициализация акселерометра, нужна для выставления базовых настроек

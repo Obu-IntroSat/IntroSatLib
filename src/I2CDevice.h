@@ -35,7 +35,6 @@ private:
 	uint8_t _address = 0;
 	I2C_HandleTypeDef *_hi2c = 0;
 public:
-	I2CDevice();
 #ifndef ARDUINO
 	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address);
 	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address, I2CSpeed speed);
@@ -47,6 +46,7 @@ public:
 	I2CDevice(I2CDevice&& other);
 	I2CDevice& operator=(const I2CDevice& other);
 	I2CDevice& operator=(I2CDevice&& other);
+	HAL_StatusTypeDef isReady();
 	HAL_StatusTypeDef read(uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef read(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef write(uint8_t* Data, uint8_t Nbytes);

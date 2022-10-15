@@ -8,8 +8,8 @@
 #ifndef GYROSCOPE_H_
 #define GYROSCOPE_H_
 
-#include <BaseDevice.h>
 #include <I2CDevice.h>
+#include <BaseDevice.h>
 
 namespace IntroSatLib {
 
@@ -31,11 +31,7 @@ private:
 		GYRO_ZOUT_L,
 	};
 
-	I2CDevice _i2c;
 	uint8_t _sensitivity = 0;
-
-	uint8_t GetRegister(RegisterMap reg);
-	void SetRegister(RegisterMap reg, uint8_t value);
 
 public:
 
@@ -71,9 +67,9 @@ public:
 	Gyroscope& operator=(const Gyroscope &other);
 	Gyroscope& operator=(Gyroscope &&other);
 
-	void Init();
-	void Init(Scale sensitivity);
-	void Init(Scale sensitivity, FilterBandwidth filter);
+	uint8_t Init();
+	uint8_t Init(Scale sensitivity);
+	uint8_t Init(Scale sensitivity, FilterBandwidth filter);
 
 	void SetScale(Scale sensitivity);
 	void SetFilter(FilterBandwidth filter);

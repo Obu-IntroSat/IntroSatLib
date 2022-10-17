@@ -28,6 +28,6 @@ void loop() {
 	Serial.print(" ");
 	Serial.print(gyro.Y());
 	Serial.print(" ");
-	Serial.println(accel.Z());
+	Serial.println(gyro.Z());
 	delay(100);
 }

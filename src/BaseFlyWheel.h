@@ -12,9 +12,8 @@
 
 namespace IntroSatLib {
 
-class BaseFlyWheel: public virtual BaseDevice {
+class BaseFlyWheel: public BaseDevice {
 private:
-	static const uint8_t BASE_ADDRESS = 0x38;
 
 	enum RegisterMap
 	{
@@ -44,6 +43,7 @@ private:
 protected:
 	uint8_t _channel = 0;
 	uint8_t _version = 0;
+	static const uint8_t BASE_ADDRESS = 0x38;
 	uint8_t CheckVersion();
 public:
 #ifndef ARDUINO

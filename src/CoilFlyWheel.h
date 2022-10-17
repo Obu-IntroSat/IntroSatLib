@@ -13,8 +13,18 @@
 namespace IntroSatLib {
 
 class CoilFlyWheel: public BaseFlyWheel {
-protected:
-	uint8_t _channel = 2;
+public:
+#ifndef ARDUINO
+	CoilFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
+#else
+	CoilFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
+#endif
+
+	CoilFlyWheel(const CoilFlyWheel &other);
+	CoilFlyWheel(CoilFlyWheel &&other);
+	CoilFlyWheel& operator=(const CoilFlyWheel &other);
+	CoilFlyWheel& operator=(CoilFlyWheel &&other);
+	virtual ~CoilFlyWheel();
 };
 
 } /* namespace IntroSatLib */

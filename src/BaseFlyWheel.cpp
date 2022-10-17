@@ -15,9 +15,9 @@ BaseFlyWheel::BaseFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice
 
 }
 #else
-BaseFlyWheel::BaseFlyWheel(TwoWire &hi2c, uint8_t address)
+BaseFlyWheel::BaseFlyWheel(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
-	_i2c = I2CDevice(hi2c, address);
+
 }
 #endif
 

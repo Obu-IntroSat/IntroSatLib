@@ -13,8 +13,18 @@
 namespace IntroSatLib {
 
 class MotorFlyWheel: public BaseFlyWheel {
-protected:
-	uint8_t _channel = 1;
+public:
+#ifndef ARDUINO
+	MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
+#else
+	MotorFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
+#endif
+
+	MotorFlyWheel(const MotorFlyWheel &other);
+	MotorFlyWheel(MotorFlyWheel &&other);
+	MotorFlyWheel& operator=(const MotorFlyWheel &other);
+	MotorFlyWheel& operator=(MotorFlyWheel &&other);
+	virtual ~MotorFlyWheel();
 };
 
 } /* namespace IntroSatLib */

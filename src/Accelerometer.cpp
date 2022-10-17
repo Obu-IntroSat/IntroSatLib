@@ -5,12 +5,10 @@ namespace IntroSatLib {
 #ifndef ARDUINO
 Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
-
 }
 #else
-Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address)
+Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
-	_i2c = I2CDevice(hi2c, address);
 }
 #endif
 

@@ -17,6 +17,9 @@ LightSensor::LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(h
 LightSensor::LightSensor(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
 }
+LightSensor::LightSensor(uint8_t address): BaseDevice(address)
+{
+}
 #endif
 
 LightSensor::LightSensor(const LightSensor &other): BaseDevice(other)

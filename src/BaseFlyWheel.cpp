@@ -19,6 +19,10 @@ BaseFlyWheel::BaseFlyWheel(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, add
 {
 
 }
+BaseFlyWheel::BaseFlyWheel(uint8_t address): BaseDevice(address)
+{
+
+}
 #endif
 
 uint8_t BaseFlyWheel::Init()

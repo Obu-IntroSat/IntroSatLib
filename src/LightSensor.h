@@ -23,6 +23,7 @@ public:
 	LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	LightSensor(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
+	LightSensor(uint8_t address = BASE_ADDRESS);
 #endif
 
 	LightSensor(const LightSensor &other);

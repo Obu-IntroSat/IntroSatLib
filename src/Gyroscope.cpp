@@ -3,11 +3,14 @@
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres): BaseDevice(hi2c, addres)
+Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
 }
 #else
-Gyroscope::Gyroscope(TwoWire &hi2c, uint8_t addres): BaseDevice(hi2c, addres)
+Gyroscope::Gyroscope(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
+{
+}
+Gyroscope::Gyroscope(uint8_t address): BaseDevice(address)
 {
 }
 #endif

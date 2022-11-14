@@ -19,6 +19,10 @@ MotorFlyWheel::MotorFlyWheel(TwoWire &hi2c, uint8_t address): BaseFlyWheel(hi2c,
 {
 	_channel = 1;
 }
+MotorFlyWheel::MotorFlyWheel(uint8_t address): BaseFlyWheel(address)
+{
+	_channel = 1;
+}
 #endif
 
 MotorFlyWheel::MotorFlyWheel(const MotorFlyWheel &other): BaseFlyWheel(other)

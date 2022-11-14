@@ -19,6 +19,10 @@ CoilFlyWheel::CoilFlyWheel(TwoWire &hi2c, uint8_t address): BaseFlyWheel(hi2c, a
 {
 	_channel = 2;
 }
+CoilFlyWheel::CoilFlyWheel(uint8_t address): BaseFlyWheel(address)
+{
+	_channel = 2;
+}
 #endif
 
 CoilFlyWheel::CoilFlyWheel(const CoilFlyWheel &other): BaseFlyWheel(other)

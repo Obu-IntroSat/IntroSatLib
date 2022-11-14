@@ -28,6 +28,7 @@ public:
 	BaseDevice(I2C_HandleTypeDef *hi2c, uint8_t address);
 #else
 	BaseDevice(TwoWire &hi2c, uint8_t address);
+	BaseDevice(uint8_t address);
 #endif
 	BaseDevice(const BaseDevice& other);
 	BaseDevice(BaseDevice&& other);

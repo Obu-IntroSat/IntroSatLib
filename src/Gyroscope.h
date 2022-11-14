@@ -60,6 +60,7 @@ public:
 	Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	Gyroscope(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
+	Gyroscope(uint8_t address = BASE_ADDRESS);
 #endif
 
 	Gyroscope(const Gyroscope &other);

@@ -55,6 +55,9 @@ BaseDevice::BaseDevice(I2C_HandleTypeDef *hi2c, uint8_t address): _i2c(* new I2C
 BaseDevice::BaseDevice(TwoWire &hi2c, uint8_t address): _i2c(* new I2CDevice(hi2c, address))
 {
 };
+BaseDevice::BaseDevice(uint8_t address): _i2c(* new I2CDevice(Wire, address))
+{
+};
 #endif
 
 uint8_t BaseDevice::Init()

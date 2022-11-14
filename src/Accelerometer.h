@@ -61,6 +61,7 @@ public:
 	Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	Accelerometer(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
+	Accelerometer(uint8_t address = BASE_ADDRESS);
 #endif
 	Accelerometer(const Accelerometer& other);
 	Accelerometer& operator=(const Accelerometer& other);

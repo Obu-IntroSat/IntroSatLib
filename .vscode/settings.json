@@ -1,3 +1,19 @@
 {
-    "cSpell.language": "en,ru"
+    "cSpell.language": "en,ru",
+    "files.associations": {
+        "array": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "format": "cpp",
+        "forward_list": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "regex": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "xiosbase": "cpp"
+    }
 }

@@ -8,12 +8,19 @@
 
 Accelerometer	KEYWORD1
 Gyroscope	KEYWORD1
+LightSensor	KEYWORD1
+CoilFlyWheel	KEYWORD1
+MotorFlyWheel	KEYWORD1
 I2CDevice	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2) for All
+#######################################
+Init	KEYWORD2
 
 #######################################
 # Methods and Functions (KEYWORD2) for Accelerometer and Gyroscope
 #######################################
-Init	KEYWORD2
 X	KEYWORD2
 Y	KEYWORD2
 Z	KEYWORD2
@@ -22,6 +29,26 @@ rawY	KEYWORD2
 rawZ	KEYWORD2
 SetScale	KEYWORD2
 SetFilter	KEYWORD2
+
+#######################################
+# Methods and Functions (KEYWORD2) for Light Sensor
+#######################################
+GetLight	KEYWORD2
+
+#######################################
+# Methods and Functions (KEYWORD2) for FlyWheel
+#######################################
+DirectMode	KEYWORD2
+SilentMode	KEYWORD2
+MinForceMode	KEYWORD2
+ReverseMode	KEYWORD2
+NeedSpeed	KEYWORD2
+CurrentSpeed	KEYWORD2
+MaxAbsSpeed	KEYWORD2
+MinForce	KEYWORD2
+PID_P	KEYWORD2
+PID_I	KEYWORD2
+PID_D	KEYWORD2
 
 #######################################
 # Constants (LITERAL1) for Accelerometer and Gyroscope

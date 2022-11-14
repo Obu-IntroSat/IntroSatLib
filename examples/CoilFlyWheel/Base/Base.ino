@@ -11,7 +11,7 @@ using namespace IntroSatLib;
 /**
  * 0x3A адрес устройства может быть другим
  */
-ColiFlyWheel coil(Wire, 0x3A);
+CoilFlyWheel coil(Wire, 0x3A);
 
 void setup() {
   Serial.begin(9600); // Включения Serial для вывода данных

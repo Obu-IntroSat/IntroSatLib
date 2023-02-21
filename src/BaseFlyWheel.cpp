@@ -5,7 +5,7 @@
  *      Author: Almaz
  */
 
-#include <BaseFlyWheel.h>
+#include "BaseFlyWheel.h"
 
 namespace IntroSatLib {
 
@@ -16,10 +16,6 @@ BaseFlyWheel::BaseFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice
 }
 #else
 BaseFlyWheel::BaseFlyWheel(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
-{
-
-}
-BaseFlyWheel::BaseFlyWheel(uint8_t address): BaseDevice(address)
 {
 
 }

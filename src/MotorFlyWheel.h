@@ -8,7 +8,7 @@
 #ifndef MOTORFLYWHEEL_H_
 #define MOTORFLYWHEEL_H_
 
-#include <BaseFlyWheel.h>
+#include "BaseFlyWheel.h"
 
 namespace IntroSatLib {
 
@@ -18,7 +18,6 @@ public:
 	MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	MotorFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	MotorFlyWheel(uint8_t address = BASE_ADDRESS);
 #endif
 
 	MotorFlyWheel(const MotorFlyWheel &other);

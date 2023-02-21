@@ -5,7 +5,7 @@
  *      Author: Almaz
  */
 
-#include <MotorFlyWheel.h>
+#include "MotorFlyWheel.h"
 
 namespace IntroSatLib {
 
@@ -16,10 +16,6 @@ MotorFlyWheel::MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address): BaseFlyW
 }
 #else
 MotorFlyWheel::MotorFlyWheel(TwoWire &hi2c, uint8_t address): BaseFlyWheel(hi2c, address)
-{
-	_channel = 1;
-}
-MotorFlyWheel::MotorFlyWheel(uint8_t address): BaseFlyWheel(address)
 {
 	_channel = 1;
 }

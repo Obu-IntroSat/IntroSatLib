@@ -8,7 +8,7 @@
 #ifndef COILFLYWHEEL_H_
 #define COILFLYWHEEL_H_
 
-#include <BaseFlyWheel.h>
+#include "BaseFlyWheel.h"
 
 namespace IntroSatLib {
 
@@ -18,7 +18,6 @@ public:
 	CoilFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	CoilFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	CoilFlyWheel(uint8_t address = BASE_ADDRESS);
 #endif
 
 	CoilFlyWheel(const CoilFlyWheel &other);

@@ -1,4 +1,4 @@
-#include <Accelerometer.h>
+#include "Accelerometer.h"
 
 namespace IntroSatLib {
 
@@ -8,9 +8,6 @@ Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevi
 }
 #else
 Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
-{
-}
-Accelerometer::Accelerometer(uint8_t address): BaseDevice(address)
 {
 }
 #endif

@@ -5,7 +5,7 @@
  *      Author: Almaz
  */
 
-#include <LightSensor.h>
+#include "LightSensor.h"
 
 namespace IntroSatLib {
 
@@ -15,9 +15,6 @@ LightSensor::LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(h
 }
 #else
 LightSensor::LightSensor(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
-{
-}
-LightSensor::LightSensor(uint8_t address): BaseDevice(address)
 {
 }
 #endif

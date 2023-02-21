@@ -1,15 +1,8 @@
-/*
- * LightSensor.h
- *
- *  Created on: 24 июл. 2022 г.
- *      Author: Almaz
- */
-
 #ifndef LIGHTSENSOR_H_
 #define LIGHTSENSOR_H_
 
-#include <I2CDevice.h>
-#include <BaseDevice.h>
+#include "I2CDevice.h"
+#include "BaseDevice.h"
 
 namespace IntroSatLib {
 
@@ -23,7 +16,6 @@ public:
 	LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	LightSensor(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	LightSensor(uint8_t address = BASE_ADDRESS);
 #endif
 
 	LightSensor(const LightSensor &other);

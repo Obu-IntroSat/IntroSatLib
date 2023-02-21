@@ -8,7 +8,7 @@
 #ifndef BASEFLYWHEEL_H_
 #define BASEFLYWHEEL_H_
 
-#include <BaseDevice.h>
+#include "BaseDevice.h"
 
 namespace IntroSatLib {
 
@@ -50,7 +50,6 @@ public:
 	BaseFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
 #else
 	BaseFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	BaseFlyWheel(uint8_t address = BASE_ADDRESS);
 #endif
 
 	uint8_t Init();

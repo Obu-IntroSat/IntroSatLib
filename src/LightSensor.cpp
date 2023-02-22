@@ -1,11 +1,4 @@
-/*
- * LightSensor.cpp
- *
- *  Created on: 24 июл. 2022 г.
- *      Author: Almaz
- */
-
-#include <LightSensor.h>
+#include "LightSensor.h"
 
 namespace IntroSatLib {
 

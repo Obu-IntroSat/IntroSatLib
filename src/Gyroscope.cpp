@@ -1,4 +1,4 @@
-#include <Gyroscope.h>
+#include "Gyroscope.h"
 
 namespace IntroSatLib {
 

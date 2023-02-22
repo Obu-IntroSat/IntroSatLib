@@ -1,14 +1,7 @@
-/*
- * MotorFlyWheel.h
- *
- *  Created on: 15 окт. 2022 г.
- *      Author: Almaz
- */
-
 #ifndef MOTORFLYWHEEL_H_
 #define MOTORFLYWHEEL_H_
 
-#include <BaseFlyWheel.h>
+#include "BaseFlyWheel.h"
 
 namespace IntroSatLib {
 

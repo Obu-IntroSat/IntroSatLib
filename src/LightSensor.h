@@ -1,8 +1,8 @@
 #ifndef LIGHTSENSOR_H_
 #define LIGHTSENSOR_H_
 
-#include <I2CDevice.h>
-#include <BaseDevice.h>
+#include "I2CDevice.h"
+#include "BaseDevice.h"
 
 namespace IntroSatLib {
 

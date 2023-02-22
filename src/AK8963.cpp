@@ -47,6 +47,7 @@ uint8_t AK8963::Init()
 	HAL_Delay(100);
 	SetRegister(0x0A, 0x02);
 	HAL_Delay(100);
+	return 0;
 }
 
 void AK8963::Read()

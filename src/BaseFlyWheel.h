@@ -1,14 +1,7 @@
-/*
- * BaseFlyWheel.h
- *
- *  Created on: 6 окт. 2022 г.
- *      Author: Almaz
- */
-
 #ifndef BASEFLYWHEEL_H_
 #define BASEFLYWHEEL_H_
 
-#include <BaseDevice.h>
+#include "BaseDevice.h"
 
 namespace IntroSatLib {
 

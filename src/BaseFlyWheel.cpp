@@ -1,11 +1,4 @@
-/*
- * BaseFlyWheel.cpp
- *
- *  Created on: 6 окт. 2022 г.
- *      Author: Almaz
- */
-
-#include <BaseFlyWheel.h>
+#include "BaseFlyWheel.h"
 
 namespace IntroSatLib {
 

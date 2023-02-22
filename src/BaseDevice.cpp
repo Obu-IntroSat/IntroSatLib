@@ -1,11 +1,4 @@
-/*
- * BaseDevice1.cpp
- *
- *  Created on: 5 окт. 2022 г.
- *      Author: Almaz
- */
-
-#include <BaseDevice.h>
+#include "BaseDevice.h"
 
 namespace IntroSatLib {
 

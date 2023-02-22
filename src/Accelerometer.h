@@ -1,10 +1,3 @@
-/*
- * Accelerometer.h
- *
- *  Created on: Jul 12, 2022
- *      Author: Almaz
- */
-
 #ifndef ACCELEROMETER_H_
 #define ACCELEROMETER_H_
 

@@ -44,6 +44,7 @@ Gyroscope& Gyroscope::operator=(Gyroscope &&other)
 
 uint8_t Gyroscope::Init(Scale sensitivity, FilterBandwidth filter)
 {
+	SetRegister(0x37, 0x02);
 	SetScale(sensitivity);
 	SetFilter(filter);
 	return 0;

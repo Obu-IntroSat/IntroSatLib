@@ -1,10 +1,3 @@
-/*
- * LightSensor.h
- *
- *  Created on: 24 июл. 2022 г.
- *      Author: Almaz
- */
-
 #ifndef LIGHTSENSOR_H_
 #define LIGHTSENSOR_H_
 

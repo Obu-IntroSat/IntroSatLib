@@ -8,7 +8,7 @@ namespace IntroSatLib
 	namespace Units
 	{
 		using DistanceAcceleration = float;
-		using DegreeVelocity = int32_t;
+		using DegreeVelocity = float;
 		using Luminance = uint32_t;
 	}
 }

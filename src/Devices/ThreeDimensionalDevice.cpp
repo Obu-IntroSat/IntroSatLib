@@ -4,47 +4,109 @@ namespace IntroSatLib
 {
 	namespace Devices
 	{
-		template<typename T, int BufferSize>
-		Status ThreeDimensionalDevice<T, BufferSize>::UpdateData()
+		template<typename T, typename TRaw>
+		ThreeDimensionalDevice<T, TRaw>::ThreeDimensionalDevice(
+			std::unique_ptr<IntroSatLib::Base::Interface> interface,
+			IntroSatLib::Base::DeviceID id,
+			int8_t maxScale,
+			uint8_t size):
+			IntroSatLib::Base::Device(interface, id | IntroSatLib::Base::DeviceID::ThreeDimensional),
+			_x(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					maxScale),
+			_y(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					maxScale),
+			_z(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					maxScale) { }
+
+		template<typename T, typename TRaw>
+		ThreeDimensionalDevice<T, TRaw>::ThreeDimensionalDevice(
+			std::unique_ptr<IntroSatLib::Base::Interface> interface,
+			IntroSatLib::Base::DeviceID id,
+			int8_t minScale,
+			int8_t maxScale,
+			uint8_t size):
+			IntroSatLib::Base::Device(interface, id | IntroSatLib::Base::DeviceID::ThreeDimensional),
+			_x(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					minScale,
+					maxScale),
+			_y(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					minScale,
+					maxScale),
+			_z(IntroSatLib::Filters::LinearFilter<IntroSatLib::Filters::ScalableFilterValue<TRaw>>(size),
+					minScale,
+					maxScale) { }
+
+		template<typename T, typename TRaw>
+		IntroSatLib::Base::Status ThreeDimensionalDevice<T, TRaw>::UpdateData()
 		{
-			Status result = Status::Ok;
-			_position = (_position + 1) % BufferSize;
+			TRaw x, y, z;
 
-			_bufferX[_position] = ConvertValue(RawX(&result));
-			_bufferY[_position] = ConvertValue(RawY(&result));
-			_bufferZ[_position] = ConvertValue(RawZ(&result));
+			IntroSatLib::Base::Status result = InnerUpdateData(x, y, z);
 
-			_averageX = 0;
-			_averageY = 0;
-			_averageZ = 0;
-
-			for (int i = 0; i < BufferSize; i++)
+			if (result != IntroSatLib::Base::Status::Ok)
 			{
-				_averageX += _bufferX[i] / BufferSize;
-				_averageY += _bufferY[i] / BufferSize;
-				_averageZ += _bufferZ[i] / BufferSize;
+				return result;
 			}
 
-			return result;
+			_x->AddValue(x);
+			_y->AddValue(y);
+			_z->AddValue(z);
+
+			if (_x->NeedUpScale() || _y->NeedUpScale() || _z->NeedUpScale())
+			{
+				_x->UpScale();
+				_y->UpScale();
+				_z->UpScale();
+				UpScale();
+			}
+
+			if (_x->CanDownScale() && _y->CanDownScale() && _z->CanDownScale())
+			{
+				_x->DownScale();
+				_y->DownScale();
+				_z.DownScale();
+				DownScale();
+			}
+
+			return IntroSatLib::Base::Status::Ok;
 
 		}
 
-		template<typename T, int BufferSize>
-		T ThreeDimensionalDevice<T, BufferSize>::X() const
+
+		template<typename T, typename TRaw>
+		IntroSatLib::Filters::ScalableFilterValue<TRaw> ThreeDimensionalDevice<T, TRaw>::RawX() const
 		{
-			return _averageX;
+			return _x.ScaledValue();
 		}
 
-		template<typename T, int BufferSize>
-		T ThreeDimensionalDevice<T, BufferSize>::Y() const
+		template<typename T, typename TRaw>
+		IntroSatLib::Filters::ScalableFilterValue<TRaw> ThreeDimensionalDevice<T, TRaw>::RawY() const
 		{
-			return _averageY;
+			return _y.ScaledValue();
 		}
 
-		template<typename T, int BufferSize>
-		T ThreeDimensionalDevice<T, BufferSize>::Z() const
+		template<typename T, typename TRaw>
+		IntroSatLib::Filters::ScalableFilterValue<TRaw> ThreeDimensionalDevice<T, TRaw>::RawZ() const
 		{
-			return _averageZ;
+			return _z.ScaledValue();
+		}
+
+		template<typename T, typename TRaw>
+		T ThreeDimensionalDevice<T, TRaw>::X() const
+		{
+			return ConvertValue(RawX());
+		}
+
+		template<typename T, typename TRaw>
+		T ThreeDimensionalDevice<T, TRaw>::Y() const
+		{
+			return ConvertValue(RawY());
+		}
+
+		template<typename T, typename TRaw>
+		T ThreeDimensionalDevice<T, TRaw>::Z() const
+		{
+			return ConvertValue(RawZ());
 		}
 	}
 }

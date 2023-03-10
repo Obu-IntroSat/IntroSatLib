@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-#if
-def ARDUINO
+#ifndef ARDUINO
 #include "stm32f1xx_hal.h"
 #else
 #include <Arduino.h>

@@ -3,7 +3,8 @@
 
 #include <memory>
 
-#include "Interface.h"
+#include "./DeviceID.h"
+#include "./Interface.h"
 
 namespace IntroSatLib
 {
@@ -11,13 +12,23 @@ namespace IntroSatLib
 	{
 		class Device
 		{
+			private:
+				DeviceID _id;
+
 			protected:
 				std::unique_ptr<Interface> _interface;
-				Device(std::unique_ptr<Interface> interface): _interface(std::move(interface)) { };
+
+				Device(
+					std::unique_ptr<Interface> interface,
+					DeviceID id):
+					_id(id),
+					_interface(std::move(interface)) { };
 
 			public:
+				DeviceID ID() const { return _id; };
 				virtual Status Init();
 				virtual Status UpdateData();
+
 		};
 
 	}

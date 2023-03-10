@@ -1,11 +1,21 @@
-#include "Status.h"
+#include "./Status.h"
 
 namespace IntroSatLib
 {
 	namespace Base
 	{
 
-#ifndef ARDUINO
+		Status operator| (const Status& a, const Status& b)
+		{
+			return (Status)((uint32_t&)a | (uint32_t&)b);
+		}
+
+		Status operator|= (Status& a, const Status& b)
+		{
+			return (Status)((uint32_t&)a |= (uint32_t&)b);
+		}
+
+#ifdef INTROSAT_USE_HAL
 		Status StatusConverter::Convert(HAL_StatusTypeDef status)
 		{
 			switch(status)
@@ -22,7 +32,9 @@ namespace IntroSatLib
 					return Status::Error;
 			}
 		}
-#else
+#endif /* INTROSAT_USE_HAL */
+
+#ifdef INTROSAT_USE_ARDUINO
 		Status StatusConverter::Convert(int status)
 		{
 			switch(status)
@@ -39,7 +51,7 @@ namespace IntroSatLib
 					return Status::Error;
 			}
 		}
-#endif
+#endif /*INTROSAT_USE_ARDUINO */
 	}
 }
 

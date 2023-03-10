@@ -2,16 +2,7 @@
 #define INTEFACES_I2CINTERFACE_H_
 
 #include "../Base/Interface.h"
-
-#ifdef ARDUINO
-	#include "Arduino.h"
-	#include "Wire.h"
-#endif
-
-#include "stm32f1xx_hal.h"
-#ifdef HAL_I2C_MODULE_ENABLED
-	#include "stm32f1xx_hal_i2c.h"
-#endif
+#include "../Includes/I2C.h"
 
 using namespace IntroSatLib::Base;
 
@@ -20,22 +11,24 @@ namespace IntroSatLib
 	namespace Interfaces
 	{
 
-#if defined(ARDUINO) || defined(HAL_I2C_MODULE_ENABLED)
+#ifdef INTROSAT_HAVE_I2C
 
 		class I2CInterface: public Interface
 		{
 
-#ifndef ARDUINO
+#ifdef INTROSAT_USE_HAL
 			private:
 				I2C_HandleTypeDef *_i2c;
 			public:
 				I2CInterface(I2C_HandleTypeDef *i2c, uint8_t address);
-#else
+#endif /* INTROSAT_USE_HAL */
+
+#ifdef INTROSAT_USE_ARDUINO
 			private:
 				TwoWire &_i2c;
 			public:
 				I2CInterface(TwoWire &i2c, uint8_t address);
-#endif
+#endif /* INTROSAT_USE_ARDUINO */
 
 			private:
 				uint8_t _address;
@@ -52,6 +45,6 @@ namespace IntroSatLib
 
 }
 
-#endif /* defined(ARDUINO) || defined(HAL_I2C_MODULE_ENABLED) */
+#endif /* INTROSAT_HAVE_I2C */
 
 #endif /* INTEFACES_I2CINTERFACE_H_ */

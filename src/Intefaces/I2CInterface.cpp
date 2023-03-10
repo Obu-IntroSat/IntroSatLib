@@ -5,12 +5,13 @@ namespace IntroSatLib
 	namespace Interfaces
 	{
 
+#ifdef INTROSAT_HAVE_I2C
 		uint8_t I2CInterface::Address()
 		{
 			return _address >> 1;
 		}
 
-#ifndef ARDUINO
+#ifdef INTROSAT_USE_HAL
 
 		I2CInterface::I2CInterface(I2C_HandleTypeDef *i2c, uint8_t address): _i2c(i2c)
 		{
@@ -46,7 +47,9 @@ namespace IntroSatLib
 			return StatusConverter::Convert(HAL_I2C_Mem_Write(_i2c, _address, Register, I2C_MEMADD_SIZE_8BIT, Data, Nbytes, 1000));
 		}
 
-#else
+#endif /* INTROSAT_USE_HAL */
+
+#ifdef INTROSAT_USE_ARDUINO
 
 		I2CInterface::I2CInterface(TwoWire &i2c, uint8_t address): _i2c(i2c)
 		{
@@ -57,6 +60,8 @@ namespace IntroSatLib
 			_address = address << 1;
 		}
 
-#endif
+#endif /* INTROSAT_USE_ARDUINO */
+
+#endif /* INTROSAT_HAVE_I2C */
 	}
 }

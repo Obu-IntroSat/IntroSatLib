@@ -1,17 +1,13 @@
 #ifndef BASE_STATUS_H_
 #define BASE_STATUS_H_
 
-#ifndef ARDUINO
-#include "stm32f1xx_hal.h"
-#else
-#include "Arduino.h"
-#endif
+#include "../Includes/Base.h"
 
 namespace IntroSatLib
 {
 	namespace Base
 	{
-		enum class Status
+		enum class Status: uint32_t
 		{
 			Ok = 0,
 			Error = 1,
@@ -20,16 +16,22 @@ namespace IntroSatLib
 			NotConnected = 8,
 		};
 
+		Status operator| (const Status& a, const Status& b);
+		Status operator|= (Status& a, const Status& b);
+
 		class StatusConverter
 		{
 
-#ifndef ARDUINO
+#ifdef INTROSAT_USE_HAL
 			public:
 				static Status Convert(HAL_StatusTypeDef status);
-#else
+#endif /* INTROSAT_USE_HAL */
+
+#ifdef INTROSAT_USE_ARDUINO
 			public:
 				static Status Convert(int status);
-#endif
+#endif /* INTROSAT_USE_ARDUINO */
+
 		};
 	}
 

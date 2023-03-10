@@ -1,19 +1,36 @@
 #ifndef DEVICES_ACCELEROMETER_H_
 #define DEVICES_ACCELEROMETER_H_
 
-#include "Devices/ThreeDimensionalDevice.h"
+#include "./ThreeDimensionalDevice.h"
 
-#include "Measurement.h"
+#include "../Measurement.h"
 
 namespace IntroSatLib
 {
 	namespace Devices
 	{
-		template<int BufferSize>
-		class Accelerometer_: public ThreeDimensionalDevice<IntroSatLib::Units::DistanceAcceleration, BufferSize>
+		template<typename TRaw>
+		class Accelerometer: ThreeDimensionalDevice<DistanceAcceleration, TRaw>
 		{
+
 			protected:
-				Accelerometer_(std::unique_ptr<Interface> interface): ThreeDimensionalDevice(std::move(interface)) { };
+
+				Accelerometer(
+					std::unique_ptr<IntroSatLib::Base::Interface> interface,
+					IntroSatLib::Base::DeviceID id,
+					int8_t maxScale,
+					uint8_t size):
+					ThreeDimensionalDevice(
+						std::move(interface), id, maxScale, size) { };
+
+				Accelerometer(
+					std::unique_ptr<IntroSatLib::Base::Interface> interface,
+					IntroSatLib::Base::DeviceID id,
+					int8_t minScale,
+					int8_t maxScale,
+					uint8_t size):
+					ThreeDimensionalDevice(
+						std::move(interface), id, minScale, maxScale, size) { };
 		};
 	}
 }

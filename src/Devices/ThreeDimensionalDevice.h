@@ -5,36 +5,54 @@
 
 #include "../Base/Device.h"
 
-using namespace IntroSatLib::Base;
+#include "../Filters/LinearFilter.h"
+#include "../Filters/ScalableFilter.h"
 
 namespace IntroSatLib
 {
 	namespace Devices
 	{
 
-		template<typename T, int BufferSize>
-		class ThreeDimensionalDevice: public Device
+		template<typename T, typename TRaw>
+		class ThreeDimensionalDevice: public IntroSatLib::Base::Device
 		{
+
 			private:
-				int _position = 0;
-				T _bufferX[BufferSize] = {0};
-				T _averageX = 0;
-				T _bufferY[BufferSize] = {0};
-				T _averageY = 0;
-				T _bufferZ[BufferSize] = {0};
-				T _averageZ = 0;
+
+				IntroSatLib::Filters::ScalableFilter<TRaw> _x;
+				IntroSatLib::Filters::ScalableFilter<TRaw> _y;
+				IntroSatLib::Filters::ScalableFilter<TRaw> _z;
+
+				IntroSatLib::Filters::ScalableFilterValue<TRaw> RawX() const;
+				IntroSatLib::Filters::ScalableFilterValue<TRaw> RawY() const;
+				IntroSatLib::Filters::ScalableFilterValue<TRaw> RawZ() const;
 
 			protected:
-				ThreeDimensionalDevice(std::unique_ptr<Interface> interface): Device(std::move(interface)) { };
 
-				virtual T ConvertValue(int32_t value) const;
+				ThreeDimensionalDevice(
+						std::unique_ptr<IntroSatLib::Base::Interface> interface,
+						IntroSatLib::Base::DeviceID id,
+						int8_t maxScale,
+						uint8_t size);
 
-				virtual int32_t RawX(Status *status) const;
-				virtual int32_t RawY(Status *status) const;
-				virtual int32_t RawZ(Status *status) const;
+				ThreeDimensionalDevice(
+						std::unique_ptr<IntroSatLib::Base::Interface> interface,
+						IntroSatLib::Base::DeviceID id,
+						int8_t minScale,
+						int8_t maxScale,
+						uint8_t size);
+
+				virtual IntroSatLib::Base::Status InnerUpdateData(TRaw& x, TRaw& y, TRaw& z) const;
+
+				virtual T ConvertValue(IntroSatLib::Filters::ScalableFilterValue<TRaw> value) const;
+
+				virtual void UpScale();
+				virtual void DownScale();
 
 			public:
-				Status UpdateData() override final;
+
+				IntroSatLib::Base::Status UpdateData() override final;
+
 				T X() const;
 				T Y() const;
 				T Z() const;

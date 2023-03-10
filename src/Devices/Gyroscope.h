@@ -1,9 +1,9 @@
 #ifndef DEVICES_GYROSCOPE_H_
 #define DEVICES_GYROSCOPE_H_
 
-#include "Devices/ThreeDimensionalDevice.h"
+#include "./ThreeDimensionalDevice.h"
 
-#include "Measurement.h"
+#include "../Measurement.h"
 
 namespace IntroSatLib
 {

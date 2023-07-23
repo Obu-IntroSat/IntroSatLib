@@ -11,10 +11,11 @@
 #include "I2CDevice.h"
 #include "BaseDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-
-class Accelerometer: public BaseDevice {
+class Accelerometer: public BaseDevice
+{
 
 private:
 
@@ -24,37 +25,26 @@ private:
 	uint8_t _sensitivity = 0;
 
 	enum RegisterMap
-		{
-			ACCEL_CONFIG = 0x1C,
-			ACCEL_CONFIG_2,
-			ACCEL_XOUT_H = 0x3B,
-			ACCEL_XOUT_L,
-			ACCEL_YOUT_H,
-			ACCEL_YOUT_L,
-			ACCEL_ZOUT_H,
-			ACCEL_ZOUT_L,
-		};
+	{
+		ACCEL_CONFIG = 0x1C,
+		ACCEL_CONFIG_2,
+		ACCEL_XOUT_H = 0x3B,
+		ACCEL_XOUT_L,
+		ACCEL_YOUT_H,
+		ACCEL_YOUT_L,
+		ACCEL_ZOUT_H,
+		ACCEL_ZOUT_L,
+	};
 protected:
 public:
 
 	enum Scale
 	{
-		twoG = 0,
-		fourG,
-		eightG,
-		sixteenG
+		twoG = 0, fourG, eightG, sixteenG
 	};
 	enum FilterBandwidth
 	{
-		F1046 = 8,
-		F0218 = 0,
-		F0218b,
-		F0099,
-		F0045,
-		F0021,
-		F0010,
-		F0005,
-		F0420
+		F1046 = 8, F0218 = 0, F0218b, F0099, F0045, F0021, F0010, F0005, F0420
 	};
 
 #ifndef ARDUINO
@@ -62,10 +52,10 @@ public:
 #else
 	Accelerometer(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
 #endif
-	Accelerometer(const Accelerometer& other);
-	Accelerometer& operator=(const Accelerometer& other);
-	Accelerometer(Accelerometer&& other);
-	Accelerometer& operator=(Accelerometer&& other);
+	Accelerometer(const Accelerometer &other);
+	Accelerometer& operator=(const Accelerometer &other);
+	Accelerometer(Accelerometer &&other);
+	Accelerometer& operator=(Accelerometer &&other);
 
 	uint8_t Init();
 	uint8_t Init(Scale sensitivity);

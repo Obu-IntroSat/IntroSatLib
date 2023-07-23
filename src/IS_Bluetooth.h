@@ -10,7 +10,8 @@
 #endif /* ARDUINO */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus */
 
 extern void enter_bootloader();

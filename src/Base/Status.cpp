@@ -1,37 +1,37 @@
-#include "./Status.h"
+#include "Status.h"
 
 namespace IntroSatLib
 {
-	namespace Base
-	{
+namespace Base
+{
 
-		Status operator| (const Status& a, const Status& b)
-		{
-			return (Status)((uint32_t&)a | (uint32_t&)b);
-		}
+Status operator|(const Status &a, const Status &b)
+{
+	return (Status) ((uint32_t&) a | (uint32_t&) b);
+}
 
-		Status operator|= (Status& a, const Status& b)
-		{
-			return (Status)((uint32_t&)a |= (uint32_t&)b);
-		}
+Status operator|=(Status &a, const Status &b)
+{
+	return (Status) ((uint32_t&) a |= (uint32_t&) b);
+}
 
 #ifdef INTROSAT_USE_HAL
-		Status StatusConverter::Convert(HAL_StatusTypeDef status)
-		{
-			switch(status)
-			{
-				case HAL_OK:
-					return Status::Ok;
-				case HAL_ERROR:
-					return Status::Error;
-				case HAL_BUSY:
-					return Status::Busy;
-				case HAL_TIMEOUT:
-					return Status::Timeout;
-				default:
-					return Status::Error;
-			}
-		}
+Status StatusConverter::Convert(HAL_StatusTypeDef status)
+{
+	switch (status)
+	{
+	case HAL_OK:
+		return Status::Ok;
+	case HAL_ERROR:
+		return Status::Error;
+	case HAL_BUSY:
+		return Status::Busy;
+	case HAL_TIMEOUT:
+		return Status::Timeout;
+	default:
+		return Status::Error;
+	}
+}
 #endif /* INTROSAT_USE_HAL */
 
 #ifdef INTROSAT_USE_ARDUINO
@@ -52,7 +52,6 @@ namespace IntroSatLib
 			}
 		}
 #endif /*INTROSAT_USE_ARDUINO */
-	}
 }
-
+}
 

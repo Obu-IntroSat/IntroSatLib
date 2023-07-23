@@ -10,9 +10,11 @@
 
 #include "I2CDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class BaseDevice {
+class BaseDevice
+{
 
 protected:
 	I2CDevice &_i2c;
@@ -29,10 +31,10 @@ public:
 #else
 	BaseDevice(TwoWire &hi2c, uint8_t address);
 #endif
-	BaseDevice(const BaseDevice& other);
-	BaseDevice(BaseDevice&& other);
-	BaseDevice& operator=(const BaseDevice& other);
-	BaseDevice& operator=(BaseDevice&& other);
+	BaseDevice(const BaseDevice &other);
+	BaseDevice(BaseDevice &&other);
+	BaseDevice& operator=(const BaseDevice &other);
+	BaseDevice& operator=(BaseDevice &&other);
 	virtual uint8_t Init();
 	virtual ~BaseDevice();
 };

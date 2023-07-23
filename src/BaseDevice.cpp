@@ -7,7 +7,8 @@
 
 #include "BaseDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 void BaseDevice::SetRegister(uint8_t reg, uint8_t value)
 {
@@ -23,14 +24,16 @@ uint8_t BaseDevice::GetRegister(uint8_t reg)
 
 void BaseDevice::SetBitRegister(uint8_t reg, uint8_t bit)
 {
-	if (bit > 7) bit = 7;
+	if (bit > 7)
+		bit = 7;
 	uint8_t tmp = GetRegister(reg);
 	tmp |= (1 << bit);
 	SetRegister(reg, tmp);
 }
 void BaseDevice::ResetBitRegister(uint8_t reg, uint8_t bit)
 {
-	if (bit > 7) bit = 7;
+	if (bit > 7)
+		bit = 7;
 	uint8_t tmp = GetRegister(reg);
 	tmp &= ~(1 << bit);
 	SetRegister(reg, tmp);
@@ -48,7 +51,8 @@ void BaseDevice::BitRegister(uint8_t reg, uint8_t bit, uint8_t value)
 }
 
 #ifndef ARDUINO
-BaseDevice::BaseDevice(I2C_HandleTypeDef *hi2c, uint8_t address): _i2c(* new I2CDevice(hi2c, address))
+BaseDevice::BaseDevice(I2C_HandleTypeDef *hi2c, uint8_t address) :
+		_i2c(*new I2CDevice(hi2c, address))
 {
 }
 #else
@@ -62,13 +66,15 @@ uint8_t BaseDevice::Init()
 	return _i2c.isReady();
 }
 
-BaseDevice::BaseDevice(const BaseDevice& other): _i2c(other._i2c)
+BaseDevice::BaseDevice(const BaseDevice &other) :
+		_i2c(other._i2c)
 {
 }
-BaseDevice::BaseDevice(BaseDevice&& other): _i2c(other._i2c)
+BaseDevice::BaseDevice(BaseDevice &&other) :
+		_i2c(other._i2c)
 {
 }
-BaseDevice& BaseDevice::operator=(const BaseDevice& other)
+BaseDevice& BaseDevice::operator=(const BaseDevice &other)
 {
 	if (this != &other)
 	{
@@ -77,7 +83,7 @@ BaseDevice& BaseDevice::operator=(const BaseDevice& other)
 	}
 	return *this;
 }
-BaseDevice& BaseDevice::operator=(BaseDevice&& other)
+BaseDevice& BaseDevice::operator=(BaseDevice &&other)
 {
 	if (this != &other)
 	{

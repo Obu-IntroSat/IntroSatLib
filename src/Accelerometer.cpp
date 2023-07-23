@@ -1,9 +1,11 @@
 #include "Accelerometer.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 #ifndef ARDUINO
-Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
+Accelerometer::Accelerometer(I2C_HandleTypeDef *hi2c, uint8_t address) :
+		BaseDevice(hi2c, address)
 {
 }
 #else
@@ -12,29 +14,31 @@ Accelerometer::Accelerometer(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, a
 }
 #endif
 
-Accelerometer::Accelerometer(const Accelerometer& other): BaseDevice(other)
+Accelerometer::Accelerometer(const Accelerometer &other) :
+		BaseDevice(other)
 {
-	_sensitivity= other._sensitivity;
+	_sensitivity = other._sensitivity;
 }
-Accelerometer::Accelerometer(Accelerometer&& other): BaseDevice(other)
+Accelerometer::Accelerometer(Accelerometer &&other) :
+		BaseDevice(other)
 {
-	_sensitivity= other._sensitivity;
+	_sensitivity = other._sensitivity;
 }
-Accelerometer& Accelerometer::operator=(const Accelerometer& other)
-{
-	if (this != &other)
-	{
-		this->BaseDevice::operator = (other);
-		_sensitivity= other._sensitivity;
-	}
-	return *this;
-}
-Accelerometer& Accelerometer::operator=(Accelerometer&& other)
+Accelerometer& Accelerometer::operator=(const Accelerometer &other)
 {
 	if (this != &other)
 	{
 		this->BaseDevice::operator =(other);
-		_sensitivity= other._sensitivity;
+		_sensitivity = other._sensitivity;
+	}
+	return *this;
+}
+Accelerometer& Accelerometer::operator=(Accelerometer &&other)
+{
+	if (this != &other)
+	{
+		this->BaseDevice::operator =(other);
+		_sensitivity = other._sensitivity;
 	}
 	return *this;
 }
@@ -54,7 +58,6 @@ uint8_t Accelerometer::Init()
 	return Init(Scale::twoG);
 }
 
-
 void Accelerometer::SetScale(Scale sensitivity)
 {
 	uint8_t reg = GetRegister(RegisterMap::ACCEL_CONFIG);
@@ -68,7 +71,6 @@ void Accelerometer::SetFilter(FilterBandwidth filter)
 {
 	SetRegister(RegisterMap::ACCEL_CONFIG_2, filter);
 }
-
 
 int16_t Accelerometer::RawX()
 {

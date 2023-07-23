@@ -7,10 +7,12 @@
 
 #include "MotorFlyWheel.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 #ifndef ARDUINO
-MotorFlyWheel::MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address): BaseFlyWheel(hi2c, address)
+MotorFlyWheel::MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address) :
+		BaseFlyWheel(hi2c, address)
 {
 	_channel = 1;
 }
@@ -21,11 +23,13 @@ MotorFlyWheel::MotorFlyWheel(TwoWire &hi2c, uint8_t address): BaseFlyWheel(hi2c,
 }
 #endif
 
-MotorFlyWheel::MotorFlyWheel(const MotorFlyWheel &other): BaseFlyWheel(other)
+MotorFlyWheel::MotorFlyWheel(const MotorFlyWheel &other) :
+		BaseFlyWheel(other)
 {
 }
 
-MotorFlyWheel::MotorFlyWheel(MotorFlyWheel &&other): BaseFlyWheel(other)
+MotorFlyWheel::MotorFlyWheel(MotorFlyWheel &&other) :
+		BaseFlyWheel(other)
 {
 }
 

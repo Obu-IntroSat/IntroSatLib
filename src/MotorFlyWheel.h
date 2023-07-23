@@ -10,9 +10,11 @@
 
 #include "BaseFlyWheel.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class MotorFlyWheel: public BaseFlyWheel {
+class MotorFlyWheel: public BaseFlyWheel
+{
 public:
 #ifndef ARDUINO
 	MotorFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);

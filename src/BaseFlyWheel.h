@@ -10,9 +10,11 @@
 
 #include "BaseDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class BaseFlyWheel: public BaseDevice {
+class BaseFlyWheel: public BaseDevice
+{
 private:
 
 	enum RegisterMap

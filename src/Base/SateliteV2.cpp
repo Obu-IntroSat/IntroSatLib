@@ -1,4 +1,4 @@
-#include "Satellite.h"
+#include "SateliteV2.h"
 
 namespace IntroSatLib
 {

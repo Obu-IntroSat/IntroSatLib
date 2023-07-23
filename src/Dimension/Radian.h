@@ -1,9 +1,11 @@
 #ifndef DIMENSION_RADIAN_H_
 #define DIMENSION_RADIAN_H_
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class Radian {
+class Radian
+{
 };
 
 }

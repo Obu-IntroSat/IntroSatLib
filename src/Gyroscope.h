@@ -11,9 +11,11 @@
 #include "I2CDevice.h"
 #include "BaseDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class Gyroscope: public BaseDevice {
+class Gyroscope: public BaseDevice
+{
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x68;
@@ -37,10 +39,7 @@ public:
 
 	enum Scale
 	{
-		DPS0250 = 0,
-		DPS0500,
-		DPS1000,
-		DPS2000
+		DPS0250 = 0, DPS0500, DPS1000, DPS2000
 	};
 	enum FilterBandwidth
 	{

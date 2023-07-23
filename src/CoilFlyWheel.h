@@ -10,9 +10,11 @@
 
 #include "BaseFlyWheel.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class CoilFlyWheel: public BaseFlyWheel {
+class CoilFlyWheel: public BaseFlyWheel
+{
 public:
 #ifndef ARDUINO
 	CoilFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);

@@ -7,10 +7,12 @@
 
 #include "LightSensor.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 #ifndef ARDUINO
-LightSensor::LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
+LightSensor::LightSensor(I2C_HandleTypeDef *hi2c, uint8_t address) :
+		BaseDevice(hi2c, address)
 {
 }
 #else
@@ -19,11 +21,13 @@ LightSensor::LightSensor(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, addre
 }
 #endif
 
-LightSensor::LightSensor(const LightSensor &other): BaseDevice(other)
+LightSensor::LightSensor(const LightSensor &other) :
+		BaseDevice(other)
 {
 }
 
-LightSensor::LightSensor(LightSensor &&other): BaseDevice(other)
+LightSensor::LightSensor(LightSensor &&other) :
+		BaseDevice(other)
 {
 }
 

@@ -16,20 +16,19 @@
 
 #include "stm32f1xx_hal.h"
 #ifdef HAL_I2C_MODULE_ENABLED
-	#include "stm32f1xx_hal_i2c.h"
+#include "stm32f1xx_hal_i2c.h"
 #endif
 
-
-
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 enum class I2CSpeed
 {
-	Standard = 0,
-	Fast = 1
+	Standard = 0, Fast = 1
 };
 
-class I2CDevice {
+class I2CDevice
+{
 private:
 	I2CSpeed _speed = I2CSpeed::Standard;
 	uint8_t _address = 0;
@@ -42,15 +41,15 @@ public:
 	I2CDevice(TwoWire &hi2c, uint8_t address);
 	I2CDevice(TwoWire &hi2c, uint8_t address, I2CSpeed speed);
 #endif
-	I2CDevice(const I2CDevice& other);
-	I2CDevice(I2CDevice&& other);
-	I2CDevice& operator=(const I2CDevice& other);
-	I2CDevice& operator=(I2CDevice&& other);
+	I2CDevice(const I2CDevice &other);
+	I2CDevice(I2CDevice &&other);
+	I2CDevice& operator=(const I2CDevice &other);
+	I2CDevice& operator=(I2CDevice &&other);
 	HAL_StatusTypeDef isReady();
-	HAL_StatusTypeDef read(uint8_t* Data, uint8_t Nbytes);
-	HAL_StatusTypeDef read(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
-	HAL_StatusTypeDef write(uint8_t* Data, uint8_t Nbytes);
-	HAL_StatusTypeDef write(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
+	HAL_StatusTypeDef read(uint8_t *Data, uint8_t Nbytes);
+	HAL_StatusTypeDef read(uint8_t Register, uint8_t *Data, uint8_t Nbytes);
+	HAL_StatusTypeDef write(uint8_t *Data, uint8_t Nbytes);
+	HAL_StatusTypeDef write(uint8_t Register, uint8_t *Data, uint8_t Nbytes);
 	~I2CDevice();
 };
 

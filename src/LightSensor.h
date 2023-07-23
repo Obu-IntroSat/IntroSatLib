@@ -4,9 +4,11 @@
 #include "I2CDevice.h"
 #include "BaseDevice.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
-class LightSensor: public virtual BaseDevice {
+class LightSensor: public virtual BaseDevice
+{
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x50;

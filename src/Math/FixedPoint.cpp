@@ -1,8 +1,8 @@
-#include "Satellite.h"
+#include <Math/FixedPoint.h>
 
 namespace IntroSatLib
 {
-namespace Base
+namespace Math
 {
 
 } /* namespace Base */

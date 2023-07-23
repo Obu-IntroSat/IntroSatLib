@@ -1,9 +1,11 @@
 #include "Gyroscope.h"
 
-namespace IntroSatLib {
+namespace IntroSatLib
+{
 
 #ifndef ARDUINO
-Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres): BaseDevice(hi2c, addres)
+Gyroscope::Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t addres) :
+		BaseDevice(hi2c, addres)
 {
 }
 #else
@@ -12,20 +14,22 @@ Gyroscope::Gyroscope(TwoWire &hi2c, uint8_t addres): BaseDevice(hi2c, addres)
 }
 #endif
 
-Gyroscope::Gyroscope(const Gyroscope &other): BaseDevice(other)
+Gyroscope::Gyroscope(const Gyroscope &other) :
+		BaseDevice(other)
 {
-	_sensitivity= other._sensitivity;
+	_sensitivity = other._sensitivity;
 }
-Gyroscope::Gyroscope(Gyroscope &&other): BaseDevice(other)
+Gyroscope::Gyroscope(Gyroscope &&other) :
+		BaseDevice(other)
 {
-	_sensitivity= other._sensitivity;
+	_sensitivity = other._sensitivity;
 }
 Gyroscope& Gyroscope::operator=(const Gyroscope &other)
 {
 	if (this != &other)
 	{
-		this->BaseDevice::operator = (other);
-		_sensitivity= other._sensitivity;
+		this->BaseDevice::operator =(other);
+		_sensitivity = other._sensitivity;
 	}
 	return *this;
 }
@@ -33,8 +37,8 @@ Gyroscope& Gyroscope::operator=(Gyroscope &&other)
 {
 	if (this != &other)
 	{
-		this->BaseDevice::operator = (other);
-		_sensitivity= other._sensitivity;
+		this->BaseDevice::operator =(other);
+		_sensitivity = other._sensitivity;
 	}
 	return *this;
 }
@@ -110,7 +114,6 @@ float Gyroscope::Z()
 	float e = RawZ() * (1 << _sensitivity);
 	return e / _rawdps;
 }
-
 
 Gyroscope::~Gyroscope()
 {

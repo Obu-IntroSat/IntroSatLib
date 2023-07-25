@@ -1,27 +1,27 @@
-#include "AK8963.h"
+#include "MagnetometerV2.h"
 
 namespace IntroSatLib {
 
 #ifndef ARDUINO
-AK8963::AK8963(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
+MagnetometerV2::MagnetometerV2(I2C_HandleTypeDef *hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
 }
 #else
-AK8963::AK8963(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
+MagnetometerV2::MagnetometerV2(TwoWire &hi2c, uint8_t address): BaseDevice(hi2c, address)
 {
 }
-AK8963::AK8963(uint8_t address): BaseDevice(address)
+MagnetometerV2::MagnetometerV2(uint8_t address): BaseDevice(address)
 {
 }
 #endif
 
-AK8963::AK8963(const AK8963& other): BaseDevice(other)
+MagnetometerV2::MagnetometerV2(const MagnetometerV2& other): BaseDevice(other)
 {
 }
-AK8963::AK8963(AK8963&& other): BaseDevice(other)
+MagnetometerV2::MagnetometerV2(MagnetometerV2&& other): BaseDevice(other)
 {
 }
-AK8963& AK8963::operator=(const AK8963& other)
+MagnetometerV2& MagnetometerV2::operator=(const MagnetometerV2& other)
 {
 	if (this != &other)
 	{
@@ -29,7 +29,7 @@ AK8963& AK8963::operator=(const AK8963& other)
 	}
 	return *this;
 }
-AK8963& AK8963::operator=(AK8963&& other)
+MagnetometerV2& MagnetometerV2::operator=(MagnetometerV2&& other)
 {
 	if (this != &other)
 	{
@@ -39,7 +39,7 @@ AK8963& AK8963::operator=(AK8963&& other)
 }
 
 
-uint8_t AK8963::Init()
+uint8_t MagnetometerV2::Init()
 {
 	SetRegister(0x20, 0x70);
 	HAL_Delay(1);
@@ -51,26 +51,26 @@ uint8_t AK8963::Init()
 	return 0;
 }
 
-int16_t AK8963::RawX()
+int16_t MagnetometerV2::RawX()
 {
 	uint8_t buf[2];
 	_i2c.read(0x28, buf, 2);
 	return buf[0] << 8 | buf[1];
 }
-int16_t AK8963::RawY()
+int16_t MagnetometerV2::RawY()
 {
 	uint8_t buf[2];
 	_i2c.read(0x2A, buf, 2);
 	return buf[0] << 8 | buf[1];
 }
-int16_t AK8963::RawZ()
+int16_t MagnetometerV2::RawZ()
 {
 	uint8_t buf[2];
 	_i2c.read(0x2C, buf, 2);
 	return buf[0] << 8 | buf[1];
 }
 
-AK8963::~AK8963()
+MagnetometerV2::~MagnetometerV2()
 {
 	BaseDevice::~BaseDevice();
 }

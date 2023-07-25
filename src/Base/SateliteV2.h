@@ -5,9 +5,6 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "DeviceID.h"
-#include "Status.h"
-#include "StackTrace.h"
 
 namespace IntroSatLib
 {
@@ -22,7 +19,8 @@ public:
 		friend SateliteV2;
 	private:
 		DeviceID _id;
-		void ForceChangeID(uint8_t newID);
+		std::string _name;
+		void ForceChangeID(std::uint8_t newID);
 
 	protected:
 
@@ -47,46 +45,31 @@ public:
 
 private:
 	std::map<DeviceID, std::shared_ptr<DeviceV2>> _treeDevices;
-	std::vector<std::shared_ptr<DeviceV2>> _listDevices;
+	std::map<std::uint32_t, std::shared_ptr<DeviceV2>, std::greater<std::uint32_t>> _listDevices;
 
 protected:
-	Status AddDeviceToList(std::shared_ptr<DeviceV2> device, uint8_t index)
+	Status AddDeviceToList(std::shared_ptr<DeviceV2> device, std::uint32_t index)
 	{
-		auto iterator = _listDevices.begin();
-		if (index >= _listDevices.size())
-		{
-			index = _listDevices.size();
-			_listDevices.push_back(device);
-		}
-		else
-		{
-			iterator += index;
-			_listDevices.insert(iterator, device);
-		}
-		for (uint8_t newIndex = index; newIndex < _listDevices.size(); newIndex++)
-		{
-			(*iterator)->ForceChangeID(newIndex);
-		}
-		return Status::Ok;
+
 	}
 
 public:
 	Status Init() const
 	{
-		uint8_t size = _listDevices.size();
+		std::uint8_t size = _listDevices.size();
 		std::vector<Status> results(size);
 
-		for (uint8_t i = 0; i < size; i++)
+		for (auto const& [key, device] : _listDevices)
 		{
-			results[i] |= (_listDevices[i])->PreInit(*this);
+			device->PreInit(*this);
 		}
-		for (uint8_t i = 0; i < size; i++)
+		for (auto const& [key, device] : _listDevices)
 		{
-			results[i] |= _listDevices[i]->Init(*this);
+			device->Init(*this);
 		}
-		for (uint8_t i = 0; i < size; i++)
+		for (auto const& [key, device] : _listDevices)
 		{
-			results[i] |= _listDevices[i]->PostUpdate(*this);
+			device->PostInit(*this);
 		}
 
 
@@ -95,18 +78,18 @@ public:
 
 	Status Update() const
 	{
-		uint8_t size = _listDevices.size();
+		std::uint8_t size = _listDevices.size();
 		std::vector<Status> results(size);
 
-		for (uint8_t i = 0; i < size; i++)
+		for (std::uint8_t i = 0; i < size; i++)
 		{
 			results[i] |= (_listDevices[i])->PreUpdate(*this);
 		}
-		for (uint8_t i = 0; i < size; i++)
+		for (std::uint8_t i = 0; i < size; i++)
 		{
 			results[i] |= _listDevices[i]->Update(*this);
 		}
-		for (uint8_t i = 0; i < size; i++)
+		for (std::uint8_t i = 0; i < size; i++)
 		{
 			results[i] |= _listDevices[i]->PostInit(*this);
 		}

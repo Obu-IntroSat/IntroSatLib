@@ -23,10 +23,23 @@ private:
 		GYRO_ZOUT_L,
 	};
 
+
 	uint8_t _sensitivity = 0;
+	uint8_t _dataRate = 0;
 
 public:
-
+	enum DataRate
+	{
+		OFF,
+		F_13_Hz,
+		F_26_Hz,
+		F_52_Hz,
+		F_104_Hz,
+		F_208_Hz,
+		F_416_Hz,
+		F_833_Hz,
+		F_1666_Hz,
+	};
 	enum Scale
 	{
 		DPS0250 = 0,
@@ -49,8 +62,10 @@ public:
 
 	uint8_t Init();
 	uint8_t Init(Scale sensitivity);
+	uint8_t Init(Scale sensitivity, DataRate dataRate);
 
 	void SetScale(Scale sensitivity);
+	void SetDataRate(DataRate dataRate);
 
 	int16_t RawX();
 	int16_t RawY();

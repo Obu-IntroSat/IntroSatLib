@@ -87,6 +87,8 @@
   - Enums
     - [Scale]()
     - [FilterBandwidth]()
+- [**FlyWheel**](#flywheel)
+  - [**Methods**](#methods-2)
 
 - ### Accelerometer
 
@@ -105,7 +107,7 @@
  ***Accelerometer* Accelerometer(*I2C_HandleTypeDef* \*hi2c, *uint8_t* address)** *(STM32CubeIDE)*
  *или*
  ***Accelerometer* Accelerometer(*TwoWire* &hi2c, *uint8_t* address)** *(ArduinoIDE)*
- Создание объекта класса
+Создание объекта класса
 
  Для [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
 
@@ -325,4 +327,71 @@
 
    ```cpp
    int16_t x = gyro.RawZ();
+   ```
+- ### FlyWheel
+
+ Класс позволяющий управлять скоростью и направлением вращения маховика
+ Находится в пространстве ***IntroSatLib***
+ *Этой строчкой подключается*
+
+ ```cpp
+ using namespace IntroSatLib;
+ ```
+ 
+ Создание объекта класса
+ 
+ ***FlyWheel* FlyWheel(*I2C_HandleTypeDef* \*hi2c, *uint8_t* address)** *(STM32CubeIDE)*
+ *или*
+ ***FlyWheel* FlyWheel(*TwoWire* &hi2c, *uint8_t* address)** *(ArduinoIDE)*
+
+ Параметры:
+
+- *hi2c* = I2C интерфейс
+- *address* = необязательный параметр, стандартное значение *0x38*. Адрес платы маховика
+
+ Для [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
+
+ ```cpp
+ FlyWheel motor = FlyWheel(&hi2c1, 0x38);
+ // или
+ FlyWheel motor = FlyWheel(&hi2c1);
+ ```
+
+ Для [ArduinoIDE](https://www.arduino.cc/en/software)
+
+ ```cpp
+ FlyWheel motor = FlyWheel(Wire, 0x38);
+ // или
+ FlyWheel motor = FlyWheel(Wire);
+ ```
+- #### Methods
+
+- ##### *void* Init()
+
+   Инициализация платы маховика, нужна для выставления базовых настроек.
+  
+   ```cpp
+   motor.Init();
+   ```
+   
+- ##### *int16_t* NeedSpeed(*int16_t* needSpeed)
+
+  Метод задает скорость вращения маховика. Знак переменной *needSpeed* определяет направение вращения:
+  
+  "+" - вращение против часовой стрелки;
+  "-" - вращение по часовой стрелки.
+  
+   ```cpp
+   motor.NeedSpeed(needSpeed);
+   ```
+
+- ##### *int16_t* CurrentSpeed()
+
+  Метод позволяет считать текущую скорость вращения маховика. Знак полученного числа будет определять текущее направление вращения маховика:
+
+  "+" - вращение против часовой стрелки;
+  "-" - вращение по часовой стрелки.
+  
+   ```cpp
+   motor.CurrentSpeed();
    ```

@@ -1,16 +1,14 @@
 #include "IS_Bluetooth.h"
 
+char enter_buffer[] = "Bootloader Mode\n\r";
+
 void enter_bootloader(void)
 {
 
-  char buf[32];
-  uint16_t ind = 0;
-  sprintf((char*)buf,"Bootloader Mode\n\r");
-  while (ind < 17)
+  for (char* next_char = enter_buffer; *next_char != 0; next_char++)
   {
     while (READ_BIT(USART1->SR, USART_SR_TXE) != (USART_SR_TXE)) {}
-    USART1->DR = buf[ind];
-    ind++;
+    USART1->DR = *next_char;
   }
 
 

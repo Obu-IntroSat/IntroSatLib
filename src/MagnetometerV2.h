@@ -3,6 +3,9 @@
 
 #include "I2CDevice.h"
 #include "BaseDevice.h"
+#include "Quaternoin/Quaternion.h"
+#include <cmath>
+#include <array>
 
 namespace IntroSatLib {
 
@@ -28,6 +31,15 @@ public:
 	int16_t RawX();
 	int16_t RawY();
 	int16_t RawZ();
+
+	Quaternion<float> GetQuaternion()
+	{
+		std::array<float, 3> buf;
+		buf[0] = 0;
+		buf[1] = 0;
+		buf[2] = std::atan2(RawX(), RawY());
+		return from_euler(buf);
+	}
 
 	virtual ~MagnetometerV2();
 };

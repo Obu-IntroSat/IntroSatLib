@@ -2,7 +2,10 @@
 #define GYROSCOPE_H_
 
 #include "I2CDevice.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "BaseDevice.h"
+#include "Quaternoin/Quaternion.h"
 
 namespace IntroSatLib {
 
@@ -10,7 +13,7 @@ class GyroscopeV2: public BaseDevice {
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x68;
-	static constexpr float _rawdps = 8.75f / 1000.f;
+	static constexpr float _rawdps = (8.75f / 1000.f) * (M_PI / 180.0);
 
 	enum RegisterMap
 	{
@@ -74,6 +77,16 @@ public:
 	float X();
 	float Y();
 	float Z();
+
+public:
+	Quaternion<float> GetQuaternion()
+	{
+		std::array<float, 3> buf;
+		buf[0] = X();
+		buf[1] = Y();
+		buf[2] = Z();
+		return from_euler(buf);
+	}
 
 	virtual ~GyroscopeV2();
 };

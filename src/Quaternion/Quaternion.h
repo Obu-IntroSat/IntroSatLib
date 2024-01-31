@@ -10,7 +10,7 @@
 #include <iterator>
 #include <assert.h>
 
-#include "./Utils.h"
+#include <Quaternion/Utils.h>
 
 namespace IntroSatLib {
 
@@ -663,19 +663,22 @@ inline Quaternion<T> from_rotation_matrix(const rotation_matrix<T>& rm) {
  * WARNING: conversion to/from Euler angles is not ready.
  */
 template <typename T>
-inline std::array<T, 3> to_euler(const Quaternion<T>& x, T eps = 1e-12) {
-//  assert(x.is_unit(eps));
-  const T pi = 3.14159265358979323846;
-  T v = x.b()*x.c()+x.a()*x.d();
-  if (std::abs(v - 0.5) < eps) {
-    return {{2*atan2(x.b(),x.a()), +pi/2, 0}};
-  }
-  if (std::abs(v + 0.5) < eps) {
-    return {{-2*atan2(x.b(),x.a()), -pi/2, 0}};
-  }
-  return {{atan2(2*(x.a()*x.c() - x.b()*x.d()), 1-2*(x.c()*x.c()+x.d()*x.d())),
-          std::asin(2*v),
-          atan2(2*(x.a()*x.b()-x.c()*x.d()), 1-2*(x.b()*x.b()+x.d()*x.d()))}};
+inline std::array<T, 3> to_euler(const Quaternion<T>& q) {
+	// roll (x-axis rotation)
+	T sinr_cosp = 2 * (q.a() * q.b() + q.c() * q.d());
+	T cosr_cosp = 1 - 2 * (q.b() * q.b() + q.c() * q.c());
+	T roll = std::atan2(sinr_cosp, cosr_cosp);
+
+	// pitch (y-axis rotation)
+	T sinp = std::sqrt(1 + 2 * (q.a() * q.c() - q.b() * q.d()));
+	T cosp = std::sqrt(1 - 2 * (q.a() * q.c() - q.b() * q.d()));
+	T pitch = 2 * std::atan2(sinp, cosp) - M_PI / 2;
+
+	// yaw (z-axis rotation)
+	T siny_cosp = 2 * (q.a() * q.d() + q.b() * q.c());
+	T cosy_cosp = 1 - 2 * (q.c() * q.c() + q.d() * q.d());
+	T yaw = std::atan2(siny_cosp, cosy_cosp);
+	return {roll, pitch, yaw};
 }
 
 /**
@@ -685,11 +688,18 @@ inline std::array<T, 3> to_euler(const Quaternion<T>& x, T eps = 1e-12) {
  */
 template <typename T>
 inline Quaternion<T> from_euler(const std::array<T, 3>& x) {
-  T c0 = std::cos(x[0]/2), s0 = std::sin(x[0]/2);
-  T c1 = std::cos(x[1]/2), s1 = std::sin(x[1]/2);
-  T c2 = std::cos(x[2]/2), s2 = std::sin(x[2]/2);
-  T c0c1 = c0*c1, s0s1 = s0*s1, s0c1 = s0*c1, c0s1 = c0*s1;
-  return {c0c1*c2+s0s1*s2,s0s1*c2-c0c1*s2,c0s1*c2+s0c1*s2,c0c1*s2-s0s1*c2};
+	T cr = std::cos(x[0] * 0.5);
+	T sr = std::sin(x[0] * 0.5);
+	T cp = std::cos(x[1] * 0.5);
+	T sp = std::sin(x[1] * 0.5);
+	T cy = std::cos(x[2] * 0.5);
+	T sy = std::sin(x[2] * 0.5);
+  return {
+	  cr * cp * cy + sr * sp * sy,
+	  sr * cp * cy - cr * sp * sy,
+	  cr * sp * cy + sr * cp * sy,
+	  cr * cp * sy - sr * sp * cy
+  };
 }
 
 /**

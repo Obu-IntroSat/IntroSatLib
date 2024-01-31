@@ -43,7 +43,7 @@ uint8_t MagnetometerV2::Init()
 {
 	SetRegister(0x20, 0x70);
 	HAL_Delay(1);
-	SetRegister(0x21, 0x00);
+	SetRegister(0x21, 0x60);
 	HAL_Delay(1);
 	SetRegister(0x22, 0x00);
 	HAL_Delay(1);
@@ -55,19 +55,28 @@ int16_t MagnetometerV2::RawX()
 {
 	uint8_t buf[2];
 	_i2c.read(0x28, buf, 2);
-	return buf[0] << 8 | buf[1];
+	return buf[1] << 8 | buf[0];
 }
 int16_t MagnetometerV2::RawY()
 {
 	uint8_t buf[2];
 	_i2c.read(0x2A, buf, 2);
-	return buf[0] << 8 | buf[1];
+	return buf[1] << 8 | buf[0];
 }
 int16_t MagnetometerV2::RawZ()
 {
 	uint8_t buf[2];
 	_i2c.read(0x2C, buf, 2);
-	return buf[0] << 8 | buf[1];
+	return buf[1] << 8 | buf[0];
+}
+
+Quaternion<float> MagnetometerV2::GetQuaternion()
+{
+	std::array<float, 3> buf;
+	buf[0] = 0;
+	buf[1] = 0;
+	buf[2] = std::atan2(RawY(), RawX());
+	return from_euler(buf);
 }
 
 MagnetometerV2::~MagnetometerV2()

@@ -49,6 +49,9 @@ uint8_t GyroscopeV2::Init(Scale sensitivity, DataRate dataRate)
 {
 	SetScale(sensitivity);
 	SetDataRate(dataRate);
+	_lastXTime = HAL_GetTick();
+	_lastYTime = _lastXTime;
+	_lastZTime = _lastXTime;
 	return 0;
 }
 
@@ -59,6 +62,31 @@ uint8_t GyroscopeV2::Init(Scale sensitivity)
 uint8_t GyroscopeV2::Init()
 {
 	return Init(Scale::DPS0250);
+}
+
+void GyroscopeV2::SetMinCutX(float x)
+{
+	_cutX = x;
+}
+void GyroscopeV2::SetMinCutY(float y)
+{
+	_cutY = x;
+}
+void GyroscopeV2::SetMinCutZ(float z)
+{
+	_cutZ = z;
+}
+
+float GyroscopeV2::cutMin(float value, float cut)
+{
+	if (value > 0)
+	{
+		return (value > cut) ? value - cut : 0;
+	}
+	else
+	{
+		return ((-value) > cut) ? value + cut : 0;
+	}
 }
 
 void GyroscopeV2::SetScale(Scale sensitivity)
@@ -101,17 +129,44 @@ int16_t GyroscopeV2::RawZ()
 float GyroscopeV2::X()
 {
 	float e = RawX() * (1 << _sensitivity);
-	return e * _rawdps;
+	float speed = cutMin(e * _rawdps, _cutX);
+	uint32_t time = HAL_GetTick();
+	uint32_t deltaTime = time - _lastXTime;
+	float value = (_lastX + speed) * (deltaTime >> 1) * 0.001;
+	_lastX = speed;
+	_lastXTime = time;
+	return value;
 }
 float GyroscopeV2::Y()
 {
 	float e = RawY() * (1 << _sensitivity);
-	return e * _rawdps;
+	float speed = cutMin(e * _rawdps, _cutY);
+	uint32_t time = HAL_GetTick();
+	uint32_t deltaTime = time - _lastYTime;
+	float value = (_lastY + speed) * (deltaTime >> 1) * 0.001;
+	_lastY = speed;
+	_lastYTime = time;
+	return value;
 }
 float GyroscopeV2::Z()
 {
 	float e = RawZ() * (1 << _sensitivity);
-	return e * _rawdps;
+	float speed = cutMin(e * _rawdps, _cutZ);
+	uint32_t time = HAL_GetTick();
+	uint32_t deltaTime = time - _lastZTime;
+	float value = (_lastZ + speed) * (deltaTime >> 1) * 0.001;
+	_lastZ = speed;
+	_lastZTime = time;
+	return value;
+}
+
+Quaternion<float> GyroscopeV2::GetQuaternion()
+{
+	std::array<float, 3> buf;
+	buf[0] = X();
+	buf[1] = Y();
+	buf[2] = Z();
+	return from_euler(buf);
 }
 
 

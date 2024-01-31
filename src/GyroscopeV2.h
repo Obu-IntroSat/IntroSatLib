@@ -5,7 +5,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "BaseDevice.h"
-#include "Quaternoin/Quaternion.h"
+#include "Quaternion/Quaternion.h"
 
 namespace IntroSatLib {
 
@@ -13,7 +13,7 @@ class GyroscopeV2: public BaseDevice {
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x68;
-	static constexpr float _rawdps = (8.75f / 1000.f) * (M_PI / 180.0);
+	static constexpr float _rawdps = (8.75f / 1000.f) * M_PI / 180.0;
 
 	enum RegisterMap
 	{
@@ -26,9 +26,22 @@ private:
 		GYRO_ZOUT_L,
 	};
 
+	static float cutMin(float value, float cut);
 
 	uint8_t _sensitivity = 0;
 	uint8_t _dataRate = 0;
+
+	uint32_t _lastXTime = 0;
+	uint32_t _lastYTime = 0;
+	uint32_t _lastZTime = 0;
+
+	float _cutX = 0.0872665;
+	float _cutY = 0.0872665;
+	float _cutZ = 0.0872665;
+
+	float _lastX = 0;
+	float _lastY = 0;
+	float _lastZ = 0;
 
 public:
 	enum DataRate
@@ -69,7 +82,7 @@ public:
 
 	void SetScale(Scale sensitivity);
 	void SetDataRate(DataRate dataRate);
-
+private:
 	int16_t RawX();
 	int16_t RawY();
 	int16_t RawZ();
@@ -79,14 +92,11 @@ public:
 	float Z();
 
 public:
-	Quaternion<float> GetQuaternion()
-	{
-		std::array<float, 3> buf;
-		buf[0] = X();
-		buf[1] = Y();
-		buf[2] = Z();
-		return from_euler(buf);
-	}
+	void SetMinCutX(float x);
+	void SetMinCutY(float y);
+	void SetMinCutZ(float z);
+
+	Quaternion<float> GetQuaternion();
 
 	virtual ~GyroscopeV2();
 };

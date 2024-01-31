@@ -70,7 +70,7 @@ void GyroscopeV2::SetMinCutX(float x)
 }
 void GyroscopeV2::SetMinCutY(float y)
 {
-	_cutY = x;
+	_cutY = y;
 }
 void GyroscopeV2::SetMinCutZ(float z)
 {

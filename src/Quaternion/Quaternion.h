@@ -10,7 +10,7 @@
 #include <iterator>
 #include <assert.h>
 
-#include <Quaternion/Utils.h>
+#include "Utils.h"
 
 namespace IntroSatLib {
 

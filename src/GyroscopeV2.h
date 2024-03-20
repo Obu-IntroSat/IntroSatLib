@@ -12,7 +12,7 @@ namespace IntroSatLib {
 class GyroscopeV2: public BaseDevice {
 private:
 
-	static const uint8_t BASE_ADDRESS = 0x68;
+	static const uint8_t BASE_ADDRESS = 0x6B;
 	static constexpr float _rawdps = (8.75f / 1000.f) * M_PI / 180.0;
 
 	enum RegisterMap
@@ -87,11 +87,11 @@ private:
 	int16_t RawY();
 	int16_t RawZ();
 
+public:
 	float X();
 	float Y();
 	float Z();
 
-public:
 	void SetMinCutX(float x);
 	void SetMinCutY(float y);
 	void SetMinCutZ(float z);

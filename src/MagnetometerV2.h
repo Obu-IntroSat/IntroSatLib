@@ -11,7 +11,7 @@ namespace IntroSatLib {
 
 class MagnetometerV2: public BaseDevice {
 private:
-	static const uint8_t BASE_ADDRESS = 0x0C;
+	static const uint8_t BASE_ADDRESS = 0x1E;
 
 public:
 #ifndef ARDUINO
@@ -27,11 +27,10 @@ public:
 	MagnetometerV2& operator=(MagnetometerV2&& other);
 
 	uint8_t Init();
-private:
+public:
 	int16_t RawX();
 	int16_t RawY();
 	int16_t RawZ();
-public:
 	Quaternion<float> GetQuaternion();
 
 	virtual ~MagnetometerV2();

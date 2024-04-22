@@ -82,12 +82,12 @@ public:
 
 	void SetScale(Scale sensitivity);
 	void SetDataRate(DataRate dataRate);
-private:
+public:
 	int16_t RawX();
 	int16_t RawY();
 	int16_t RawZ();
 
-public:
+
 	float X();
 	float Y();
 	float Z();

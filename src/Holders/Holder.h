@@ -87,43 +87,29 @@ namespace IntroSatLib
 		public:
 			Base::Error Start() override
 			{
-				char res[80] = {0};
 				for(auto& service : _list)
 				{
-					sprintf(res, "Start start %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
-					service->Start(*this);
-					sprintf(res, "Start end %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
+					auto result = service->Start(*this);
+					if(result.has_value()) { continue; }
 				}
 				return 0;
 			}
 			Base::Error Update() override
 			{
-				char res[80] = {0};
 				for(auto& service : _list)
 				{
-					sprintf(res, "PreUpdate start %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
-					service->PreUpdate();
-					sprintf(res, "PreUpdate end %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
+					auto result = service->PreUpdate();
+					if(result.has_value()) { continue; }
 				}
 				for(auto& service : _list)
 				{
-					sprintf(res, "Update start %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
-					service->Update();
-					sprintf(res, "Update end %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
+					auto result = service->Update();
+					if(result.has_value()) { continue; }
 				}
 				for(auto& service : _list)
 				{
-					sprintf(res, "PostUpdate start %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
-					service->PostUpdate();
-					sprintf(res, "PostUpdate end %s\n", service->GetId().data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
+					auto result = service->PostUpdate();
+					if(result.has_value()) { continue; }
 				}
 				return 0;
 			}

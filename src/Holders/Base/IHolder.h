@@ -45,8 +45,8 @@ namespace IntroSatLib
 
 			protected:
 
-				virtual void RegisterByInteraface(TypeId typeId, ServiceReference) = 0;
-				virtual void RegisterByInstance(TypeId typeId, ServiceReference) = 0;
+				virtual void RegisterByInteraface(TypeId typeId, ServiceReference service) = 0;
+				virtual void RegisterByInstance(TypeId typeId, ServiceReference service) = 0;
 
 				virtual Base::ServiceReference GetByClass(TypeId typeId) const = 0;
 				virtual Base::ServiceReference GetById(TypeId typeId, ServiceID id)  const = 0;
@@ -55,9 +55,6 @@ namespace IntroSatLib
 				template<class TService, typename... Args, typename std::enable_if<std::is_base_of<IService, TService>::value>::type* = nullptr>
 				RegisterSetting Register(ServiceStage stage, ServiceID id, Args&&... args)
 				{
-					char result[80] = {0};
-					sprintf(result, "Register %s\n", id.data());
-					HAL_UART_Transmit(&huart1, (uint8_t *)result, strlen(result), 1000);
 					ServiceReference service = std::make_shared<TService>(std::forward<Args>(args)...);
 					service->SetStage(stage);
 					service->SetId(id);

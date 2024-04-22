@@ -58,7 +58,6 @@ namespace IntroSatLib
 				void SetData(Float data, std::uint8_t index)
 				{
 					char res[80] = {0};
-					sprintf(res, "Calculated value %s %d %f\n", GetId().data(), index, data);
 					HAL_UART_Transmit(&huart1, (uint8_t *)res, strlen(res), 1000);
 					_data[index] = data;
 					SetNextScale(CalculateNextScale(data));

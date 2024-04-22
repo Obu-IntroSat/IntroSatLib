@@ -4,6 +4,8 @@
 #include "./Types.h"
 #include "./IHolder.h"
 #include <cinttypes>
+#include "../../Base/Expected.h"
+#include "../../Base/Error.h"
 
 namespace IntroSatLib
 {
@@ -11,16 +13,16 @@ namespace IntroSatLib
 	{
 		namespace Base
 		{
+			using IntroSatLib::Base::Error;
 			class IHolder;
 
-			using Error = std::uint32_t;
 			class IService
 			{
 			public:
-				virtual Error Start(const IHolder& holder) = 0;
-				virtual Error PreUpdate() = 0;
-				virtual Error Update() = 0;
-				virtual Error PostUpdate() = 0;
+				virtual tl::expected<void, Error> Start(const IHolder& holder) = 0;
+				virtual tl::expected<void, Error> PreUpdate() = 0;
+				virtual tl::expected<void, Error> Update() = 0;
+				virtual tl::expected<void, Error> PostUpdate() = 0;
 			private:
 				ServiceID _id;
 				ServiceStage _stage;

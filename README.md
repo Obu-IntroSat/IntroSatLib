@@ -395,3 +395,10 @@
    ```cpp
    motor.CurrentSpeed();
    ```
+> ## Полезные ссылки
+>
+> Наш [канал в Telegram](https://t.me/introsat_news) поможет не пропустить обновления.
+> 
+> Если у вас возникли вопросы или сложности при работе с IntroSat, ответы можно найти в нашем [F.A.Q.](https://docs.google.com/document/d/15KqFrMlc6Jzxut_zMf_pXNx5r5JTjqfKEvCHWx99rEc/edit#heading=h.demjj79bt080)
+>
+> Остались вопросы? Напишите нашему [боту в Telegram](https://t.me/introsatBot)! Укажите в обращении модуль конструктора, при работе с которым возникли проблемы, и версии платы (написаны на самих платах), и мы обязательно вам поможем.

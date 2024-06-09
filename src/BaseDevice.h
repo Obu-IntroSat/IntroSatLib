@@ -1,10 +1,3 @@
-/*
- * BaseDevice.h
- *
- *  Created on: Jul 12, 2022
- *      Author: Almaz
- */
-
 #ifndef BASEDEVICE_H_
 #define BASEDEVICE_H_
 

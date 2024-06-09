@@ -12,12 +12,12 @@ class TestHolder: public IntroSatLib::HDLC::Base::HDLCHolder
 private:
 	static const uint8_t TestCommandByte = 0xF3;
 public:
-	virtual uint8_t IsCurrent(
+	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == TestCommandByte; }
 
-	virtual void Responce(
+	void Responce(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce

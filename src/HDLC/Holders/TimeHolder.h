@@ -50,16 +50,16 @@ private:
 	}
 
 protected:
-	virtual uint8_t IsCurrentParams(
+	uint8_t IsCurrentParams(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == TimeCommandByte; }
 
-	virtual uint8_t RequestParams(
+	uint8_t RequestParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	)
+	) override
 	{
 		if (params != TimeCommandParams) { return 1; }
 		uint64_t time = ConvertTime(cpStart, cpStop);
@@ -68,22 +68,22 @@ protected:
 		return 0;
 	}
 
-	virtual void ResponceParams(
+	void ResponceParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const
+	) const override
 	{
 		responce.push_back(0);
 	}
 
-	virtual void ErrorParams(
+	void ErrorParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const
+	) const override
 	{
 		params != TimeCommandParams ?
 			responce.push_back(1) :

@@ -11,7 +11,7 @@ class DISCHolder: public IntroSatLib::HDLC::Base::HDLCHolder
 {
 private:
 	static const uint8_t DISCCommandByte = 0x53;
-	static const uint8_t DISCResponceByte = 0x73;
+	static const uint8_t DISCResponseByte = 0x73;
 
 
 private:
@@ -23,26 +23,26 @@ public:
 	}
 
 public:
-	virtual uint8_t IsCurrent(
+	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == DISCCommandByte; }
 
-	virtual uint8_t Request(
+	uint8_t Request(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) {
+	) override {
 		_needStop = 1;
 		return CantNextCode;
 	}
 
-	virtual void Responce(
+	void Responce(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
-	{
-		responce.push_back(DISCResponceByte);
+	) const override {
+		uint8_t value = DISCResponseByte;
+		responce.push_back(value);
 	}
 };
 

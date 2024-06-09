@@ -39,7 +39,7 @@ protected:
 	) const { }
 
 public:
-	virtual uint8_t IsCurrent(
+	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) const override
@@ -50,7 +50,7 @@ public:
 		return countParams > 0 && IsCurrentParams(commandParams, cpStop);
 	}
 
-	virtual uint8_t Request(
+	uint8_t Request(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) override
@@ -60,7 +60,7 @@ public:
 		return RequestParams(countParams, paramsStart, cpStop);
 	}
 
-	virtual void Responce(
+	void Responce(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
@@ -71,7 +71,7 @@ public:
 		ResponceParams(countParams, paramsStart, cpStop, responce);
 	}
 
-	virtual void Error(
+	void Error(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce

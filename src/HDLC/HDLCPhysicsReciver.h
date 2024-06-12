@@ -36,7 +36,7 @@ public:
 	{
 		NewRequestByte();
 		_buffer.clear();
-		_buffer.reserve(255);
+		_buffer.reserve(MaxBufferLength);
 		_errors = 0;
 		_prevAddedByte = 0;
 	}

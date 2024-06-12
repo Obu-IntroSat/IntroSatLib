@@ -17,6 +17,7 @@ private:
 	template<typename Base, typename Derived>
 	using InstanceOf = IntroSatLib::Base::InstanceOf<Base, Derived>;
 
+	using RequestStatus = Base::HDLCHolder::RequestStatus;
 	using HDLCPhysicsIterator = Base::HDLCPhysics::iterator;
 
 public:
@@ -34,7 +35,12 @@ private:
 	std::vector<ServiceReference> _list;
 
 public:
-	HDLCLogic(UART_HandleTypeDef *usart, uint8_t address): _transmitter(usart), _reciver(usart), _address(address)
+	HDLCLogic(
+		UART_HandleTypeDef *usart,
+		GPIO_TypeDef *gpio,
+		uint16_t gpioPin,
+		uint8_t address
+	): _transmitter(usart, gpio, gpioPin), _reciver(usart), _address(address)
 	{
 		_reciver.OnSuccess += [this](uint8_t address, HDLCPhysicsIterator cpStart, HDLCPhysicsIterator cpStop)
 		{
@@ -74,21 +80,22 @@ private:
 		{
 			if (holder->IsCurrent(cpStart, cpStop) == 0) { continue; }
 
-			uint8_t resultCode = holder->Request(cpStart, cpStop);
-			uint8_t hasError = resultCode & 0x7F;
-			uint8_t cantNext = resultCode & Base::HDLCHolder::CantNextCode;
+			RequestStatus resultCode = holder->Request(cpStart, cpStop);
+			RequestStatus hasError = resultCode & RequestStatus::ErrorCode;
+			RequestStatus canResponce = resultCode & RequestStatus::CanResponce;
+			RequestStatus cantNext = resultCode & RequestStatus::CantNextCode;
 
-			if (broadcast) { continue; }
+			if (broadcast && canResponce != RequestStatus::CanResponce) { continue; }
 
 			std::vector<uint8_t> responce;
 			responce.push_back(_address);
 
-			hasError ?
+			(hasError == RequestStatus::ErrorCode) ?
 				holder->Error(cpStart, cpStop, responce) :
 				holder->Responce(cpStart, cpStop, responce);
 
 			_transmitter.NewResponse(responce);
-			return cantNext == 0;
+			return cantNext == RequestStatus::CantNextCode;
 		}
 		return 1;
 	}
@@ -126,6 +133,11 @@ public:
 	static void USARTTransmitCallback(UART_HandleTypeDef *usart)
 	{
 		HDLCPhysicsTransmitter::USARTCallback(usart);
+	}
+
+	static void TimeoutCallback()
+	{
+		HDLCPhysicsTransmitter::TimeoutCallback();
 	}
 };
 

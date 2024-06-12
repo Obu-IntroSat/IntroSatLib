@@ -1,7 +1,6 @@
 #ifndef HDLCPhysics_H_
 #define HDLCPhysics_H_
 
-#include "BaseDevice.h"
 #include <vector>
 #include <map>
 
@@ -12,6 +11,7 @@ namespace Base {
 class HDLCPhysics
 {
 private:
+	static inline std::map<uint32_t, uint32_t> _lastTime;
 
 protected:
 	static const uint8_t StartOrStopByte = 0x7E;
@@ -19,7 +19,7 @@ protected:
 	static const uint8_t ReplaceAddedByte = 0x5D;
 	static const uint8_t ReplaceStartOrStopByte = 0x5E;
 
-	static inline std::map<uint32_t, uint32_t> _lastTime;
+	static const uint8_t MaxBufferLength = 255;
 
 	UART_HandleTypeDef *_usart;
 	const uint32_t _usartReference;
@@ -44,7 +44,7 @@ protected:
 
 	HDLCPhysics(UART_HandleTypeDef *usart): _usart(usart), _usartReference(UartReferenceToValue(usart))
 	{
-		_buffer.reserve(255);
+		_buffer.reserve(MaxBufferLength);
 		_lastTime[_usartReference] = 0;
 	}
 

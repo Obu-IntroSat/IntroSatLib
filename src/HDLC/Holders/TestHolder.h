@@ -17,6 +17,13 @@ public:
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == TestCommandByte; }
 
+	RequestStatus Request(
+		HDLCPhysicsIterator cpStart,
+		HDLCPhysicsIterator cpStop
+	) override {
+		return RequestStatus::CanResponce;
+	}
+
 	void Responce(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,

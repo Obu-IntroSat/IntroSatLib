@@ -55,17 +55,21 @@ protected:
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == TimeCommandByte; }
 
-	uint8_t RequestParams(
+	RequestStatus RequestParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) override
 	{
-		if (params != TimeCommandParams) { return 1; }
+		if (params != TimeCommandParams) { return RequestStatus::ErrorCode; }
+
 		uint64_t time = ConvertTime(cpStart, cpStop);
-		if (time < StartTime) { return 1; }
+
+		if (time < StartTime) { return RequestStatus::ErrorCode; }
+
 		_fullTime = time;
-		return 0;
+
+		return RequestStatus::Ok;
 	}
 
 	void ResponceParams(

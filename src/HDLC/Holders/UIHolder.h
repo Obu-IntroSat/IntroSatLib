@@ -18,11 +18,11 @@ protected:
 		HDLCPhysicsIterator cpStop
 	) const { return 0; }
 
-	virtual uint8_t RequestParams(
+	virtual RequestStatus RequestParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) { return 0; }
+	) { return RequestStatus::Ok; }
 
 	virtual void ResponceParams(
 		uint16_t params,
@@ -50,7 +50,7 @@ public:
 		return countParams > 0 && IsCurrentParams(commandParams, cpStop);
 	}
 
-	uint8_t Request(
+	RequestStatus Request(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) override

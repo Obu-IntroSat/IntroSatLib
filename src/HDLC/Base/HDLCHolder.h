@@ -11,7 +11,13 @@ namespace Base {
 class HDLCHolder
 {
 public:
-	static const uint8_t CantNextCode = 0x80;
+	enum class RequestStatus: uint8_t
+	{
+		Ok = 0,
+		ErrorCode = 1,
+		CanResponce = 0x40,
+		CantNextCode = 0x80
+	};
 protected:
 	using HDLCPhysicsIterator = HDLCPhysics::iterator;
 
@@ -21,10 +27,10 @@ public:
 		HDLCPhysicsIterator cpStop
 	) const { return 0; }
 
-	virtual uint8_t Request(
+	virtual RequestStatus Request(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) { return 0; }
+	) { return RequestStatus::Ok; }
 
 	virtual void Responce(
 		HDLCPhysicsIterator cpStart,
@@ -40,6 +46,16 @@ public:
 
 	virtual ~HDLCHolder() = default;
 };
+
+HDLCHolder::RequestStatus operator &(HDLCHolder::RequestStatus left, HDLCHolder::RequestStatus rigth)
+{
+	return static_cast<HDLCHolder::RequestStatus>(static_cast<uint8_t>(left) & static_cast<uint8_t>(left));
+}
+
+HDLCHolder::RequestStatus operator |(HDLCHolder::RequestStatus left, HDLCHolder::RequestStatus rigth)
+{
+	return static_cast<HDLCHolder::RequestStatus>(static_cast<uint8_t>(left) | static_cast<uint8_t>(left));
+}
 
 }
 }

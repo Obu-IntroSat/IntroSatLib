@@ -28,12 +28,12 @@ public:
 		HDLCPhysicsIterator cpStop
 	) const override { return *cpStart == DISCCommandByte; }
 
-	uint8_t Request(
+	RequestStatus Request(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
 	) override {
 		_needStop = 1;
-		return CantNextCode;
+		return RequestStatus::CantNextCode;
 	}
 
 	void Responce(

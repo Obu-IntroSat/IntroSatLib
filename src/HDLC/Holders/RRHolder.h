@@ -2,6 +2,8 @@
 #define HDLC_HOLDERS_RRHOLDER_H_
 
 #include "../Base/HDLCHolder.h"
+#include <queue>
+#include <memory>
 
 namespace IntroSatLib {
 namespace HDLC {
@@ -20,6 +22,26 @@ private:
 
 	uint32_t _vi = 0;
 
+	std::queue<std::shared_ptr<std::vector<uint8_t>>> _buffer;
+
+public:
+	void Add(const std::vector<uint8_t> &data)
+	{
+		Add(data.cbegin(), data.cend());
+	}
+
+	template<class iterator>
+	void Add(const iterator &cpStart, const iterator &cpStop)
+	{
+		auto dataToAdd = std::make_shared<std::vector<uint8_t>>();
+		dataToAdd->reserve(std::distance(cpStart, cpStop));
+		for (iterator it = cpStart; it != cpStop; it++)
+		{
+			dataToAdd->push_back(*it);
+		}
+		_buffer.push(dataToAdd);
+	}
+
 public:
 	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
@@ -37,7 +59,7 @@ public:
 	) override
 	{
 		uint16_t countParams = std::distance(cpStart, cpStop);
-		if (countParams != RRCommandLength) { return RequestStatus::Error; }
+		if (countParams != RRCommandLength) { return RequestStatus::ErrorCode; }
 
 		uint64_t command = ByteConverter::ToUInt64(cpStart, cpStop);
 
@@ -59,6 +81,12 @@ public:
 		for (uint8_t i = 0; i < ByteConverter::Int64ByteCount; i++)
 		{
 			responce.push_back(static_cast<uint8_t>(resultCode >> (i * ByteConverter::BitInByte)));
+		}
+		auto data = _buffer.front();
+		_buffer.pop();
+		for (auto it = data->cbegin(); it != data->cbegin(); it++)
+		{
+			responce.push_back(*it);
 		}
 		_vi++;
 	}

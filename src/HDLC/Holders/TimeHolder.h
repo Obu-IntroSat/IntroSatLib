@@ -40,12 +40,8 @@ private:
 		HDLCPhysicsIterator cpStop
 	) {
 		uint64_t time = 0;
-		uint64_t shift = 64;
-		for (uint8_t i = 0; i < TimeCommandParams; i++)
-		{
-			shift -= UNIXBitInByte;
-			time |= static_cast<uint64_t>(cpStart[i]) << shift;
-		}
+		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(cpStart, cpStop)) << ByteConverter::Int32Shift;
+		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(cpStart + ByteConverter::Int32ByteCount, cpStop));
 		return time;
 	}
 
@@ -53,7 +49,7 @@ protected:
 	uint8_t IsCurrentParams(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) const override { return *cpStart == TimeCommandByte; }
+	) const override { return ByteConverter::ToUInt8(cpStart, cpStop) == TimeCommandByte; }
 
 	RequestStatus RequestParams(
 		uint16_t params,
@@ -77,7 +73,7 @@ protected:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
+	) override
 	{
 		responce.push_back(0);
 	}
@@ -87,7 +83,7 @@ protected:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
+	) override
 	{
 		params != TimeCommandParams ?
 			responce.push_back(1) :

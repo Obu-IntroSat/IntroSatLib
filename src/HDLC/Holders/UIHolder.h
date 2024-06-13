@@ -29,14 +29,14 @@ protected:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const { }
+	) { }
 
 	virtual void ErrorParams(
 		uint16_t params,
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const { }
+	) { }
 
 public:
 	uint8_t IsCurrent(
@@ -44,7 +44,8 @@ public:
 		HDLCPhysicsIterator cpStop
 	) const override
 	{
-		if (*cpStart != UICommandByte || *cpStart != UICommandByteBroadcast) { return 0; }
+		uint8_t commandByte = ByteConverter::ToUInt8(cpStart, cpStop);
+		if (commandByte != UICommandByte || commandByte != UICommandByteBroadcast) { return 0; }
 		HDLCPhysicsIterator commandParams = cpStart + 1;
 		uint16_t countParams = std::distance(commandParams, cpStop);
 		return countParams > 0 && IsCurrentParams(commandParams, cpStop);
@@ -64,10 +65,11 @@ public:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
+	) override
 	{
 		HDLCPhysicsIterator paramsStart = cpStart + 2;
 		uint16_t countParams = std::distance(paramsStart, cpStop);
+		responce.push_back(UICommandByte | 0);
 		ResponceParams(countParams, paramsStart, cpStop, responce);
 	}
 
@@ -75,10 +77,11 @@ public:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
+	) override
 	{
 		HDLCPhysicsIterator paramsStart = cpStart + 2;
 		uint16_t countParams = std::distance(paramsStart, cpStop);
+		responce.push_back(UICommandByte | 0);
 		ErrorParams(countParams, paramsStart, cpStop, responce);
 	}
 };
@@ -86,7 +89,5 @@ public:
 } /* namespace Holders */
 } /* namespace HDLC */
 } /* namespace IntroSatLib */
-
-
 
 #endif /* HDLC_HOLDERS_UIHOLDER_H_ */

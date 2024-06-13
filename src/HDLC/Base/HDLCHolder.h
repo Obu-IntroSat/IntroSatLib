@@ -3,6 +3,7 @@
 
 #include "inttypes.h"
 #include "HDLCPhysics.h"
+#include "../../Base/ByteConverter.h"
 
 namespace IntroSatLib {
 namespace HDLC {
@@ -20,6 +21,7 @@ public:
 	};
 protected:
 	using HDLCPhysicsIterator = HDLCPhysics::iterator;
+	using ByteConverter = IntroSatLib::Base::ByteConverterLittleEndian;
 
 public:
 	virtual uint8_t IsCurrent(
@@ -36,13 +38,13 @@ public:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const { }
+	) { }
 
 	virtual void Error(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const { }
+	) { }
 
 	virtual ~HDLCHolder() = default;
 };

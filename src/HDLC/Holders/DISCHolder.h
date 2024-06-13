@@ -26,7 +26,7 @@ public:
 	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) const override { return *cpStart == DISCCommandByte; }
+	) const override { return ByteConverter::ToUInt8(cpStart, cpStop) == DISCCommandByte; }
 
 	RequestStatus Request(
 		HDLCPhysicsIterator cpStart,
@@ -40,7 +40,7 @@ public:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override {
+	) override {
 		uint8_t value = DISCResponseByte;
 		responce.push_back(value);
 	}
@@ -49,7 +49,5 @@ public:
 } /* namespace Holders */
 } /* namespace HDLC */
 } /* namespace IntroSatLib */
-
-
 
 #endif /* HDLC_HOLDERS_DISCHOLDER_H_ */

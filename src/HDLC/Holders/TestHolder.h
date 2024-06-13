@@ -15,7 +15,7 @@ public:
 	uint8_t IsCurrent(
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop
-	) const override { return *cpStart == TestCommandByte; }
+	) const override { return ByteConverter::ToUInt8(cpStart, cpStop) == TestCommandByte; }
 
 	RequestStatus Request(
 		HDLCPhysicsIterator cpStart,
@@ -28,7 +28,7 @@ public:
 		HDLCPhysicsIterator cpStart,
 		HDLCPhysicsIterator cpStop,
 		std::vector<uint8_t>& responce
-	) const override
+	) override
 	{
 		for(HDLCPhysicsIterator it = cpStart; it != cpStop; it++)
 		{

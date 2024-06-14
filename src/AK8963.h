@@ -9,12 +9,16 @@ namespace IntroSatLib {
 class AK8963: public BaseDevice {
 private:
 	static const uint8_t BASE_ADDRESS = 0x0C;
+	static constexpr float _rawmt = 8190.0f / 4912.0f; //microTesla
+
 	uint16_t _x = 0;
 	uint16_t _y = 0;
 	uint16_t _z = 0;
 	uint8_t _calX = 0;
 	uint8_t _calY = 0;
 	uint8_t _calZ = 0;
+
+	void ReadCal();
 
 public:
 #ifndef ARDUINO
@@ -36,6 +40,10 @@ public:
 	int16_t RawX();
 	int16_t RawY();
 	int16_t RawZ();
+
+	float X();
+	float Y();
+	float Z();
 
 	virtual ~AK8963();
 };

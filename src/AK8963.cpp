@@ -43,11 +43,23 @@ uint8_t AK8963::Init()
 {
 	SetRegister(0x0A, 0x00);
 	HAL_Delay(100);
-	SetRegister(0x0A, 0x0F);
+	SetRegister(0x0A, 0x0F); // Fuse ROM
 	HAL_Delay(100);
-	SetRegister(0x0A, 0x02);
+	ReadCal();
+	SetRegister(0x0A, 0x00);
+	HAL_Delay(100);
+	SetRegister(0x0A, 0x06); // Continuous measurement mode 2
 	HAL_Delay(100);
 	return 0;
+}
+
+void AK8963::ReadCal()
+{
+	uint8_t buf[3];
+	_i2c.read(0x10, buf, 3);
+	_calX = buf[0];
+	_calY = buf[1];
+	_calZ = buf[2];
 }
 
 void AK8963::Read()
@@ -59,25 +71,36 @@ void AK8963::Read()
 		_x = (buf[1] << 8) | buf[0];
 		_y = (buf[3] << 8) | buf[2];
 		_z = (buf[5] << 8) | buf[4];
-		_i2c.read(0x10, buf, 3);
-		_calX = buf[0];
-		_calY = buf[1];
-		_calZ = buf[2];
 	}
 }
 
 
 int16_t AK8963::RawX()
 {
-	return _x + _calX;
+	return int16_t(_x) * ((int8_t(_calX) - 128) / 256.0f + 1);
 }
 int16_t AK8963::RawY()
 {
-	return _y + _calY;
+	return int16_t(_y) * ((int8_t(_calY) - 128) / 256.0f + 1);
 }
 int16_t AK8963::RawZ()
 {
-	return _z + _calZ;
+	return int16_t(_z) * ((int8_t(_calZ) - 128) / 256.0f + 1);
+}
+
+float AK8963::X()
+{
+	return RawX() / _rawmt;
+}
+
+float AK8963::Y()
+{
+	return RawY() / _rawmt;
+}
+
+float AK8963::Z()
+{
+	return RawZ() / _rawmt;
 }
 
 AK8963::~AK8963()

@@ -39,35 +39,72 @@ MagnetometerV2& MagnetometerV2::operator=(MagnetometerV2&& other)
 }
 
 
+uint8_t MagnetometerV2::Init(Scale sensitivity)
+{
+	SetRegister(RegisterMap::CTRL_REG1, 0x7C);
+	HAL_Delay(1);
+	SetScale(sensitivity);
+	HAL_Delay(1);
+	SetRegister(RegisterMap::CTRL_REG3, 0x00);
+	HAL_Delay(1);
+	SetRegister(RegisterMap::CTRL_REG4, 0x0C);
+	HAL_Delay(1);
+	SetRegister(RegisterMap::CTRL_REG5, 0x40);
+	return 0;
+}
+
 uint8_t MagnetometerV2::Init()
 {
-	SetRegister(0x20, 0x70);
-	HAL_Delay(1);
-	SetRegister(0x21, 0x60);
-	HAL_Delay(1);
-	SetRegister(0x22, 0x00);
-	HAL_Delay(1);
-	SetRegister(0x23, 0x0C);
-	return 0;
+	return Init(Scale::G16);
+}	
+
+void MagnetometerV2::SetScale(Scale sensitivity)
+{
+	uint8_t bitSensitivity = 2 * (sensitivity - 1);
+	uint8_t reg = bitSensitivity << 4;
+	_sensitivity = sensitivity;
+	SetRegister(RegisterMap::CTRL_REG2, reg);  
+}
+
+void MagnetometerV2::Read()
+{
+	if (GetRegister(RegisterMap::STATUS_REG)&0x08) 
+	{
+		uint8_t buf[6];
+		_i2c.read(RegisterMap::OUT_X_L, buf, 6);
+		_x = buf[1] << 8 | buf[0];
+		_y = buf[3] << 8 | buf[2];
+		_z = buf[5] << 8 | buf[4];
+	}
 }
 
 int16_t MagnetometerV2::RawX()
 {
-	uint8_t buf[2];
-	_i2c.read(0x28, buf, 2);
-	return buf[1] << 8 | buf[0];
+	return _x;
 }
 int16_t MagnetometerV2::RawY()
 {
-	uint8_t buf[2];
-	_i2c.read(0x2A, buf, 2);
-	return buf[1] << 8 | buf[0];
+	return _y;
 }
 int16_t MagnetometerV2::RawZ()
 {
-	uint8_t buf[2];
-	_i2c.read(0x2C, buf, 2);
-	return buf[1] << 8 | buf[0];
+	return _z;
+}
+
+float MagnetometerV2::X()
+{
+	float e = int16_t(_x) * _sensitivity;
+	return e / _rawg;
+}
+float MagnetometerV2::Y()
+{
+	float e = int16_t(_y) * _sensitivity;
+	return e / _rawg;	
+}
+float MagnetometerV2::Z()
+{
+	float e = int16_t(_z) * _sensitivity;
+	return e / _rawg;	
 }
 
 Quaternion<float> MagnetometerV2::GetQuaternion()

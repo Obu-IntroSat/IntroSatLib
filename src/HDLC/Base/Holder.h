@@ -2,7 +2,6 @@
 #define HDLC_BASE_HOLDER_H_
 
 #include <inttypes.h>
-#include <vector>
 #include "./Physics.h"
 #include "../../Base/ByteConverter.h"
 
@@ -20,15 +19,18 @@ public:
 		CanResponce = 0x40,
 		CantNextCode = 0x80
 	};
+
 protected:
-	using PhysicsIterator = Physics::iterator;
 	using ByteConverter = IntroSatLib::Base::ByteConverterLittleEndian;
+
+	using HolderIterator = iterator;
+	using HolderBuffer = BufferType;
 
 	constexpr static uint8_t
 	distance
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) noexcept
 	{ return static_cast<uint8_t>(std::distance(begin, end)); }
 
@@ -36,8 +38,8 @@ public:
 	virtual uint8_t
 	is_current
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end
 	) const noexcept
 	{
 		return 0;
@@ -46,24 +48,24 @@ public:
 	virtual RequestStatus
 	request
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end
 	) noexcept { return RequestStatus::Ok; }
 
 	virtual void
 	response
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		[[maybe_unused]] std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+		[[maybe_unused]] HolderBuffer& response
 	) noexcept { }
 
 	virtual void
 	error
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		[[maybe_unused]] std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+		[[maybe_unused]] HolderBuffer& response
 	) noexcept { }
 
 	virtual ~Holder() = default;

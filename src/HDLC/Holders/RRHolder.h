@@ -36,8 +36,8 @@ protected:
 	uint8_t
 	is_current
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) const noexcept override
 	{
 		uint8_t firstByte = ByteConverter::ToUInt8(begin, end);
@@ -48,8 +48,8 @@ protected:
 	RequestStatus
 	request
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) noexcept override
 	{
 		uint8_t countParams = distance(begin, end);
@@ -67,9 +67,9 @@ protected:
 	void
 	response
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+						 HolderBuffer& response
 	) noexcept override
 	{
 		uint64_t resultCode = 0x100000000;
@@ -84,9 +84,9 @@ protected:
 	void
 	error
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end,
-		std::vector<uint8_t>& response
+		HolderIterator begin,
+		HolderIterator end,
+		HolderBuffer& response
 	) noexcept override
 	{
 		response.push_back(RRCommandError | 0);

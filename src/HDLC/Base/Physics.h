@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <map>
-#include "stm32f1xx_hal_uart.h"
+#include "../../Includes/UART.h"
 #include "../../Base/Memory/static_ptr.h"
-#include "../../Base/Collections/BufferArray.h"
+#include "./Typing.h"
 
 namespace IntroSatLib {
 namespace HDLC {
@@ -14,47 +14,61 @@ namespace Base {
 class Physics
 {
 private:
-	static const uint8_t MaxBufferLength = 255;
-
-private:
 	uint32_t _lastTime;
-	IntroSatLib::Base::Memory::BufferArray<uint8_t, MaxBufferLength> _buffer;
+	BufferType _buffer;
+
+	const static_ptr<UART_HandleTypeDef> _usart;
+
+	uint8_t _bufferByte = 0;
+
+	bool _prevAddedByte = 0;
 
 protected:
-
-	template<typename T>
-	using static_ptr = IntroSatLib::Base::Memory::static_ptr<T>;
-
 	static const uint8_t StartOrStopByte = 0x7E;
 	static const uint8_t AddedByte = 0x7D;
 	static const uint8_t ReplaceAddedByte = 0x5D;
 	static const uint8_t ReplaceStartOrStopByte = 0x5E;
 
-	static_ptr<UART_HandleTypeDef> _usart;
 	const uint32_t _usartReference;
 
-	uint8_t _prevAddedByte = 0;
-	uint8_t _bufferByte = 0;
-
-public:
-	typedef decltype(_buffer)::const_iterator iterator;
-	typedef decltype(_buffer)::value_type value_type;
-	typedef decltype(_buffer)::size_type size_type;
-
 protected:
-	static constexpr uint32_t UartReferenceToValue(const USART_TypeDef *usart)
-	{
-		return reinterpret_cast<uint32_t>(usart);
-	}
-	static constexpr uint32_t UartReferenceToValue(const UART_HandleTypeDef *usart)
-	{
-		return UartReferenceToValue(usart->Instance);
-	}
 
-	Physics(UART_HandleTypeDef *usart):
+	static constexpr uint32_t
+	UartReferenceToValue(const USART_TypeDef *usart) noexcept
+	{ return reinterpret_cast<uint32_t>(usart); }
+
+	static constexpr uint32_t
+	UartReferenceToValue(const UART_HandleTypeDef *usart) noexcept
+	{ return UartReferenceToValue(usart->Instance); }
+
+	Physics(UART_HandleTypeDef *usart) noexcept :
 		_usart(usart),
 		_usartReference(UartReferenceToValue(usart))
 	{ set_last_time(); }
+
+	constexpr UART_HandleTypeDef*
+	get_UART() const noexcept
+	{ return _usart.get(); }
+
+	constexpr uint8_t*
+	get_buffer_reference() noexcept
+	{ return &_bufferByte; }
+
+	constexpr uint8_t
+	get_buffer_byte() const noexcept
+	{ return _bufferByte; }
+
+	constexpr uint8_t*
+	set_buffer_byte(uint8_t byte) noexcept
+	{ _bufferByte = byte; return &_bufferByte; }
+
+	constexpr bool
+	get_added_byte() const noexcept
+	{ return _prevAddedByte; }
+
+	constexpr void
+	set_added_byte(bool x) noexcept
+	{ _prevAddedByte = x; }
 
 	void
 	set_last_time() noexcept

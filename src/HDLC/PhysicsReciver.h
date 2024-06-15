@@ -21,9 +21,9 @@ private:
 public:
 
 	event<> OnZeroSize;
-	event<uint8_t, iterator, iterator> OnSuccess;
-	event<uint16_t, iterator, iterator> OnReciveError;
-	event<uint16_t, iterator, iterator> OnSizeError;
+	event<uint8_t, Base::iterator, Base::iterator> OnSuccess;
+	event<uint16_t, Base::iterator, Base::iterator> OnReciveError;
+	event<uint16_t, Base::iterator, Base::iterator> OnSizeError;
 
 
 	PhysicsReciver(UART_HandleTypeDef *usart) noexcept : Physics(usart)
@@ -35,7 +35,7 @@ public:
 		new_byte_request();
 		clear();
 		_errors = 0;
-		_prevAddedByte = 0;
+		set_added_byte(false);
 	}
 
 private:
@@ -57,17 +57,17 @@ private:
 
 	void
 	new_byte_request() noexcept
-	{ HAL_UART_Receive_IT(_usart.get(), &_bufferByte, 1); }
+	{ HAL_UART_Receive_IT(get_UART(), get_buffer_reference(), 1); }
 
 	void
 	end_packet() noexcept
 	{
 		const uint8_t sizeBuf = size();
-		iterator begin = cbegin();
-		iterator end = cend();
+		Base::iterator begin = cbegin();
+		Base::iterator end = cend();
 
 		if (sizeBuf == 0) { OnZeroSize(); }
-		else if (sizeBuf < 5) { OnSizeError(sizeBuf, begin, end); }
+		else if (sizeBuf < Base::MinBufferSize) { OnSizeError(sizeBuf, begin, end); }
 
 		else
 		{
@@ -76,7 +76,7 @@ private:
 			);
 			errors = errors + _errors;
 
-			if (_prevAddedByte) { errors++; }
+			if (get_added_byte()) { errors++; }
 
 			uint16_t crcResult = IntroSatLib::Base::CRC_CCITT::CRC16(0xFFFF, begin, end);
 			if (crcResult != IntroSatLib::Base::CRC_CCITT::GOOD_FCS) { errors++; }
@@ -90,31 +90,30 @@ private:
 		}
 	}
 
-	void next_byte(uint8_t byte)
+	void
+	next_byte(uint8_t byte) noexcept
 	{
 		if (byte == StartOrStopByte) { end_packet(); }
 		else
 		{
 			new_byte_request();
-			if (AddedByte == byte) { _prevAddedByte = 1; }
+			if (AddedByte == byte) { set_added_byte(true); }
 			else
 			{
-				if (_prevAddedByte)
+				if (get_added_byte())
 				{
 					byte = byte_replacer(byte);
-					_prevAddedByte = 0;
+					set_added_byte(false);
 				}
 				push(byte);
 			}
 
 		}
 	}
+
 	void
 	recive_callback() noexcept
-	{
-		uint8_t byte = _bufferByte;
-		next_byte(byte);
-	}
+	{ next_byte(get_buffer_byte()); }
 
 public:
 

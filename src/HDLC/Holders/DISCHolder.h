@@ -27,16 +27,16 @@ public:
 	uint8_t
 	is_current
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) const noexcept override
 	{ return ByteConverter::ToUInt8(begin, end) == DISCCommandByte; }
 
 	RequestStatus
 	request
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end
 	) noexcept override
 	{
 		_needStop = 1;
@@ -46,9 +46,9 @@ public:
 	void
 	response
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+						 HolderBuffer& response
 	) noexcept override
 	{
 		uint8_t value = DISCResponseByte;

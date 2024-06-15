@@ -17,6 +17,11 @@ public:
 	static const uint8_t Int32ByteCount = 4;
 	static const uint8_t Int64ByteCount = 8;
 
+	static constexpr uint8_t Int8BitCount = Int8ByteCount * BitInByte;
+	static constexpr uint8_t Int16BitCount = Int16ByteCount * BitInByte;
+	static constexpr uint8_t Int32BitCount = Int32ByteCount * BitInByte;
+	static constexpr uint8_t Int64BitCount = Int64ByteCount * BitInByte;
+
 	static constexpr uint8_t Int8Shift = 1 * BitInByte;
 	static constexpr uint8_t Int16Shift = 2 * BitInByte;
 	static constexpr uint8_t Int32Shift = 4 * BitInByte;

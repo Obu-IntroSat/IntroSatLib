@@ -16,8 +16,8 @@ protected:
 	virtual uint8_t
 	is_current_params
 	(
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end
 	) const noexcept
 	{ return 0; }
 
@@ -25,8 +25,8 @@ protected:
 	request_params
 	(
 		[[maybe_unused]] uint8_t params,
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end
 	) noexcept
 	{ return RequestStatus::Ok; }
 
@@ -34,18 +34,18 @@ protected:
 	response_params
 	(
 		[[maybe_unused]] uint8_t params,
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		[[maybe_unused]] std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+		[[maybe_unused]] HolderBuffer& response
 	) noexcept { }
 
 	virtual void
 	error_params
 	(
 		[[maybe_unused]] uint8_t params,
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		[[maybe_unused]] std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+		[[maybe_unused]] HolderBuffer& response
 	) noexcept { }
 
 public:
@@ -53,13 +53,13 @@ public:
 	uint8_t
 	is_current
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) const noexcept override
 	{
 		uint8_t commandByte = ByteConverter::ToUInt8(begin, end);
 		if (commandByte != UICommandByte || commandByte != UICommandByteBroadcast) { return 0; }
-		PhysicsIterator commandParams = begin + 1;
+		HolderIterator commandParams = begin + 1;
 		uint8_t countParams = distance(commandParams, end);
 		return countParams > 0 && is_current_params(commandParams, end);
 	}
@@ -67,11 +67,11 @@ public:
 	RequestStatus
 	request
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) noexcept override
 	{
-		PhysicsIterator paramsStart = begin + 2;
+		HolderIterator paramsStart = begin + 2;
 		uint8_t countParams = distance(paramsStart, end);
 		return request_params(countParams, paramsStart, end);
 	}
@@ -79,12 +79,12 @@ public:
 	void
 	response
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end,
-		std::vector<uint8_t>& response
+		HolderIterator begin,
+		HolderIterator end,
+		HolderBuffer& response
 	) noexcept override
 	{
-		PhysicsIterator paramsStart = begin + 2;
+		HolderIterator paramsStart = begin + 2;
 		uint8_t countParams = distance(paramsStart, end);
 		response.push_back(UICommandByte | 0);
 		response_params(countParams, paramsStart, end, response);
@@ -93,12 +93,12 @@ public:
 	void
 	error
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end,
-		std::vector<uint8_t>& response
+		HolderIterator begin,
+		HolderIterator end,
+		HolderBuffer& response
 	) noexcept override
 	{
-		PhysicsIterator paramsStart = begin + 2;
+		HolderIterator paramsStart = begin + 2;
 		uint8_t countParams = distance(paramsStart, end);
 		response.push_back(UICommandByte | 0);
 		error_params(countParams, paramsStart, end, response);

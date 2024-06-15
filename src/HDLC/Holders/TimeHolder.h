@@ -1,7 +1,7 @@
 #ifndef HDLC_HOLDERS_TIMEHOLDER_H_
 #define HDLC_HOLDERS_TIMEHOLDER_H_
 
-#include "UIHolder.h"
+#include "./UIHolder.h"
 
 namespace IntroSatLib {
 namespace HDLC {
@@ -19,7 +19,6 @@ private:
 	uint64_t _fullTime = 0;
 
 public:
-
 	constexpr uint32_t
 	UNIX() const noexcept
 	{ return static_cast<uint32_t>(_fullTime >> UNIXFractionShift); }
@@ -33,12 +32,11 @@ public:
 	{ return _fullTime; }
 
 private:
-
 	constexpr static uint64_t
 	convert_time
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) noexcept
 	{
 		uint64_t time = 0;
@@ -51,8 +49,8 @@ protected:
 	uint8_t
 	is_current
 	(
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) const noexcept override
 	{ return ByteConverter::ToUInt8(begin, end) == TimeCommandByte; }
 
@@ -60,8 +58,8 @@ protected:
 	request_params
 	(
 		uint8_t params,
-		PhysicsIterator begin,
-		PhysicsIterator end
+		HolderIterator begin,
+		HolderIterator end
 	) noexcept override
 	{
 		if (params != TimeCommandParams) { return RequestStatus::ErrorCode; }
@@ -79,9 +77,9 @@ protected:
 	response_params
 	(
 		[[maybe_unused]] uint8_t params,
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+						 HolderBuffer& response
 	) noexcept override
 	{ response.push_back(0); }
 
@@ -89,9 +87,9 @@ protected:
 	error_params
 	(
 		uint8_t params,
-		[[maybe_unused]] PhysicsIterator begin,
-		[[maybe_unused]] PhysicsIterator end,
-		std::vector<uint8_t>& response
+		[[maybe_unused]] HolderIterator begin,
+		[[maybe_unused]] HolderIterator end,
+						 HolderBuffer& response
 	) noexcept override
 	{
 		params != TimeCommandParams ?

@@ -1,18 +1,20 @@
+
 #ifndef HDLCPHYSICSTRANSMITTER_H_
 #define HDLCPHYSICSTRANSMITTER_H_
 
-#include "stm32f1xx_hal_gpio.h"
-#include "Base/Physics.h"
+#include "../Includes/GPIO.h"
+#include "./Base/Physics.h"
 
 namespace IntroSatLib {
 namespace HDLC {
 
 class PhysicsTransmitter: public Base::Physics
 {
+
 private:
 	static inline std::map<uint32_t, PhysicsTransmitter*> _transmitCallbacks;
 
-	Base::Physics::static_ptr<GPIO_TypeDef> _gpio;
+	const Base::static_ptr<GPIO_TypeDef> _gpio;
 	const uint16_t _gpioPin;
 	int16_t _count = -2;
 
@@ -37,7 +39,7 @@ public:
 	) noexcept
 	{
 		set_last_time();
-		_prevAddedByte = 0;
+		set_added_byte(false);
 		set_buffer(cpStart, cpStop);
 	}
 
@@ -71,7 +73,7 @@ private:
 
 		uint16_t crc = IntroSatLib::Base::CRC_CCITT::CRC16(0xFFFF, cbegin(), cend()) ^ 0xFFFF;
 		push(uint8_t(crc));
-		push(uint8_t(crc >> 8));
+		push(uint8_t(crc >> IntroSatLib::Base::ByteConverterLittleEndian::Int8BitCount));
 
 		_count = -1;
 	}
@@ -79,8 +81,7 @@ private:
 	void
 	transmite_byte(uint8_t byte) noexcept
 	{
-		_bufferByte = byte;
-		HAL_UART_Transmit_IT(_usart.get(), &_bufferByte, 1);
+		HAL_UART_Transmit_IT(get_UART(), set_buffer_byte(byte), 1);
 	}
 
 	void
@@ -89,19 +90,19 @@ private:
 		if (_count == -2) { return; }
 		if (HAL_GPIO_ReadPin(_gpio.get(), _gpioPin) == GPIO_PIN_RESET) { return; }
 
-		if (get_last_time() < 50) { clear_buffer(); }
+		if (get_last_time() < Base::MaxTimeout) { clear_buffer(); }
 		else { transmite_next_byte(); }
 	}
 
 	uint8_t
 	start_or_stop_transmite() noexcept
 	{
-		if (_count < -1 || _count > static_cast<int16_t>(size()))
+		if (_count < -1 || _count > size())
 		{
 			clear_buffer();
 			return 1;
 		}
-		if (_count == -1 || _count == static_cast<int16_t>(size()))
+		if (_count == -1 || _count == size())
 		{
 			transmite_byte(StartOrStopByte);
 			set_last_time();
@@ -114,9 +115,9 @@ private:
 	constexpr uint8_t
 	byte_replacer(uint8_t byte) noexcept
 	{
-		if (_prevAddedByte)
+		if (get_added_byte())
 		{
-			_prevAddedByte = 0;
+			set_added_byte(false);
 			switch (byte)
 			{
 			case AddedByte:
@@ -134,7 +135,7 @@ private:
 			case AddedByte:
 			case StartOrStopByte:
 				_count--;
-				_prevAddedByte = 1;
+				set_added_byte(true);
 				return ReplaceStartOrStopByte;
 			default:
 				return byte;
@@ -151,7 +152,6 @@ private:
 		_count++;
 
 		transmite_byte(byte);
-
 	}
 
 	void

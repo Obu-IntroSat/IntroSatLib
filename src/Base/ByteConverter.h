@@ -23,17 +23,27 @@ public:
 	static constexpr uint8_t Int64Shift = 8 * BitInByte;
 
 	template<class iterator>
-	static uint8_t ToUInt8(const iterator &begin, const iterator &end)
+	constexpr static uint8_t
+	ToUInt8
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
-		if (end - begin >= Int8ByteCount) { return 0; }
+		if (end - begin < Int8ByteCount) { return 0; }
 
 		return static_cast<uint8_t>(*begin);
 	}
 
 	template<class iterator>
-	static uint16_t ToUInt16(const iterator &begin, const iterator &end)
+	constexpr static uint16_t
+	ToUInt16
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
-		if (end - begin >= Int16ByteCount) { return 0; }
+		if (end - begin < Int16ByteCount) { return 0; }
 
 		uint16_t result = 0;
 		for (uint8_t i = 0; i < Int16ByteCount; i++)
@@ -44,9 +54,14 @@ public:
 	}
 
 	template<class iterator>
-	static uint32_t ToUInt32(const iterator &begin, const iterator &end)
+	constexpr static uint32_t
+	ToUInt32
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
-		if (end - begin >= Int32ByteCount) { return 0; }
+		if (end - begin < Int32ByteCount) { return 0; }
 
 		uint32_t result = 0;
 		for (uint8_t i = 0; i < Int32ByteCount; i++)
@@ -57,9 +72,13 @@ public:
 	}
 
 	template<class iterator>
-	static uint64_t ToUInt64(const iterator &begin, const iterator &end)
+	constexpr static uint64_t ToUInt64
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
-		if (end - begin >= Int64ByteCount) { return 0; }
+		if (end - begin < Int64ByteCount) { return 0; }
 
 		uint64_t result = 0;
 		for (uint8_t i = 0; i < Int64ByteCount; i++)
@@ -70,32 +89,51 @@ public:
 	}
 
 	template<class iterator>
-	static int8_t ToInt8(const iterator &begin, const iterator &end)
+	constexpr static int8_t
+	ToInt8
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
 		return static_cast<int8_t>(ToUInt8(begin, end));
 	}
 
 	template<class iterator>
-	static int16_t ToInt16(const iterator &begin, const iterator &end)
+	constexpr static int16_t
+	ToInt16
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
 		return static_cast<int16_t>(ToUInt16(begin, end));
 	}
 
 	template<class iterator>
-	static int32_t ToInt32(const iterator &begin, const iterator &end)
+	constexpr static int32_t
+	ToInt32
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
 		return static_cast<int32_t>(ToUInt32(begin, end));
 	}
 
 	template<class iterator>
-	static int64_t ToInt64(const iterator &begin, const iterator &end)
+	constexpr static int64_t
+	ToInt64
+	(
+		const iterator &begin,
+		const iterator &end
+	) noexcept
 	{
 		return static_cast<int64_t>(ToUInt64(begin, end));
 	}
 };
-}
-}
 
-
+} /* namespace Base */
+} /* namespace IntroSatLib */
 
 #endif /* BASE_BYTECONVERTER_H_ */

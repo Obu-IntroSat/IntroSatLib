@@ -19,47 +19,54 @@ private:
 	uint64_t _fullTime = 0;
 
 public:
-	uint32_t GetUNIX() const
-	{
-		return _fullTime >> UNIXFractionShift;
-	}
 
-	uint32_t GetFractionalUNIX() const
-	{
-		return static_cast<uint32_t>(_fullTime);
-	}
+	constexpr uint32_t
+	UNIX() const noexcept
+	{ return static_cast<uint32_t>(_fullTime >> UNIXFractionShift); }
 
-	uint64_t GetFullTime() const
-	{
-		return _fullTime;
-	}
+	constexpr uint32_t
+	fractional_UNIX() const noexcept
+	{ return static_cast<uint32_t>(_fullTime); }
+
+	constexpr uint64_t
+	full_time() const noexcept
+	{ return _fullTime; }
 
 private:
-	static uint64_t ConvertTime(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) {
+
+	constexpr static uint64_t
+	convert_time
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) noexcept
+	{
 		uint64_t time = 0;
-		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(cpStart, cpStop)) << ByteConverter::Int32Shift;
-		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(cpStart + ByteConverter::Int32ByteCount, cpStop));
+		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(begin, end)) << ByteConverter::Int32Shift;
+		time |= static_cast<uint64_t>(ByteConverter::ToUInt32(begin + ByteConverter::Int32ByteCount, end));
 		return time;
 	}
 
 protected:
-	uint8_t IsCurrentParams(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) const override { return ByteConverter::ToUInt8(cpStart, cpStop) == TimeCommandByte; }
+	uint8_t
+	is_current
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) const noexcept override
+	{ return ByteConverter::ToUInt8(begin, end) == TimeCommandByte; }
 
-	RequestStatus RequestParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) override
+	RequestStatus
+	request_params
+	(
+		uint8_t params,
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) noexcept override
 	{
 		if (params != TimeCommandParams) { return RequestStatus::ErrorCode; }
 
-		uint64_t time = ConvertTime(cpStart, cpStop);
+		uint64_t time = convert_time(begin, end);
 
 		if (time < StartTime) { return RequestStatus::ErrorCode; }
 
@@ -68,26 +75,28 @@ protected:
 		return RequestStatus::Ok;
 	}
 
-	void ResponceParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) override
-	{
-		responce.push_back(0);
-	}
+	void
+	response_params
+	(
+		[[maybe_unused]] uint8_t params,
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end,
+		std::vector<uint8_t>& response
+	) noexcept override
+	{ response.push_back(0); }
 
-	void ErrorParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) override
+	void
+	error_params
+	(
+		uint8_t params,
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end,
+		std::vector<uint8_t>& response
+	) noexcept override
 	{
 		params != TimeCommandParams ?
-			responce.push_back(1) :
-			responce.push_back(2);
+			response.push_back(1) :
+			response.push_back(2);
 	}
 };
 

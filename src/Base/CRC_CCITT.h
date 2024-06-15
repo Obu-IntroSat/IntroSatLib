@@ -2,7 +2,8 @@
 #define BASE_CRC_CCITT_H_
 
 #include <stdint.h>
-#include <vector>
+#include <iterator>
+#include <type_traits>
 
 namespace IntroSatLib {
 
@@ -48,25 +49,16 @@ private:
 public:
 	static const uint16_t GOOD_FCS = 0xF0B8;
 
-	static uint16_t CRC16(uint16_t fcs, const uint8_t *cp, uint16_t len)
-	{
-		return CRC16(fcs, cp, cp + len);
-	}
-
-	static uint16_t CRC16(uint16_t fcs, const std::vector<uint8_t> &cp)
-	{
-		return CRC16(fcs, cp.cbegin(), cp.cend());
-	}
-
-	template<class iterator>
-	static uint16_t CRC16
+	template<typename InputIterator>
+	constexpr static uint16_t
+	CRC16
 	(
 		uint16_t fcs,
-		const iterator &cpStart,
-		const iterator &cpStop
-	)
+		const InputIterator &begin,
+		const InputIterator &end
+	) noexcept
 	{
-		for (iterator it = cpStart; it != cpStop; it++)
+		for (InputIterator it = begin; it != end; it++)
 		{
 			fcs = (fcs >> 8) ^ CRC16Table[(fcs ^ (*it)) & 0xff];
 		}
@@ -77,6 +69,5 @@ public:
 
 } /* namespace Base */
 } /* namespace IntroSatLib */
-
 
 #endif /* BASE_CRC_CCITT_H_ */

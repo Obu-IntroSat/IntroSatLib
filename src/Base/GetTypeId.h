@@ -3,18 +3,17 @@
 
 #include <cinttypes>
 
-namespace IntroSatLib
-{
-	namespace Base
-	{
-		using TypeId = std::uint32_t;
+namespace IntroSatLib {
+namespace Base {
 
-		template<class T>
-		constexpr TypeId GetTypeId()
-		{
-			return reinterpret_cast<TypeId>(&GetTypeId<T>);
-		}
-	} /* namespace Base */
+	using TypeId = std::uint32_t;
+
+	template<class T>
+	constexpr TypeId
+	GetTypeId() noexcept
+	{ return reinterpret_cast<TypeId>(&GetTypeId<T>); }
+
+} /* namespace Base */
 } /* namespace IntroSatLib */
 
 #endif /* BASE_GETTYPEID_H_ */

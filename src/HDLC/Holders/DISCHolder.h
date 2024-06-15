@@ -1,48 +1,58 @@
 #ifndef HDLC_HOLDERS_DISCHOLDER_H_
 #define HDLC_HOLDERS_DISCHOLDER_H_
 
-#include "../Base/HDLCHolder.h"
+#include "../Base/Holder.h"
 
 namespace IntroSatLib {
 namespace HDLC {
 namespace Holders {
 
-class DISCHolder: public IntroSatLib::HDLC::Base::HDLCHolder
+class DISCHolder: public IntroSatLib::HDLC::Base::Holder
 {
 private:
 	static const uint8_t DISCCommandByte = 0x53;
 	static const uint8_t DISCResponseByte = 0x73;
 
-
 private:
 	uint8_t _needStop = 0;
+
 public:
-	uint8_t NeedStop() const
+
+	constexpr uint8_t
+	need_stop() const noexcept
+	{ return _needStop; }
+
+public:
+
+	uint8_t
+	is_current
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) const noexcept override
+	{ return ByteConverter::ToUInt8(begin, end) == DISCCommandByte; }
+
+	RequestStatus
+	request
+	(
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end
+	) noexcept override
 	{
-		return _needStop;
-	}
-
-public:
-	uint8_t IsCurrent(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) const override { return ByteConverter::ToUInt8(cpStart, cpStop) == DISCCommandByte; }
-
-	RequestStatus Request(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) override {
 		_needStop = 1;
 		return RequestStatus::CantNextCode;
 	}
 
-	void Responce(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) override {
+	void
+	response
+	(
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end,
+		std::vector<uint8_t>& response
+	) noexcept override
+	{
 		uint8_t value = DISCResponseByte;
-		responce.push_back(value);
+		response.push_back(value);
 	}
 };
 

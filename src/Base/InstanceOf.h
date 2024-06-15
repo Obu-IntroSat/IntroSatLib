@@ -15,5 +15,4 @@ struct InstanceOf : std::enable_if<std::is_base_of<Base, Derived>::value>
 } /* namespace Base */
 } /* namespace IntroSatLib */
 
-
 #endif /* BASE_INTANCEOF_H_ */

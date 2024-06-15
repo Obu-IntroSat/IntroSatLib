@@ -1,88 +1,107 @@
 #ifndef HDLC_HOLDERS_UIHOLDER_H_
 #define HDLC_HOLDERS_UIHOLDER_H_
 
-#include "../Base/HDLCHolder.h"
+#include "../Base/Holder.h"
 
 namespace IntroSatLib {
 namespace HDLC {
 namespace Holders {
 
-class UIHolder: public IntroSatLib::HDLC::Base::HDLCHolder
+class UIHolder: public IntroSatLib::HDLC::Base::Holder
 {
 protected:
 	static const uint8_t UICommandByte = 0x13;
 	static const uint8_t UICommandByteBroadcast = 0x03;
 
-	virtual uint8_t IsCurrentParams(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) const { return 0; }
+	virtual uint8_t
+	is_current_params
+	(
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end
+	) const noexcept
+	{ return 0; }
 
-	virtual RequestStatus RequestParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) { return RequestStatus::Ok; }
+	virtual RequestStatus
+	request_params
+	(
+		[[maybe_unused]] uint8_t params,
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end
+	) noexcept
+	{ return RequestStatus::Ok; }
 
-	virtual void ResponceParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) { }
+	virtual void
+	response_params
+	(
+		[[maybe_unused]] uint8_t params,
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end,
+		[[maybe_unused]] std::vector<uint8_t>& response
+	) noexcept { }
 
-	virtual void ErrorParams(
-		uint16_t params,
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) { }
+	virtual void
+	error_params
+	(
+		[[maybe_unused]] uint8_t params,
+		[[maybe_unused]] PhysicsIterator begin,
+		[[maybe_unused]] PhysicsIterator end,
+		[[maybe_unused]] std::vector<uint8_t>& response
+	) noexcept { }
 
 public:
-	uint8_t IsCurrent(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) const override
+
+	uint8_t
+	is_current
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) const noexcept override
 	{
-		uint8_t commandByte = ByteConverter::ToUInt8(cpStart, cpStop);
+		uint8_t commandByte = ByteConverter::ToUInt8(begin, end);
 		if (commandByte != UICommandByte || commandByte != UICommandByteBroadcast) { return 0; }
-		HDLCPhysicsIterator commandParams = cpStart + 1;
-		uint16_t countParams = std::distance(commandParams, cpStop);
-		return countParams > 0 && IsCurrentParams(commandParams, cpStop);
+		PhysicsIterator commandParams = begin + 1;
+		uint8_t countParams = distance(commandParams, end);
+		return countParams > 0 && is_current_params(commandParams, end);
 	}
 
-	RequestStatus Request(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop
-	) override
+	RequestStatus
+	request
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end
+	) noexcept override
 	{
-		HDLCPhysicsIterator paramsStart = cpStart + 2;
-		uint16_t countParams = std::distance(paramsStart, cpStop);
-		return RequestParams(countParams, paramsStart, cpStop);
+		PhysicsIterator paramsStart = begin + 2;
+		uint8_t countParams = distance(paramsStart, end);
+		return request_params(countParams, paramsStart, end);
 	}
 
-	void Responce(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) override
+	void
+	response
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end,
+		std::vector<uint8_t>& response
+	) noexcept override
 	{
-		HDLCPhysicsIterator paramsStart = cpStart + 2;
-		uint16_t countParams = std::distance(paramsStart, cpStop);
-		responce.push_back(UICommandByte | 0);
-		ResponceParams(countParams, paramsStart, cpStop, responce);
+		PhysicsIterator paramsStart = begin + 2;
+		uint8_t countParams = distance(paramsStart, end);
+		response.push_back(UICommandByte | 0);
+		response_params(countParams, paramsStart, end, response);
 	}
 
-	void Error(
-		HDLCPhysicsIterator cpStart,
-		HDLCPhysicsIterator cpStop,
-		std::vector<uint8_t>& responce
-	) override
+	void
+	error
+	(
+		PhysicsIterator begin,
+		PhysicsIterator end,
+		std::vector<uint8_t>& response
+	) noexcept override
 	{
-		HDLCPhysicsIterator paramsStart = cpStart + 2;
-		uint16_t countParams = std::distance(paramsStart, cpStop);
-		responce.push_back(UICommandByte | 0);
-		ErrorParams(countParams, paramsStart, cpStop, responce);
+		PhysicsIterator paramsStart = begin + 2;
+		uint8_t countParams = distance(paramsStart, end);
+		response.push_back(UICommandByte | 0);
+		error_params(countParams, paramsStart, end, response);
 	}
 };
 

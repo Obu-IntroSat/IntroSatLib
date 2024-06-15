@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <iterator>
 #include <type_traits>
+#include <limits>
+#include "./ByteConverter.h"
 
 namespace IntroSatLib {
 
@@ -60,7 +62,8 @@ public:
 	{
 		for (InputIterator it = begin; it != end; it++)
 		{
-			fcs = (fcs >> 8) ^ CRC16Table[(fcs ^ (*it)) & 0xff];
+			fcs = (fcs >> ByteConverterLittleEndian::Int8BitCount) ^
+				CRC16Table[(fcs ^ (*it)) & std::numeric_limits<uint8_t>::max()];
 		}
 		return fcs;
 	}

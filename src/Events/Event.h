@@ -38,18 +38,22 @@ namespace IntroSatLib
 		// copy assignment operator
 		event_handler& operator=(const event_handler& src)
 		{
-			m_handlerFunc = src.m_handlerFunc;
-			m_handlerId = src.m_handlerId;
-
+			if (this != src)
+			{
+				m_handlerFunc = src.m_handlerFunc;
+				m_handlerId = src.m_handlerId;
+			}
 			return *this;
 		}
 
 		// move assignment operator
 		event_handler& operator=(event_handler&& src)
 		{
-			std::swap(m_handlerFunc, src.m_handlerFunc);
-			m_handlerId = src.m_handlerId;
-
+			if (this != src)
+			{
+				std::swap(m_handlerFunc, src.m_handlerFunc);
+				m_handlerId = src.m_handlerId;
+			}
 			return *this;
 		}
 

@@ -101,7 +101,7 @@ private:
 				holder->response(begin, end, response);
 
 			_transmitter.new_response(response.cbegin(), response.cend());
-			return cantNext == RequestStatus::CantNextCode;
+			return cantNext != RequestStatus::CantNextCode;
 		}
 		return 1;
 	}

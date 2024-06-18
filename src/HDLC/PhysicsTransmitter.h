@@ -87,11 +87,9 @@ private:
 	void
 	start_transmite() noexcept
 	{
-		if (_count == -2) { return; }
-		if (HAL_GPIO_ReadPin(_gpio.get(), _gpioPin) == GPIO_PIN_RESET) { return; }
-
-		if (get_last_time() < Base::MaxTimeout) { clear_buffer(); }
-		else { transmite_next_byte(); }
+		if (_count != -1) { return; }
+		if (get_last_time() < Base::MaxTimeout) { clear_buffer(); return; }
+		if (HAL_GPIO_ReadPin(_gpio.get(), _gpioPin) == GPIO_PIN_SET) { transmite_next_byte(); return; }
 	}
 
 	uint8_t
@@ -104,6 +102,7 @@ private:
 		}
 		if (_count == -1 || _count == size())
 		{
+			_count++;
 			transmite_byte(StartOrStopByte);
 			set_last_time();
 			return 1;

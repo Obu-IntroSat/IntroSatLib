@@ -34,12 +34,8 @@ protected:
 protected:
 
 	static constexpr uint32_t
-	UartReferenceToValue(const USART_TypeDef *usart) noexcept
-	{ return reinterpret_cast<uint32_t>(usart); }
-
-	static constexpr uint32_t
 	UartReferenceToValue(const UART_HandleTypeDef *usart) noexcept
-	{ return UartReferenceToValue(usart->Instance); }
+	{ return reinterpret_cast<uint32_t>(usart); }
 
 	Physics(UART_HandleTypeDef *usart) noexcept :
 		_usart(usart),

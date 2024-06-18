@@ -35,6 +35,7 @@ public:
 		new_byte_request();
 		clear();
 		_errors = 0;
+		set_last_time();
 		set_added_byte(false);
 	}
 

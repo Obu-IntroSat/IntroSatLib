@@ -22,6 +22,8 @@ private:
 
 	uint32_t _vi = 0;
 
+	uint8_t _first = 1;
+
 public:
 	template<class iterator>
 	constexpr void
@@ -59,7 +61,14 @@ protected:
 
 		uint32_t index = static_cast<uint32_t>(command >> RRCommandIndexShift);
 
-		if (index != _vi) { return RequestStatus::ErrorCode; }
+		if (_first == 1)
+		{
+			_vi = index;
+			_first = 0;
+			return RequestStatus::Ok;
+		}
+
+		if (index != _vi && index != (_vi + 1)) { return RequestStatus::ErrorCode; }
 
 		return RequestStatus::Ok;
 	}
@@ -67,18 +76,23 @@ protected:
 	void
 	response
 	(
-		[[maybe_unused]] HolderIterator begin,
-		[[maybe_unused]] HolderIterator end,
-						 HolderBuffer& response
+		HolderIterator begin,
+		HolderIterator end,
+		HolderBuffer& response
 	) noexcept override
 	{
 		uint64_t resultCode = 0x100000000;
+		uint64_t command = ByteConverter::ToUInt64(begin, end);
+
+		uint32_t index = static_cast<uint32_t>(command >> RRCommandIndexShift);
+
+		if (index != _vi) { _vi = (_vi + 1) & 0x7FFFFFFF; }
+
 		resultCode |= (_vi << 1);
 		for (uint8_t i = 0; i < ByteConverter::Int64ByteCount; i++)
 		{
 			response.push_back(static_cast<uint8_t>(resultCode >> (i * ByteConverter::BitInByte)));
 		}
-		_vi++;
 	}
 
 	void

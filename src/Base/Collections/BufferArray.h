@@ -1,13 +1,12 @@
 #ifndef BASE_COLLECTIONS_BUFFERARRAY_H_
 #define BASE_COLLECTIONS_BUFFERARRAY_H_
 
-#include <inttypes.h>
 #include <iterator>
 #include <type_traits>
 
 namespace IntroSatLib {
 namespace Base {
-namespace Memory {
+namespace Collections {
 
 template<typename _Tp, std::size_t _Nm>
 struct __buffer_array_traits
@@ -44,6 +43,7 @@ struct __buffer_array_traits<_Tp, 0>
 template<typename _Tp, std::size_t _Nm>
 class BufferArray
 {
+
 public:
 	typedef _Tp										value_type;
 	typedef value_type*								pointer;
@@ -64,7 +64,6 @@ private:
 	size_type _currentItem = 0;
 
 public:
-
     constexpr iterator
     begin() noexcept
     { return iterator(data()); }
@@ -127,7 +126,7 @@ public:
     constexpr size_type
     max_size() const noexcept { return _Nm; }
 
-    _GLIBCXX_NODISCARD constexpr bool
+    constexpr bool
     empty() const noexcept { return size() == 0; }
 
     constexpr void
@@ -151,7 +150,7 @@ public:
 
 };
 
-} /* namespace Memory */
+} /* namespace Collections */
 } /* namespace Base */
 } /* namespace IntroSatLib */
 

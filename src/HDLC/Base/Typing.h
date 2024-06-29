@@ -17,7 +17,7 @@ const uint8_t MinBufferSize = 5;
 
 const uint16_t MaxTimeout = 100;
 
-using BufferType = IntroSatLib::Base::Memory::BufferArray<uint8_t, MaxBufferLength>;
+using BufferType = IntroSatLib::Base::Collections::BufferArray<uint8_t, MaxBufferLength>;
 
 using iterator = BufferType::const_iterator;
 using value_type = BufferType::value_type;

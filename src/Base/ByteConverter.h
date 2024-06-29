@@ -88,7 +88,7 @@ public:
 		uint64_t result = 0;
 		for (uint8_t i = 0; i < Int64ByteCount; i++)
 		{
-			result |= static_cast<uint32_t>(begin[i]) << (i * BitInByte);
+			result |= static_cast<uint64_t>(begin[i]) << (i * BitInByte);
 		}
 		return result;
 	}

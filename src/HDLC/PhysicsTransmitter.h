@@ -135,7 +135,7 @@ private:
 			case StartOrStopByte:
 				_count--;
 				set_added_byte(true);
-				return ReplaceStartOrStopByte;
+				return AddedByte;
 			default:
 				return byte;
 			}

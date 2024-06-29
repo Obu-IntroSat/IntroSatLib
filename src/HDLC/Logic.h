@@ -111,13 +111,14 @@ public:
 		typename... Args,
 		typename InstanceOf<Base::Holder, TService>::type* = nullptr
 	>
-	void
+	Reference<TService>
 	Register(Args&&... args) noexcept
 	{
 		Reference<TService> service = std::make_shared<TService>(std::forward<Args>(args)...);
 		ServiceReference baseService = std::static_pointer_cast<Base::Holder>(service);
 		_tree[IntroSatLib::Base::GetTypeId<TService>()] = baseService;
 		_list.push_back(baseService);
+		return service;
 	}
 
 	template<

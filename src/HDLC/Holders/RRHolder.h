@@ -1,9 +1,9 @@
 #ifndef HDLC_HOLDERS_RRHOLDER_H_
 #define HDLC_HOLDERS_RRHOLDER_H_
 
-#include "../Base/Holder.h"
 #include <queue>
-#include <memory>
+#include "../Base/Holder.h"
+#include "../Base/Typing.h"
 
 namespace IntroSatLib {
 namespace HDLC {
@@ -19,20 +19,44 @@ private:
 
 	static const uint8_t RRCommandErrorFormat = 1;
 	static const uint8_t RRCommandErrorIndex = 4;
+	static const uint32_t MaxValueIndex = 0x7FFFFFFF;
+	static const uint32_t MaxBuffer = 5;
 
 	uint32_t _vi = 0;
 
 	uint8_t _first = 1;
 
+	std::queue<Base::BufferType> _queue;
+
 public:
 	template<class iterator>
 	constexpr void
-	Add
+	add
 	(
-		const iterator &cpStart,
-		const iterator &cpStop
+		const iterator cpStart,
+		const iterator cpStop
 	) noexcept
-	{ }
+	{
+		Base::BufferType toSet;
+		for (iterator it = cpStart; cpStart != cpStop; it++)
+		{
+			toSet.push_back(*it);
+		}
+		_queue.push(toSet);
+	}
+
+	template<class iterator>
+	constexpr void
+	add
+	(
+		const iterator cpStart,
+		const uint8_t size
+	) noexcept
+	{ add(cpStart, cpStart + size); }
+
+	bool
+	can_add() const noexcept
+	{ return _queue.size() < MaxBuffer; }
 
 protected:
 	uint8_t
@@ -67,7 +91,6 @@ protected:
 			_first = 0;
 			return RequestStatus::Ok;
 		}
-
 		if (index != _vi && index != (_vi + 1)) { return RequestStatus::ErrorCode; }
 
 		return RequestStatus::Ok;
@@ -86,13 +109,24 @@ protected:
 
 		uint32_t index = static_cast<uint32_t>(command >> RRCommandIndexShift);
 
-		if (index != _vi) { _vi = (_vi + 1) & 0x7FFFFFFF; }
+		if (index != _vi) { _vi = (_vi + 1) & MaxValueIndex; }
 
 		resultCode |= (_vi << 1);
+
 		for (uint8_t i = 0; i < ByteConverter::Int64ByteCount; i++)
 		{
 			response.push_back(static_cast<uint8_t>(resultCode >> (i * ByteConverter::BitInByte)));
 		}
+
+		if (_queue.empty()) { return; }
+
+		Base::BufferType& buffer = _queue.front();
+
+		for (const uint8_t& value : buffer)
+		{
+			response.push_back(value);
+		}
+		_queue.pop();
 	}
 
 	void

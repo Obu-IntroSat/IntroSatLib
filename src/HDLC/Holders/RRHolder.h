@@ -38,7 +38,7 @@ public:
 	) noexcept
 	{
 		Base::BufferType toSet;
-		for (iterator it = cpStart; cpStart != cpStop; it++)
+		for (iterator it = cpStart; it != cpStop; it++)
 		{
 			toSet.push_back(*it);
 		}

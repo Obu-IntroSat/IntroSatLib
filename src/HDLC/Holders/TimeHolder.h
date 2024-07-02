@@ -19,6 +19,10 @@ private:
 	uint64_t _fullTime = 0;
 
 public:
+
+	constexpr TimeHolder() noexcept:
+		UIHolder(TimeCommandByte) { }
+
 	constexpr uint32_t
 	UNIX() const noexcept
 	{ return static_cast<uint32_t>(_fullTime >> UNIXFractionShift); }
@@ -46,13 +50,6 @@ private:
 	}
 
 protected:
-	uint8_t
-	is_current
-	(
-		HolderIterator begin,
-		HolderIterator end
-	) const noexcept override
-	{ return ByteConverter::ToUInt8(begin, end) == TimeCommandByte; }
 
 	RequestStatus
 	request_params

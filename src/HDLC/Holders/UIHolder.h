@@ -7,19 +7,19 @@ namespace IntroSatLib {
 namespace HDLC {
 namespace Holders {
 
-class UIHolder: public IntroSatLib::HDLC::Base::Holder
+class UIHolder: public Base::Holder
 {
-protected:
+private:
 	static const uint8_t UICommandByte = 0x13;
 	static const uint8_t UICommandByteBroadcast = 0x03;
 
-	virtual uint8_t
-	is_current_params
-	(
-		[[maybe_unused]] HolderIterator begin,
-		[[maybe_unused]] HolderIterator end
-	) const noexcept
-	{ return 0; }
+	const uint8_t _address = 0x00;
+
+protected:
+	constexpr
+	UIHolder(uint8_t address) noexcept:
+		Base::Holder(),
+		_address(address) { }
 
 	virtual RequestStatus
 	request_params
@@ -59,9 +59,14 @@ public:
 	{
 		uint8_t commandByte = ByteConverter::ToUInt8(begin, end);
 		if (commandByte != UICommandByte || commandByte != UICommandByteBroadcast) { return 0; }
+
 		HolderIterator commandParams = begin + 1;
 		uint8_t countParams = distance(commandParams, end);
-		return countParams > 0 && is_current_params(commandParams, end);
+		if (countParams == 0) { return 0; }
+
+		if (ByteConverter::ToUInt8(commandParams, end) == _address) { return 1; }
+
+		return 0;
 	}
 
 	RequestStatus

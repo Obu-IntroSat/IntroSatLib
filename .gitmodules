@@ -1,0 +1,3 @@
+[submodule "ThirdParty/etl"]
+	path = ThirdParty/etl
+	url = https://github.com/ETLCPP/etl

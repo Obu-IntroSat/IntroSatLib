@@ -8,7 +8,7 @@
  */
 using namespace IntroSatLib;
 
-/** Создание класса акселерометра */
+/** Создание объекта акселерометра */
 Accelerometer accel(Wire);
 
 void setup() {

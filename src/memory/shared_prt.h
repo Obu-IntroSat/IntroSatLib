@@ -9,36 +9,37 @@ namespace is {
 namespace memory {
 
 template<typename TObject>
-struct shared_object
+class shared_ptr final
 {
-	std::uint32_t _count = 0;
-	TObject _object;
+private:
+	struct shared_object
+	{
+		std::uint32_t _count = 0;
+		TObject _object;
+
+	public:
+		template<typename... Args>
+		shared_object(Args&&... args): _object(etl::forward<Args>(args)...) { };
+
+		constexpr void
+		acquire() noexcept
+		{ _count++; }
+
+		constexpr bool
+		release() noexcept
+		{ return --_count == 0; }
+	};
+
+	template<typename T, typename TShared, typename... Args>
+	friend TShared make_shared(etl::ipool *pool, Args&&... args);
 
 public:
-	template<typename... Args>
-	shared_object(Args&&... args): _object(etl::forward<Args>(args)...) { };
-
-	constexpr void
-	acquire() noexcept
-	{ _count++; }
-
-	constexpr bool
-	release() noexcept
-	{ return --_count == 0; }
-};
-
-template<typename TObject>
-class shared_ptr
-{
-public:
-
-	typedef shared_object<TObject> type;
+	typedef shared_object	type;
 
 private:
-	shared_object<TObject> *_object;
-	etl::ipool *_pool;
+	shared_object			*_object;
+	etl::ipool				*_pool;
 
-private:
 	constexpr void acquire()
 	{
 		if (_object == 0) { return; }
@@ -74,7 +75,7 @@ public:
 public:
 	constexpr shared_ptr(): _object(0), _pool(0) { }
 
-	constexpr shared_ptr(shared_object<TObject> *object, etl::ipool *pool): _object(object), _pool(pool)
+	constexpr shared_ptr(shared_object *object, etl::ipool *pool): _object(object), _pool(pool)
 	{ acquire(); }
 
 	constexpr shared_ptr(const shared_ptr &ptr): _object(ptr._object), _pool(ptr._pool)
@@ -91,15 +92,14 @@ public:
 		return *this;
 	}
 
-	virtual ~shared_ptr() { release(); }
+	~shared_ptr() { release(); }
 };
 
 template<typename TObject, typename TShared = shared_ptr<TObject>, typename... Args>
 TShared make_shared(etl::ipool *pool, Args&&... args)
 {
-	shared_object<TObject> *object = pool->create<shared_object<TObject>>(etl::forward<Args>(args)...);
-	TShared result(object, pool);
-	return result;
+	auto *object = pool->create<typename shared_ptr<TObject>::shared_object>(etl::forward<Args>(args)...);
+	return { reinterpret_cast<typename TShared::type *>(object), pool };
 }
 
 } /* namespace memory */

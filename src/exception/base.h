@@ -5,6 +5,7 @@
 #include <cinttypes>
 #include <type_traits>
 #include "../memory/shared_prt.h"
+#include "../../third_party/etl/include/etl/expected.h"
 #include "../../third_party/etl/include/etl/generic_pool.h"
 
 
@@ -57,6 +58,11 @@ base::exception_ref next(base::exception_ref prev, base::string_type file, base:
 	result->_ref = prev;
 	return result;
 }
+
+template<typename TResult>
+using result_type = etl::expected<TResult, base::exception_ref>;
+
+using error_type = etl::unexpected<base::exception_ref>;
 
 } /* namespace exception */
 } /* namespace is */

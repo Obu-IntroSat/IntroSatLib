@@ -11,7 +11,6 @@
 #include <cinttypes>
 
 #include "../exception/base.h"
-#include "../../third_party/etl/include/etl/expected.h"
 #include "../../third_party/etl/include/etl/enum_type.h"
 
 namespace is {
@@ -34,51 +33,81 @@ struct GPIOPinState
 		SET = 1
 	};
 
-	ETL_DECLARE_ENUM_TYPE(GPIOPinState, GPIO_PinState)
+	ETL_DECLARE_ENUM_TYPE(GPIOPinState, uint8_t)
 	ETL_ENUM_TYPE(RESET	, "Reset")
 	ETL_ENUM_TYPE(SET	, "Set"  )
+	ETL_END_ENUM_TYPE
+};
+
+struct GPIOPinEvent
+{
+	enum enum_type
+	{
+		NONE = 0,
+		RISING = 1,
+		FALLING = 2,
+		CHANGE = 3
+	};
+
+	ETL_DECLARE_ENUM_TYPE(GPIOPinEvent, uint8_t)
+	ETL_ENUM_TYPE(NONE		, "None"	)
+	ETL_ENUM_TYPE(RISING	, "Rising"	)
+	ETL_ENUM_TYPE(FALLING	, "Falling"	)
+	ETL_ENUM_TYPE(CHANGE	, "Change"	)
 	ETL_END_ENUM_TYPE
 };
 
 class GPIO final
 {
 private:
-	GPIO_TypeDef& _GPIO;
+	GPIO_TypeDef* _GPIO;
 	std::uint16_t _pin;
+	GPIOPinState  _lastState = GPIOPinState::RESET;
 
 public:
 	constexpr
-	GPIO(GPIO_TypeDef& GPIO, std::uint16_t pin): _GPIO(GPIO), _pin(pin) { }
+	GPIO(GPIO_TypeDef* GPIO, std::uint16_t pin): _GPIO(GPIO), _pin(pin) { }
 
-	etl::expected<void, exception::base::exception_ref>
+	exception::result_type<void>
 	lock() const noexcept
 	{
-		if (HAL_GPIO_LockPin(&_GPIO, _pin) == HAL_ERROR || 1)
+		if (HAL_GPIO_LockPin(_GPIO, _pin) == HAL_ERROR)
 		{
-			return etl::unexpected<exception::base::exception_ref>
-			(exception::create<exception::GPIO_lock_exception>(__FILE__, __LINE__));
+			return exception::error_type(exception::create<exception::GPIO_lock_exception>(__FILE__, __LINE__));
 		}
-		return etl::expected<void, exception::base::exception_ref>();
+		return exception::result_type<void>();
 	}
 
-	etl::expected<GPIOPinState, exception::base>
+	exception::result_type<GPIOPinState>
 	get() const noexcept
 	{
-		return etl::expected<GPIOPinState, exception::base>(GPIOPinState(HAL_GPIO_ReadPin(&_GPIO, _pin)));
+		return exception::result_type<GPIOPinState>(GPIOPinState(HAL_GPIO_ReadPin(_GPIO, _pin)));
+	}
+	exception::result_type<GPIOPinEvent>
+	event() noexcept
+	{
+		GPIOPinState current = get().value_or(GPIOPinState::RESET);
+		GPIOPinEvent result = GPIOPinEvent::NONE;
+		if (_lastState.get_value() != current.get_value())
+		{
+			result = current.get_value() ? GPIOPinEvent::RISING : GPIOPinEvent::FALLING;
+		}
+		_lastState = current;
+		return result;
 	}
 
-	etl::expected<void, exception::base>
+	exception::result_type<void>
 	set(GPIOPinState value) const noexcept
 	{
-		HAL_GPIO_WritePin(&_GPIO, _pin, value);
-		return etl::expected<void, exception::base>();
+		HAL_GPIO_WritePin(_GPIO, _pin, static_cast<GPIO_PinState>(value.get_value()));
+		return exception::result_type<void>();
 	}
 
-	etl::expected<void, exception::base>
+	exception::result_type<void>
 	togle() const noexcept
 	{
-		HAL_GPIO_TogglePin(&_GPIO, _pin);
-		return etl::expected<void, exception::base>();
+		HAL_GPIO_TogglePin(_GPIO, _pin);
+		return exception::result_type<void>();
 	}
 };
 

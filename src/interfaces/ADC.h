@@ -95,7 +95,7 @@ public:
 
 		std::uint16_t result = HAL_ADC_GetValue(_adc);
 
-		switch(HAL_ADC_Stop(_adc))
+		switch(ADC_ConversionStop(_adc, ADC_REGULAR_GROUP))
 		{
 		case HAL_ERROR:
 			return exception::error_type(exception::create<exception::ADC_stop_exception>(__FILE__, __LINE__));

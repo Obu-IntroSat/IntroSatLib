@@ -20,7 +20,7 @@ public:
 	typedef memory::shared_ptr<base>	exception_ref;
 
 private:
-	static etl::generic_pool<32, 8, 20> _pool;
+	static inline etl::generic_pool<32, 8, 20> _pool;
 
 private:
 	string_type		_text = 0;

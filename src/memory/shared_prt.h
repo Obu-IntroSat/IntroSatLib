@@ -19,7 +19,7 @@ private:
 
 	public:
 		template<typename... Args>
-		shared_object(Args&&... args): _object(etl::forward<Args>(args)...) { };
+		shared_object(Args&&... args): _object(etl::forward<Args>(args)...) { }
 
 		constexpr void
 		acquire() noexcept

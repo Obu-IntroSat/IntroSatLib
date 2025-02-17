@@ -46,7 +46,7 @@ public:
 	BaseFlyWheel(uint8_t address = BASE_ADDRESS);
 #endif
 
-	uint8_t Init();
+	uint8_t Init() override;
 
 	void DirectMode(uint8_t directMode);
 	uint8_t DirectMode();

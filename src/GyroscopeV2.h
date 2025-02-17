@@ -1,9 +1,7 @@
-#ifndef GYROSCOPE_H_
-#define GYROSCOPE_H_
+#ifndef GYROSCOPE_V2_H_
+#define GYROSCOPE_V2_H_
 
 #include "I2CDevice.h"
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include "BaseDevice.h"
 #include "Quaternion/Quaternion.h"
 
@@ -13,7 +11,7 @@ class GyroscopeV2: public BaseDevice {
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x6B;
-	static constexpr float _rawdps = (8.75f / 1000.f) * M_PI / 180.0;
+	static constexpr float _rawdps = (8.75f / 1000.f) * 3.1415926f / 180.0f;
 
 	enum RegisterMap
 	{
@@ -76,7 +74,7 @@ public:
 	GyroscopeV2& operator=(const GyroscopeV2 &other);
 	GyroscopeV2& operator=(GyroscopeV2 &&other);
 
-	uint8_t Init();
+	uint8_t Init() override;
 	uint8_t Init(Scale sensitivity);
 	uint8_t Init(Scale sensitivity, DataRate dataRate);
 
@@ -103,4 +101,4 @@ public:
 
 } /* namespace IntroSatLib */
 
-#endif /* GYROSCOPE_H_ */
+#endif /* GYROSCOPE_V2_H_ */

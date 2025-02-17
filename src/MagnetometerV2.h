@@ -1,5 +1,5 @@
-#ifndef MagnetometerV2_H_
-#define MagnetometerV2_H_
+#ifndef MAGNETOMETER_V2_H_
+#define MAGNETOMETER_V2_H_
 
 #include "I2CDevice.h"
 #include "BaseDevice.h"
@@ -60,7 +60,7 @@ namespace IntroSatLib
 		MagnetometerV2(MagnetometerV2 &&other);
 		MagnetometerV2 &operator=(MagnetometerV2 &&other);
 
-		uint8_t Init();
+		uint8_t Init() override;
 		uint8_t Init(Scale sensitivity);
 
 		void SetScale(Scale sensitivity);
@@ -82,4 +82,4 @@ namespace IntroSatLib
 
 } /* namespace IntroSatLib */
 
-#endif /* MagnetometerV2_H_ */
+#endif /* MAGNETOMETER_V2_H_ */

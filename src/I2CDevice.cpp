@@ -1,11 +1,14 @@
-/*
- * I2CDevice.cpp
- *
- *  Created on: Jul 10, 2022
- *      Author: Almaz
- */
+#include "./I2CDevice.h"
 
-#include "I2CDevice.h"
+#include "./Logger.h"
+
+
+#define ASSERT_I2C_HAVE() \
+if(!_hi2c) { \
+	logText("Haven't i2c handle"); \
+	return HAL_StatusTypeDef::HAL_ERROR; \
+}
+
 
 namespace IntroSatLib {
 
@@ -78,31 +81,106 @@ I2CDevice& I2CDevice::operator=(I2CDevice&& other)
 	_speed = other._speed;
 	return *this;
 }
-HAL_StatusTypeDef I2CDevice::isReady()
+HAL_StatusTypeDef I2CDevice::isReady(uint8_t force)
 {
-	return HAL_I2C_IsDeviceReady(_hi2c, _address, 1, 1000);
+	ASSERT_I2C_HAVE();
+	while (innerIsReady() || force) { }
+	return HAL_OK;
+}
+
+HAL_StatusTypeDef I2CDevice::innerIsReady()
+{
+	LOG_I2C_ADDRESS();
+	logText(": ");
+	HAL_StatusTypeDef status = logStatus(
+			HAL_I2C_IsDeviceReady(_hi2c, _address, 1, 1000)
+	);
+	logText("\n");
+	return status;
 }
 
 
 HAL_StatusTypeDef I2CDevice::read(uint8_t* Data, uint8_t Nbytes)
 {
-	if(!_hi2c) return HAL_StatusTypeDef::HAL_ERROR;
-	return HAL_I2C_Master_Receive(_hi2c, _address, Data, Nbytes, 1000);
+	ASSERT_I2C_HAVE();
+	LOG_I2C_ADDRESS();
+	logText(" read ");
+	logNumber(Nbytes);
+	logText("bytes > ");
+
+	HAL_StatusTypeDef status = logStatus(
+			HAL_I2C_Master_Receive(_hi2c, _address, Data, Nbytes, 1000)
+	);
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }
+
+	logText("\n");
+	return status;
+
 }
 HAL_StatusTypeDef I2CDevice::read(uint8_t Register, uint8_t* Data, uint8_t Nbytes)
 {
-	if(!_hi2c) return HAL_StatusTypeDef::HAL_ERROR;
-	return HAL_I2C_Mem_Read(_hi2c, _address, Register, I2C_MEMADD_SIZE_8BIT, Data, Nbytes, 5000);
+	ASSERT_I2C_HAVE();
+	LOG_I2C_ADDRESS();
+	logText(" read from memory ");
+	logHEX(Register);
+	logText(" ");
+	logNumber(Nbytes);
+	logText("bytes > ");
+	HAL_StatusTypeDef status = logStatus(
+		HAL_I2C_Mem_Read(
+			_hi2c,
+			_address,
+			Register,
+			I2C_MEMADD_SIZE_8BIT,
+			Data,
+			Nbytes,
+			1000
+		)
+	);
+
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }
+
+	logText("\n");
+	return status;
 }
 HAL_StatusTypeDef I2CDevice::write(uint8_t* Data, uint8_t Nbytes)
 {
-	if(!_hi2c) return HAL_StatusTypeDef::HAL_ERROR;
-	return HAL_I2C_Master_Transmit(_hi2c, _address, Data, Nbytes, 1000);
+	ASSERT_I2C_HAVE();
+	LOG_I2C_ADDRESS();
+	logText(" write ");
+	logNumber(Nbytes);
+	logText(" bytes ");
+	LOG_I2C_BUFFER(", ", Data, Nbytes);
+	logText(" > ");
+	HAL_StatusTypeDef status = logStatus(
+			HAL_I2C_Master_Transmit(_hi2c, _address, Data, Nbytes, 1000)
+	);
+	logText("\n");
+	return status;
 }
 HAL_StatusTypeDef I2CDevice::write(uint8_t Register, uint8_t* Data, uint8_t Nbytes)
 {
-	if(!_hi2c) return HAL_StatusTypeDef::HAL_ERROR;
-	return HAL_I2C_Mem_Write(_hi2c, _address, Register, I2C_MEMADD_SIZE_8BIT, Data, Nbytes, 1000);
+	ASSERT_I2C_HAVE();
+	LOG_I2C_ADDRESS();
+	logText(" write from memory ");
+	logHEX(Register);
+	logText(" ");
+	logNumber(Nbytes);
+	logText(" bytes ");
+	LOG_I2C_BUFFER(", ", Data, Nbytes);
+	logText(" > ");
+	HAL_StatusTypeDef status = logStatus(
+		HAL_I2C_Mem_Write(
+				_hi2c,
+				_address,
+				Register,
+				I2C_MEMADD_SIZE_8BIT,
+				Data,
+				Nbytes,
+				1000)
+	);
+	logText("\n");
+	return status;
 }
 
 I2CDevice::~I2CDevice()

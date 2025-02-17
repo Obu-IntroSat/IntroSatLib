@@ -1,10 +1,3 @@
-/*
- * BaseDevice.h
- *
- *  Created on: Jul 12, 2022
- *      Author: Almaz
- */
-
 #ifndef BASEDEVICE_H_
 #define BASEDEVICE_H_
 
@@ -17,11 +10,11 @@ class BaseDevice {
 protected:
 	I2CDevice &_i2c;
 
-	virtual uint8_t GetRegister(uint8_t reg);
-	virtual void SetRegister(uint8_t reg, uint8_t value);
-	virtual void SetBitRegister(uint8_t reg, uint8_t bit);
-	virtual void ResetBitRegister(uint8_t reg, uint8_t bit);
-	virtual void BitRegister(uint8_t reg, uint8_t bit, uint8_t value);
+	uint8_t GetRegister(uint8_t reg);
+	void SetRegister(uint8_t reg, uint8_t value);
+	void SetBitRegister(uint8_t reg, uint8_t bit);
+	void ResetBitRegister(uint8_t reg, uint8_t bit);
+	void BitRegister(uint8_t reg, uint8_t bit, uint8_t value);
 
 public:
 #ifndef ARDUINO

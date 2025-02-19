@@ -131,9 +131,6 @@ void IRCamera::tryReset()
 	HAL_Delay(100);
 }
 
-IRCamera::~IRCamera()
-{
-	BaseDevice::~BaseDevice();
-}
+IRCamera::~IRCamera() { }
 
 }

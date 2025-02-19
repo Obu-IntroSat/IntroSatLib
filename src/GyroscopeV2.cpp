@@ -170,9 +170,6 @@ Quaternion<float> GyroscopeV2::GetQuaternion()
 }
 
 
-GyroscopeV2::~GyroscopeV2()
-{
-	BaseDevice::~BaseDevice();
-}
+GyroscopeV2::~GyroscopeV2() { }
 
 }

@@ -116,9 +116,6 @@ Quaternion<float> MagnetometerV2::GetQuaternion()
 	return from_euler(buf);
 }
 
-MagnetometerV2::~MagnetometerV2()
-{
-	BaseDevice::~BaseDevice();
-}
+MagnetometerV2::~MagnetometerV2() { }
 
 } /* namespace IntroSatLib */

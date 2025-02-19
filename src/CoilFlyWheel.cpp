@@ -44,9 +44,6 @@ CoilFlyWheel& CoilFlyWheel::operator=(CoilFlyWheel &&other)
 	return *this;
 }
 
-CoilFlyWheel::~CoilFlyWheel()
-{
-	BaseFlyWheel::~BaseFlyWheel();
-}
+CoilFlyWheel::~CoilFlyWheel() { }
 
 } /* namespace IntroSatLib */

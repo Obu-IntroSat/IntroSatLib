@@ -80,7 +80,7 @@ public:
 
 	float getPixel(uint8_t x, uint8_t y);
 
-	virtual ~IRCamera();
+	~IRCamera() override;
 };
 
 } /* namespace IntroSatLib */

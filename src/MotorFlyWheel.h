@@ -18,7 +18,7 @@ public:
 	MotorFlyWheel(MotorFlyWheel &&other);
 	MotorFlyWheel& operator=(const MotorFlyWheel &other);
 	MotorFlyWheel& operator=(MotorFlyWheel &&other);
-	virtual ~MotorFlyWheel();
+	~MotorFlyWheel() override;
 };
 
 } /* namespace IntroSatLib */

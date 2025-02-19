@@ -77,7 +77,7 @@ namespace IntroSatLib
 		
 		Quaternion<float> GetQuaternion();
 
-		virtual ~MagnetometerV2();
+		~MagnetometerV2() override;
 	};
 
 } /* namespace IntroSatLib */

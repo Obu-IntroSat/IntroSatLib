@@ -96,7 +96,7 @@ public:
 
 	Quaternion<float> GetQuaternion();
 
-	virtual ~GyroscopeV2();
+	~GyroscopeV2() override;
 };
 
 } /* namespace IntroSatLib */

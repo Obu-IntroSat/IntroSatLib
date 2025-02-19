@@ -74,7 +74,7 @@ public:
 	BaseFlyWheel(BaseFlyWheel &&other);
 	BaseFlyWheel& operator=(const BaseFlyWheel &other);
 	BaseFlyWheel& operator=(BaseFlyWheel &&other);
-	virtual ~BaseFlyWheel();
+	~BaseFlyWheel() override;
 };
 
 } /* namespace IntroSatLib */

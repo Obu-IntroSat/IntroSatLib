@@ -328,8 +328,6 @@ BaseFlyWheel& BaseFlyWheel::operator=(BaseFlyWheel &&other)
 	return *this;
 }
 
-BaseFlyWheel::~BaseFlyWheel()
-{
-	BaseDevice::~BaseDevice();
-}
+BaseFlyWheel::~BaseFlyWheel() { }
+
 } /* namespace IntroSatLib */

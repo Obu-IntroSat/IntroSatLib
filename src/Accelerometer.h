@@ -76,7 +76,7 @@ public:
 	float Y();
 	float Z();
 
-	virtual ~Accelerometer();
+	~Accelerometer() override;
 };
 
 } /* namespace IntroSatLib */

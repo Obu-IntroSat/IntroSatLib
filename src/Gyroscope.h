@@ -76,7 +76,7 @@ public:
 	float Y();
 	float Z();
 
-	virtual ~Gyroscope();
+	~Gyroscope() override;
 };
 
 } /* namespace IntroSatLib */

@@ -18,7 +18,7 @@ public:
 	CoilFlyWheel(CoilFlyWheel &&other);
 	CoilFlyWheel& operator=(const CoilFlyWheel &other);
 	CoilFlyWheel& operator=(CoilFlyWheel &&other);
-	virtual ~CoilFlyWheel();
+	~CoilFlyWheel() override;
 };
 
 } /* namespace IntroSatLib */

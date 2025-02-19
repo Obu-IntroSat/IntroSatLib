@@ -85,10 +85,13 @@ public:
 	int16_t RawY();
 	int16_t RawZ();
 
-
 	float X();
 	float Y();
 	float Z();
+
+	float integrationX();
+	float integrationY();
+	float integrationZ();
 
 	void SetMinCutX(float x);
 	void SetMinCutY(float y);

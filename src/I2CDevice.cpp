@@ -9,6 +9,23 @@ if(!_hi2c) { \
 	return HAL_StatusTypeDef::HAL_ERROR; \
 }
 
+#define LOG_I2C_ADDRESS() \
+logText("Device in "); \
+logHEX(_address >> 1);
+
+#if LOGDATA
+#define LOG_I2C_BUFFER(Sep, Data, Nbytes) { \
+logText(" - "); \
+for(uint8_t i = 0; i < Nbytes; i++) { \
+	logHEX(Data[i]); \
+	if (i != (Nbytes - 1)) logText(Sep); \
+} \
+}
+
+#else
+#define LOG_I2C_BUFFER(Sep, Data, Nbytes)
+#endif
+
 
 namespace IntroSatLib {
 

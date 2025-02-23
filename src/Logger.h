@@ -25,21 +25,4 @@ void logNumber(uint8_t val);
 HAL_StatusTypeDef logStatus(HAL_StatusTypeDef status);
 
 
-#define LOG_I2C_ADDRESS() \
-logText("Device in "); \
-logHEX(_address >> 1);
-
-#if LOGDATA
-#define LOG_I2C_BUFFER(Sep, Data, Nbytes) { \
-logText(" - "); \
-for(uint8_t i = 0; i < Nbytes; i++) { \
-	logHEX(Data[i]); \
-	if (i != (Nbytes - 1)) logText(Sep); \
-} \
-}
-
-#else
-#define LOG_I2C_BUFFER(Sep, Data, Nbytes)
-#endif
-
 #endif /* LOGGER_H_ */

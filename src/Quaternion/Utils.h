@@ -1,3 +1,4 @@
+#ifndef ARDUINO
 /**
  * Utilities for working with quaternion.
  */
@@ -56,3 +57,5 @@ inline bool is_nearly_equal(T1 x, T2 y, T3 eps = 0) {
 
 } // end namespace IntroSatLib
 #endif //QUATERNIONS_UTILS_H
+
+#endif

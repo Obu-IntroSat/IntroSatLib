@@ -175,6 +175,7 @@ float GyroscopeV2::integrationZ()
 	return value;
 }
 
+#ifndef ARDUINO
 Quaternion<float> GyroscopeV2::GetQuaternion()
 {
 	std::array<float, 3> buf;
@@ -183,6 +184,7 @@ Quaternion<float> GyroscopeV2::GetQuaternion()
 	buf[2] = integrationZ();
 	return from_euler(buf);
 }
+#endif
 
 
 GyroscopeV2::~GyroscopeV2() { }

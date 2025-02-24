@@ -107,6 +107,7 @@ float MagnetometerV2::Z()
 	return e / _rawg;	
 }
 
+#ifndef ARDUINO
 Quaternion<float> MagnetometerV2::GetQuaternion()
 {
 	std::array<float, 3> buf;
@@ -115,6 +116,7 @@ Quaternion<float> MagnetometerV2::GetQuaternion()
 	buf[2] = std::atan2(RawY(), RawX());
 	return from_euler(buf);
 }
+#endif
 
 MagnetometerV2::~MagnetometerV2() { }
 

@@ -78,7 +78,7 @@ public:
 		logNumber((uint8_t)len);
 		logText("bytes > ");
 		HAL_StatusTypeDef result = logStatus(
-			HAL_SPI_TransmitReceive(_hspi, out, in, len, 1000)
+			HAL_SPI_TransmitReceive(_hspi, (uint8_t*) out, in, len, 1000)
 		);
 
 		LOG_SPI_BUFFER(", ", out, N);

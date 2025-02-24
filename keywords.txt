@@ -6,12 +6,19 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Accelerometer	KEYWORD1
+Accelerometer   KEYWORD1
+AccelerometerV2	KEYWORD1
 Gyroscope	KEYWORD1
+GyroscopeV2	KEYWORD1
+AK8963  KEYWORD1
+MagnetometerV2  KEYWORD1
+IRCamera    KEYWORD1
+CC1101  KEYWORD1
 LightSensor	KEYWORD1
 CoilFlyWheel	KEYWORD1
 MotorFlyWheel	KEYWORD1
 I2CDevice	KEYWORD1
+IS_Bluetooth    KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2) for All

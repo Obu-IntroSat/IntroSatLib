@@ -3,7 +3,10 @@
 
 #include "I2CDevice.h"
 #include "BaseDevice.h"
+
+#ifndef ARDUINO
 #include "Quaternion/Quaternion.h"
+#endif
 
 namespace IntroSatLib {
 
@@ -96,9 +99,9 @@ public:
 	void SetMinCutX(float x);
 	void SetMinCutY(float y);
 	void SetMinCutZ(float z);
-
+#ifndef ARDUINO
 	Quaternion<float> GetQuaternion();
-
+#endif
 	~GyroscopeV2() override;
 };
 

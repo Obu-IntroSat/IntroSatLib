@@ -1,3 +1,5 @@
+#ifndef ARDUINO
+
 #ifndef QUATERNIONS_QUATERNION_H
 #define QUATERNIONS_QUATERNION_H
 
@@ -1340,3 +1342,5 @@ inline Quaternion<T> axby(K k1, const Quaternion<T>& x, K k2, const Quaternion<T
 } // end namespace IntroSatLib
 
 #endif //QUATERNIONS_QUATERNION_H
+
+#endif 

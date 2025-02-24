@@ -3,7 +3,9 @@
 
 #include "I2CDevice.h"
 #include "BaseDevice.h"
+#ifndef ARDUINO
 #include "Quaternion/Quaternion.h"
+#endif
 #include <cmath>
 #include <array>
 
@@ -74,8 +76,9 @@ namespace IntroSatLib
 		float X();
 		float Y();
 		float Z();
-		
+#ifndef ARDUINO	
 		Quaternion<float> GetQuaternion();
+#endif
 
 		~MagnetometerV2() override;
 	};

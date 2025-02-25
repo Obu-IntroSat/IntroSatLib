@@ -5,17 +5,10 @@
 #include "./interfaces/SPI.h"
 #include <array>
 #include "string.h"
+#include "math.h"
 
+#ifdef HAVE_SPI
 namespace IntroSatLib {
-
-template<size_t T>
-class AnswerAwaiter
-{
-	void operator()()
-	{
-		HAL_Delay(T);
-	}
-};
 
 class CC1101 {
 
@@ -285,7 +278,7 @@ private:
 		RegisterData { CC1101_TEST0    }
 	};
 protected:
-	virtual void await() = 0;
+	virtual void await(uint8_t len) = 0;
 
 private:
 	void start() { }
@@ -371,7 +364,7 @@ public:
 	// MDMCFG4
 	void setRxBW(float f);
 	// MDMCFG4 + MDMCFG3
-	void setDRate(float d);
+	virtual void setDRate(float kD);
 	// MDMCFG2
 	void setDcFilterOff(uint8_t v);
 	void setManchester(uint8_t v);
@@ -404,7 +397,7 @@ public:
 
 	void goSleep();
 
-	void SendData(char *txchar);
+	void SendData(const char *txchar);
 	void SendData(uint8_t *txBuffer, uint8_t size);
 
 	uint8_t CheckCRC();
@@ -413,20 +406,62 @@ public:
 
 class CC1101WithDelay: public CC1101
 {
-	uint32_t _delay;
+
+	static constexpr float getTimeoutK(float kD)
+	{
+		return (1.66f + 0.6f * (log10f(kD) + 3)) / kD;
+	}
+
+	float timeoutK = getTimeoutK(99.97f);
+
 public:
 	CC1101WithDelay(
 			intefaces::SPI &spi,
 			intefaces::GPIO &scl,
 			intefaces::GPIO &mosi,
 			intefaces::GPIO &miso,
-			intefaces::GPIO &reset,
-			uint32_t delay
-		): CC1101(spi, scl, mosi, miso, reset), _delay(delay) { }
+			intefaces::GPIO &reset
+		): CC1101(spi, scl, mosi, miso, reset) { }
 
-	void await() override { HAL_Delay(_delay); }
+	void await(uint8_t len) override
+	{
+		uint32_t timeout = ceilf((float)len * timeoutK * 8);
+		HAL_Delay(timeout);
+	}
+
+	void setDRate(float kD) override
+	{
+		CC1101::setDRate(kD);
+		timeoutK = getTimeoutK(kD);
+	};
+};
+
+class CC1101WithGD0: public CC1101
+{
+
+	intefaces::GPIO &_gd0;
+
+public:
+	CC1101WithGD0(
+			intefaces::SPI &spi,
+			intefaces::GPIO &scl,
+			intefaces::GPIO &mosi,
+			intefaces::GPIO &miso,
+			intefaces::GPIO &reset,
+			intefaces::GPIO &gd0
+		): CC1101(spi, scl, mosi, miso, reset), _gd0(gd0) { }
+
+	void await(uint8_t len) override
+	{
+		logText("wait set\n");
+		_gd0.waitSet();
+		logText("wait reset\n");
+		_gd0.waitReset();
+		HAL_Delay(10);
+	}
+
 };
 
 } /* namespace IntroSatLib */
-
+#endif
 #endif /* CC1101_H_ */

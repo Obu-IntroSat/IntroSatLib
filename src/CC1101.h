@@ -7,7 +7,6 @@
 #include "string.h"
 #include "math.h"
 
-#ifdef HAVE_SPI
 namespace IntroSatLib {
 
 class CC1101 {
@@ -463,5 +462,5 @@ public:
 };
 
 } /* namespace IntroSatLib */
-#endif
+
 #endif /* CC1101_H_ */

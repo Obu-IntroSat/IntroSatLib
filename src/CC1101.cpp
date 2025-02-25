@@ -1,8 +1,6 @@
 
 #include <CC1101.h>
 
-#ifdef HAVE_SPI
-
 namespace IntroSatLib {
 
 void CC1101::reset()
@@ -637,4 +635,3 @@ uint8_t CC1101::CheckCRC()
 
 } /* namespace IntroSatLib */
 
-#endif

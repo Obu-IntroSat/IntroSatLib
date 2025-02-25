@@ -5,26 +5,17 @@
 #ifdef ARDUINO
 	#include "Arduino.h"
 	#include "SPI.h"
-	#define HAVE_SPI
 #else
 	#if __has_include ("stm32f4xx_hal.h")
 		#include "stm32f4xx_hal.h"
-		#ifdef HAL_SPI_MODULE_ENABLED
-			#include "stm32f4xx_hal_spi.h"
-			#define HAVE_SPI
-		#endif
+		#include "stm32f4xx_hal_spi.h"
 	#endif
 
 	#if __has_include ("stm32f1xx_hal.h")
 		#include "stm32f1xx_hal.h"
-		#ifdef HAL_SPI_MODULE_ENABLED
-			#include "stm32f1xx_hal_spi.h"
-			#define HAVE_SPI
-		#endif
+		#include "stm32f1xx_hal_spi.h"
 	#endif
 #endif
-
-#ifdef HAVE_SPI
 
 #include <array>
 #include "../Logger.h"
@@ -97,5 +88,4 @@ public:
 } /* namespace intefaces */
 } /* namespace IntroSatLib */
 
-#endif
 #endif /* INTERFACES_SPI_H_ */

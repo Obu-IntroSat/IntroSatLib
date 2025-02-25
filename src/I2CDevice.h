@@ -9,16 +9,12 @@
 #else
 	#if __has_include ("stm32f4xx_hal.h")
 		#include "stm32f4xx_hal.h"
-		#ifdef HAL_I2C_MODULE_ENABLED
-			#include "stm32f4xx_hal_i2c.h"
-		#endif
+		#include "stm32f4xx_hal_i2c.h"
 	#endif
 
 	#if __has_include ("stm32f1xx_hal.h")
 		#include "stm32f1xx_hal.h"
-		#ifdef HAL_I2C_MODULE_ENABLED
-			#include "stm32f1xx_hal_i2c.h"
-		#endif
+		#include "stm32f1xx_hal_i2c.h"
 	#endif
 #endif
 

@@ -8,10 +8,10 @@
  #ifndef I2C_ER_H_
  #define I2C_ER_H_
  
- #define SCL_PIN     GPIO_PIN_8
+ #define SCL_PIN     GPIO_PIN_6
  #define SCL_PORT    GPIOB
  
- #define SDA_PIN     GPIO_PIN_9
+ #define SDA_PIN     GPIO_PIN_7
  #define SDA_PORT    GPIOB
  
  
@@ -37,6 +37,15 @@
  static void I2C_ClearBusyFlagErratum(I2C_HandleTypeDef *hi2c, uint32_t timeout)
  {
      // 2.13.7 I2C analog filter may provide wrong value, locking BUSY. STM32F10xx8 STM32F10xxB Errata sheet
+
+     #ifdef ARDUINO
+        Wire.end();
+        Serial.println("Resetting I2C");
+        delay(I2C_TIMEOUT);
+        Wire.begin();
+     #else
+     
+     
  
      GPIO_InitTypeDef GPIO_InitStructure = {0};
  
@@ -96,20 +105,28 @@
      GPIO_InitStructure.Pin = SDA_PIN;
      HAL_GPIO_Init(SDA_PORT, &GPIO_InitStructure);
  
+    HAL_Delay(I2C_TIMEOUT);
      // 13. Set SWRST bit in I2Cx_CR1 register.
      SET_BIT(hi2c->Instance->CR1, I2C_CR1_SWRST);
+     asm("nop");
+     asm("nop");
      asm("nop");
  
      /* 14. Clear SWRST bit in I2Cx_CR1 register. */
      CLEAR_BIT(hi2c->Instance->CR1, I2C_CR1_SWRST);
      asm("nop");
+     asm("nop");
+     asm("nop");
  
      /* 15. Enable the I2C peripheral by setting the PE bit in I2Cx_CR1 register */
      SET_BIT(hi2c->Instance->CR1, I2C_CR1_PE);
      asm("nop");
+     asm("nop");
+     asm("nop");
  
      // Call initialization function.
      HAL_I2C_Init(hi2c);
+     #endif
  }
  
  #endif /* I2C_ER_H_ */

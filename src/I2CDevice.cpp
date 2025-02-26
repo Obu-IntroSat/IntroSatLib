@@ -28,6 +28,9 @@ for(uint8_t i = 0; i < Nbytes; i++) { \
 #define LOG_I2C_BUFFER(Sep, Data, Nbytes)
 #endif
 
+// Timeout in ms for I2C reset
+#define I2C_TIMEOUT 200 
+
 
 namespace IntroSatLib {
 
@@ -137,7 +140,7 @@ HAL_StatusTypeDef I2CDevice::read(uint8_t* Data, uint8_t Nbytes)
 		// 	Serial.println("I2C reset");
 		// 	Wire.begin();
 		// #endif
-		I2C_ClearBusyFlagErratum(_hi2c, 300);
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
 	}
 
 	logText("\n");
@@ -172,7 +175,7 @@ HAL_StatusTypeDef I2CDevice::read(uint8_t Register, uint8_t* Data, uint8_t Nbyte
 		// 	Serial.println("I2C reset");
 		// 	Wire.begin();
 		// #endif
-		I2C_ClearBusyFlagErratum(_hi2c, 300);
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
 	}
 
 	logText("\n");
@@ -198,7 +201,7 @@ HAL_StatusTypeDef I2CDevice::write(uint8_t* Data, uint8_t Nbytes)
 		// 	Serial.println("I2C reset");
 		// 	Wire.begin();
 		// #endif
-		I2C_ClearBusyFlagErratum(_hi2c, 300);
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
 	}
 
 	logText("\n");
@@ -232,7 +235,7 @@ HAL_StatusTypeDef I2CDevice::write(uint8_t Register, uint8_t* Data, uint8_t Nbyt
 		// 	Serial.println("I2C reset");
 		// 	Wire.begin();
 		// #endif
-		I2C_ClearBusyFlagErratum(_hi2c, 300);
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
 	}
 	logText("\n");
 	return status;

@@ -58,7 +58,7 @@ uint8_t IRCamera::Init(Framerate framrate)
 {
 	tryReset();
 
-	while (_i2c.isReady(0)) { }
+	_i2c.isReady(1);
 
 	uint8_t value = 0;
 	if (_i2c.write(AMG88xx_PCTL, &value, 1)) { return 1; }

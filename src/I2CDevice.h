@@ -45,7 +45,7 @@ public:
 	I2CDevice(I2CDevice&& other);
 	I2CDevice& operator=(const I2CDevice& other);
 	I2CDevice& operator=(I2CDevice&& other);
-	HAL_StatusTypeDef isReady(uint8_t waitIsReady = 1);
+	HAL_StatusTypeDef isReady(uint8_t waitIsReady = 0);
 	HAL_StatusTypeDef read(uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef read(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef write(uint8_t* Data, uint8_t Nbytes);

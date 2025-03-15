@@ -52,7 +52,8 @@ uint8_t GyroscopeV2::Init(Scale sensitivity, DataRate dataRate)
 	_lastXTime = HAL_GetTick();
 	_lastYTime = _lastXTime;
 	_lastZTime = _lastXTime;
-	return 0;
+	return _i2c.isReady(); // Use existing method instead of returning 0
+	// return 0;
 }
 
 uint8_t GyroscopeV2::Init(Scale sensitivity)

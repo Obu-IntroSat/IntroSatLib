@@ -9,7 +9,7 @@
 using namespace IntroSatLib;
 
 /**
- * 0x3A адрес устройства может быть другим
+ * 0x3A - адрес устройства, может быть другим
  */
 MotorFlyWheel motor(Wire, 0x3A);
 

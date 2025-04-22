@@ -8,7 +8,7 @@
  */
 using namespace IntroSatLib;
 
-/** Создание класса гироскопа*/
+/** Создание объекта гироскопа*/
 Gyroscope gyro(Wire);
 
 void setup() {

@@ -43,7 +43,8 @@ LightSensor& LightSensor::operator=(LightSensor &&other)
 
 uint8_t LightSensor::Init()
 {
-	return 0;
+	return _i2c.isReady(); // Use existing method instead of returning 0
+	// return 0;
 }
 
 int16_t LightSensor::GetLight()

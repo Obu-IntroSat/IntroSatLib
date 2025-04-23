@@ -47,7 +47,8 @@ uint8_t Gyroscope::Init(Scale sensitivity, FilterBandwidth filter)
 	SetRegister(0x37, 0x02);
 	SetScale(sensitivity);
 	SetFilter(filter);
-	return 0;
+	return _i2c.isReady(); // Use existing method instead of returning 0
+	// return 0;
 }
 uint8_t Gyroscope::Init(Scale sensitivity)
 {

@@ -2,6 +2,8 @@
 
 #include "./Logger.h"
 
+#include "./I2C_Err.h"
+
 
 #define ASSERT_I2C_HAVE() \
 if(!_hi2c) { \
@@ -25,6 +27,9 @@ for(uint8_t i = 0; i < Nbytes; i++) { \
 #else
 #define LOG_I2C_BUFFER(Sep, Data, Nbytes)
 #endif
+
+// Timeout in ms for I2C reset
+#define I2C_TIMEOUT 200 
 
 
 namespace IntroSatLib {
@@ -132,7 +137,15 @@ HAL_StatusTypeDef I2CDevice::read(uint8_t* Data, uint8_t Nbytes)
 	HAL_StatusTypeDef status = logStatus(
 			HAL_I2C_Master_Receive(_hi2c, _address, Data, Nbytes, 1000)
 	);
-	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); } else {
+		// #ifdef ARDUINO
+		// 	Wire.end();
+		// 	HAL_Delay(300);
+		// 	Serial.println("I2C reset");
+		// 	Wire.begin();
+		// #endif
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
+	}
 
 	logText("\n");
 	return status;
@@ -159,7 +172,15 @@ HAL_StatusTypeDef I2CDevice::read(uint8_t Register, uint8_t* Data, uint8_t Nbyte
 		)
 	);
 
-	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }else {
+		// #ifdef ARDUINO
+		// 	Wire.end();
+		// 	HAL_Delay(300);
+		// 	Serial.println("I2C reset");
+		// 	Wire.begin();
+		// #endif
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
+	}
 
 	logText("\n");
 	return status;
@@ -176,6 +197,17 @@ HAL_StatusTypeDef I2CDevice::write(uint8_t* Data, uint8_t Nbytes)
 	HAL_StatusTypeDef status = logStatus(
 			HAL_I2C_Master_Transmit(_hi2c, _address, Data, Nbytes, 1000)
 	);
+
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); }else {
+		// #ifdef ARDUINO
+		// 	Wire.end();
+		// 	HAL_Delay(300);
+		// 	Serial.println("I2C reset");
+		// 	Wire.begin();
+		// #endif
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
+	}
+
 	logText("\n");
 	return status;
 }
@@ -200,6 +232,15 @@ HAL_StatusTypeDef I2CDevice::write(uint8_t Register, uint8_t* Data, uint8_t Nbyt
 				Nbytes,
 				1000)
 	);
+	if (status == HAL_OK) { LOG_I2C_BUFFER(", ", Data, Nbytes); } else {
+		// #ifdef ARDUINO
+		// 	Wire.end();
+		// 	HAL_Delay(300);
+		// 	Serial.println("I2C reset");
+		// 	Wire.begin();
+		// #endif
+		I2C_ClearBusyFlagErratum(_hi2c, I2C_TIMEOUT);
+	}
 	logText("\n");
 	return status;
 }

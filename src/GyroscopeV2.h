@@ -1,11 +1,12 @@
-#ifndef GYROSCOPE_H_
-#define GYROSCOPE_H_
+#ifndef GYROSCOPE_V2_H_
+#define GYROSCOPE_V2_H_
 
 #include "I2CDevice.h"
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include "BaseDevice.h"
+
+#ifndef ARDUINO
 #include "Quaternion/Quaternion.h"
+#endif
 
 namespace IntroSatLib {
 
@@ -13,7 +14,7 @@ class GyroscopeV2: public BaseDevice {
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x6B;
-	static constexpr float _rawdps = (8.75f / 1000.f) * M_PI / 180.0;
+	static constexpr float _rawdps = (8.75f / 1000.f) * 3.1415926f / 180.0f;
 
 	enum RegisterMap
 	{
@@ -76,7 +77,7 @@ public:
 	GyroscopeV2& operator=(const GyroscopeV2 &other);
 	GyroscopeV2& operator=(GyroscopeV2 &&other);
 
-	uint8_t Init();
+	uint8_t Init() override;
 	uint8_t Init(Scale sensitivity);
 	uint8_t Init(Scale sensitivity, DataRate dataRate);
 
@@ -87,20 +88,23 @@ public:
 	int16_t RawY();
 	int16_t RawZ();
 
-
 	float X();
 	float Y();
 	float Z();
 
+	float integrationX();
+	float integrationY();
+	float integrationZ();
+
 	void SetMinCutX(float x);
 	void SetMinCutY(float y);
 	void SetMinCutZ(float z);
-
+#ifndef ARDUINO
 	Quaternion<float> GetQuaternion();
-
-	virtual ~GyroscopeV2();
+#endif
+	~GyroscopeV2() override;
 };
 
 } /* namespace IntroSatLib */
 
-#endif /* GYROSCOPE_H_ */
+#endif /* GYROSCOPE_V2_H_ */

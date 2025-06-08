@@ -61,7 +61,7 @@ public:
 	Gyroscope& operator=(const Gyroscope &other);
 	Gyroscope& operator=(Gyroscope &&other);
 
-	uint8_t Init();
+	uint8_t Init() override;
 	uint8_t Init(Scale sensitivity);
 	uint8_t Init(Scale sensitivity, FilterBandwidth filter);
 
@@ -76,7 +76,7 @@ public:
 	float Y();
 	float Z();
 
-	virtual ~Gyroscope();
+	~Gyroscope() override;
 };
 
 } /* namespace IntroSatLib */

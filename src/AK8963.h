@@ -45,7 +45,7 @@ public:
 	float Y();
 	float Z();
 
-	virtual ~AK8963();
+	~AK8963() override;
 };
 
 } /* namespace IntroSatLib */

@@ -44,9 +44,6 @@ MotorFlyWheel& MotorFlyWheel::operator=(MotorFlyWheel &&other)
 	return *this;
 }
 
-MotorFlyWheel::~MotorFlyWheel()
-{
-	BaseFlyWheel::~BaseFlyWheel();
-}
+MotorFlyWheel::~MotorFlyWheel() { }
 
 } /* namespace IntroSatLib */

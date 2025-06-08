@@ -109,9 +109,6 @@ float Accelerometer::Z()
 	return e / _rawg;
 }
 
-Accelerometer::~Accelerometer()
-{
-	BaseDevice::~BaseDevice();
-}
+Accelerometer::~Accelerometer() { }
 
 }

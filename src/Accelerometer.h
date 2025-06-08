@@ -61,7 +61,7 @@ public:
 	Accelerometer(Accelerometer&& other);
 	Accelerometer& operator=(Accelerometer&& other);
 
-	uint8_t Init();
+	uint8_t Init() override;
 	uint8_t Init(Scale sensitivity);
 	uint8_t Init(Scale sensitivity, FilterBandwidth filter);
 
@@ -76,7 +76,7 @@ public:
 	float Y();
 	float Z();
 
-	virtual ~Accelerometer();
+	~Accelerometer() override;
 };
 
 } /* namespace IntroSatLib */

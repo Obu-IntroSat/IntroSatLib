@@ -1,24 +1,22 @@
-/*
- * I2CDevice.h
- *
- *  Created on: Jul 10, 2022
- *      Author: Almaz
- */
-
 #ifndef I2CDEVICE_H_
 #define I2CDEVICE_H_
 
 #include <stdint.h>
+
 #ifdef ARDUINO
 	#include "Arduino.h"
 	#include "Wire.h"
-#endif
+#else
+	#if __has_include ("stm32f4xx_hal.h")
+		#include "stm32f4xx_hal.h"
+		#include "stm32f4xx_hal_i2c.h"
+	#endif
 
-#include "stm32f1xx_hal.h"
-#ifdef HAL_I2C_MODULE_ENABLED
-	#include "stm32f1xx_hal_i2c.h"
+	#if __has_include ("stm32f1xx_hal.h")
+		#include "stm32f1xx_hal.h"
+		#include "stm32f1xx_hal_i2c.h"
+	#endif
 #endif
-
 
 
 namespace IntroSatLib {
@@ -34,6 +32,7 @@ private:
 	I2CSpeed _speed = I2CSpeed::Standard;
 	uint8_t _address = 0;
 	I2C_HandleTypeDef *_hi2c = 0;
+	HAL_StatusTypeDef innerIsReady();
 public:
 #ifndef ARDUINO
 	I2CDevice(I2C_HandleTypeDef *hi2c, uint8_t address);
@@ -46,7 +45,7 @@ public:
 	I2CDevice(I2CDevice&& other);
 	I2CDevice& operator=(const I2CDevice& other);
 	I2CDevice& operator=(I2CDevice&& other);
-	HAL_StatusTypeDef isReady();
+	HAL_StatusTypeDef isReady(uint8_t waitIsReady = 0);
 	HAL_StatusTypeDef read(uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef read(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef write(uint8_t* Data, uint8_t Nbytes);

@@ -46,7 +46,7 @@ public:
 	BaseFlyWheel(uint8_t address = BASE_ADDRESS);
 #endif
 
-	uint8_t Init();
+	uint8_t Init() override;
 
 	void DirectMode(uint8_t directMode);
 	uint8_t DirectMode();
@@ -74,7 +74,7 @@ public:
 	BaseFlyWheel(BaseFlyWheel &&other);
 	BaseFlyWheel& operator=(const BaseFlyWheel &other);
 	BaseFlyWheel& operator=(BaseFlyWheel &&other);
-	virtual ~BaseFlyWheel();
+	~BaseFlyWheel() override;
 };
 
 } /* namespace IntroSatLib */

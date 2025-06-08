@@ -54,9 +54,6 @@ int16_t LightSensor::GetLight()
 	return buf[1] << 8 | buf[0];
 }
 
-LightSensor::~LightSensor()
-{
-	BaseDevice::~BaseDevice();
-}
+LightSensor::~LightSensor() { }
 
 } /* namespace IntroSatLib */

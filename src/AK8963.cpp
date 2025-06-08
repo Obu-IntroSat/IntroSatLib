@@ -103,9 +103,6 @@ float AK8963::Z()
 	return RawZ() / _rawmt;
 }
 
-AK8963::~AK8963()
-{
-	BaseDevice::~BaseDevice();
-}
+AK8963::~AK8963() { }
 
 } /* namespace IntroSatLib */

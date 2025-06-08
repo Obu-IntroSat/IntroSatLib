@@ -116,9 +116,6 @@ float Gyroscope::Z()
 }
 
 
-Gyroscope::~Gyroscope()
-{
-	BaseDevice::~BaseDevice();
-}
+Gyroscope::~Gyroscope() { }
 
 }

@@ -129,7 +129,23 @@ int16_t GyroscopeV2::RawZ()
 float GyroscopeV2::X()
 {
 	float e = RawX() * (1 << _sensitivity);
-	float speed = cutMin(e * _rawdps, _cutX);
+	return cutMin(e * _rawdps, _cutX);
+}
+
+float GyroscopeV2::Y()
+{
+	float e = RawY() * (1 << _sensitivity);
+	return cutMin(e * _rawdps, _cutY);
+}
+float GyroscopeV2::Z()
+{
+	float e = RawZ() * (1 << _sensitivity);
+	return cutMin(e * _rawdps, _cutZ);
+}
+
+float GyroscopeV2::integrationX()
+{
+	float speed = X();
 	uint32_t time = HAL_GetTick();
 	uint32_t deltaTime = time - _lastXTime;
 	float value = (_lastX + speed) * (deltaTime >> 1) * 0.001;
@@ -137,10 +153,10 @@ float GyroscopeV2::X()
 	_lastXTime = time;
 	return value;
 }
-float GyroscopeV2::Y()
+
+float GyroscopeV2::integrationY()
 {
-	float e = RawY() * (1 << _sensitivity);
-	float speed = cutMin(e * _rawdps, _cutY);
+	float speed = Y();
 	uint32_t time = HAL_GetTick();
 	uint32_t deltaTime = time - _lastYTime;
 	float value = (_lastY + speed) * (deltaTime >> 1) * 0.001;
@@ -148,10 +164,9 @@ float GyroscopeV2::Y()
 	_lastYTime = time;
 	return value;
 }
-float GyroscopeV2::Z()
+float GyroscopeV2::integrationZ()
 {
-	float e = RawZ() * (1 << _sensitivity);
-	float speed = cutMin(e * _rawdps, _cutZ);
+	float speed = X();
 	uint32_t time = HAL_GetTick();
 	uint32_t deltaTime = time - _lastZTime;
 	float value = (_lastZ + speed) * (deltaTime >> 1) * 0.001;
@@ -160,19 +175,18 @@ float GyroscopeV2::Z()
 	return value;
 }
 
+#ifndef ARDUINO
 Quaternion<float> GyroscopeV2::GetQuaternion()
 {
 	std::array<float, 3> buf;
-	buf[0] = X();
-	buf[1] = Y();
-	buf[2] = Z();
+	buf[0] = integrationX();
+	buf[1] = integrationY();
+	buf[2] = integrationZ();
 	return from_euler(buf);
 }
+#endif
 
 
-GyroscopeV2::~GyroscopeV2()
-{
-	BaseDevice::~BaseDevice();
-}
+GyroscopeV2::~GyroscopeV2() { }
 
 }

@@ -24,10 +24,10 @@ public:
 	LightSensor& operator=(const LightSensor &other);
 	LightSensor& operator=(LightSensor &&other);
 
-	uint8_t Init();
+	uint8_t Init() override;
 
 	int16_t GetLight();
-	~LightSensor();
+	~LightSensor() override;
 };
 
 } /* namespace IntroSatLib */

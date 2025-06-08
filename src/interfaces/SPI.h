@@ -1,22 +1,19 @@
 #ifndef INTERFACES_SPI_H_
 #define INTERFACES_SPI_H_
 
+
 #ifdef ARDUINO
 	#include "Arduino.h"
-	#include "Wire.h"
+	#include "SPI.h"
 #else
 	#if __has_include ("stm32f4xx_hal.h")
 		#include "stm32f4xx_hal.h"
-		#ifdef HAL_SPI_MODULE_ENABLED
-			#include "stm32f4xx_hal_spi.h"
-		#endif
+		#include "stm32f4xx_hal_spi.h"
 	#endif
 
 	#if __has_include ("stm32f1xx_hal.h")
 		#include "stm32f1xx_hal.h"
-		#ifdef HAL_SPI_MODULE_ENABLED
-			#include "stm32f1xx_hal_spi.h"
-		#endif
+		#include "stm32f1xx_hal_spi.h"
 	#endif
 #endif
 
@@ -74,14 +71,16 @@ public:
 	HAL_StatusTypeDef transfer(const uint8_t* out, uint8_t* in, uint8_t len)
 	{
 		LOG_SPI("read/write");
-		LOG_SPI_BUFFER(", ", in, len);
+		LOG_SPI_BUFFER(", ", out, len);
+		logText(" ");
 		logNumber((uint8_t)len);
-		logText("bytes > ");
+		logText(" bytes > ");
 		HAL_StatusTypeDef result = logStatus(
 			HAL_SPI_TransmitReceive(_hspi, (uint8_t*) out, in, len, 1000)
 		);
 
-		LOG_SPI_BUFFER(", ", out, N);
+		LOG_SPI_BUFFER(", ", in, len);
+		logText("\n");
 		return result;
 	}
 };

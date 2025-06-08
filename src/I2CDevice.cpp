@@ -100,11 +100,15 @@ I2CDevice& I2CDevice::operator=(I2CDevice&& other)
 	_speed = other._speed;
 	return *this;
 }
-HAL_StatusTypeDef I2CDevice::isReady(uint8_t force)
+HAL_StatusTypeDef I2CDevice::isReady(uint8_t waitIsReady)
 {
 	ASSERT_I2C_HAVE();
-	while (innerIsReady() || force) { }
-	return HAL_OK;
+	while(true)
+	{
+		HAL_StatusTypeDef status = innerIsReady();
+		if (status == HAL_OK) { return HAL_OK; }
+		if (waitIsReady == 0) { return status; }
+	}
 }
 
 HAL_StatusTypeDef I2CDevice::innerIsReady()
@@ -112,7 +116,7 @@ HAL_StatusTypeDef I2CDevice::innerIsReady()
 	LOG_I2C_ADDRESS();
 	logText(": ");
 	HAL_StatusTypeDef status = logStatus(
-			HAL_I2C_IsDeviceReady(_hi2c, _address, 1, 1000)
+		HAL_I2C_IsDeviceReady(_hi2c, _address, 1, 1000)
 	);
 	logText("\n");
 	return status;

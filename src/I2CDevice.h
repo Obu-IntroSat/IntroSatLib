@@ -9,16 +9,12 @@
 #else
 	#if __has_include ("stm32f4xx_hal.h")
 		#include "stm32f4xx_hal.h"
-		#ifdef HAL_I2C_MODULE_ENABLED
-			#include "stm32f4xx_hal_i2c.h"
-		#endif
+		#include "stm32f4xx_hal_i2c.h"
 	#endif
 
 	#if __has_include ("stm32f1xx_hal.h")
 		#include "stm32f1xx_hal.h"
-		#ifdef HAL_I2C_MODULE_ENABLED
-			#include "stm32f1xx_hal_i2c.h"
-		#endif
+		#include "stm32f1xx_hal_i2c.h"
 	#endif
 #endif
 
@@ -49,7 +45,7 @@ public:
 	I2CDevice(I2CDevice&& other);
 	I2CDevice& operator=(const I2CDevice& other);
 	I2CDevice& operator=(I2CDevice&& other);
-	HAL_StatusTypeDef isReady(uint8_t force = 1);
+	HAL_StatusTypeDef isReady(uint8_t waitIsReady = 0);
 	HAL_StatusTypeDef read(uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef read(uint8_t Register, uint8_t* Data, uint8_t Nbytes);
 	HAL_StatusTypeDef write(uint8_t* Data, uint8_t Nbytes);

@@ -73,7 +73,7 @@ void CC1101::setStrobe(StrobeCommand command, uint8_t initSpi)
 	_miso.waitReset();
 	uint8_t out = command;
 	uint8_t in = 0;
-	_spi.transfer(&in, &out, 1);
+	_spi.transfer(&out, &in, 1);
 	deSelect();
 	if (initSpi) { end(); }
 }
@@ -204,7 +204,7 @@ void CC1101::setMHZ(float mhz)
 	uint8_t freq1 = 0;
 	uint8_t freq0 = 0;
 
-	while (mhz < 0.00039675)
+	while (mhz > 0.00039675)
 	{
 		if (mhz >= 26) { mhz -= 26; freq2 += 1; }
 	    else if (mhz >= 0.1015625) { mhz -= 0.1015625; freq1 += 1; }
@@ -331,10 +331,10 @@ void CC1101::setRxBW(float f)
 	setRegister(CC1101_MDMCFG4, _m4RxBw + _m4DaRa);
 }
 
-void CC1101::setDRate(float d)
+void CC1101::setDRate(float kD)
 {
 	Split_MDMCFG4();
-	float c = d;
+	float c = kD;
 	uint8_t MDMCFG3 = 0;
 	if (c > 1621.83) { c = 1621.83; }
 	if (c < 0.0247955) { c = 0.0247955; }
@@ -600,7 +600,7 @@ void CC1101::goSleep()
 }
 
 
-void CC1101::SendData(char *txchar)
+void CC1101::SendData(const char *txchar)
 {
 	int len = strlen(txchar);
 	SendData((uint8_t*)txchar, len);
@@ -608,11 +608,14 @@ void CC1101::SendData(char *txchar)
 
 void CC1101::SendData(uint8_t *txBuffer, uint8_t size)
 {
+	logText("Transfer len ");
+	logNumber(size);
+	logText("\n");
 	sendRegister(CC1101_TXFIFO, size);
 	setBurstReg(CC1101_TXFIFO, txBuffer, size); //write data to send
 	setStrobe(CC1101_SIDLE);
 	setStrobe(CC1101_STX); //start send
-	await();
+	await(size);
 	setStrobe(CC1101_SFTX); //flush TXfifo
 	_trxstate = State::TX;
 }
@@ -631,3 +634,4 @@ uint8_t CC1101::CheckCRC()
 }
 
 } /* namespace IntroSatLib */
+

@@ -27,7 +27,8 @@ uint8_t BaseFlyWheel::Init()
 		return 1;
 	}
 
-	return 0;
+	return _i2c.isReady(); // Use existing method instead of returning 0
+	// return 0;
 }
 
 void BaseFlyWheel::DirectMode(uint8_t directMode)

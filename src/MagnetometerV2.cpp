@@ -50,7 +50,8 @@ uint8_t MagnetometerV2::Init(Scale sensitivity)
 	SetRegister(RegisterMap::CTRL_REG4, 0x0C);
 	HAL_Delay(1);
 	SetRegister(RegisterMap::CTRL_REG5, 0x40);
-	return 0;
+	return _i2c.isReady(); // Use existing method instead of returning 0
+	// return 0;
 }
 
 uint8_t MagnetometerV2::Init()

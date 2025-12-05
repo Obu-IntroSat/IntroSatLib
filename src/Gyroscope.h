@@ -1,12 +1,12 @@
 #ifndef GYROSCOPE_H_
 #define GYROSCOPE_H_
 
-#include "I2CDevice.h"
-#include "BaseDevice.h"
+#include "Device/I2CDevice.h"
+//#include "../BaseDevice.h"
 
 namespace IntroSatLib {
 
-class Gyroscope: public BaseDevice {
+class Gyroscope: private I2CDevice {
 private:
 
 	static const uint8_t BASE_ADDRESS = 0x68;
@@ -49,24 +49,19 @@ public:
 		F3600b
 	};
 
-#ifndef ARDUINO
-	Gyroscope(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
-#else
-	Gyroscope(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	Gyroscope(uint8_t address = BASE_ADDRESS);
-#endif
+	Gyroscope(const interfaces::I2C &i2c, uint8_t address = BASE_ADDRESS);
 
 	Gyroscope(const Gyroscope &other);
 	Gyroscope(Gyroscope &&other);
 	Gyroscope& operator=(const Gyroscope &other);
 	Gyroscope& operator=(Gyroscope &&other);
 
-	uint8_t Init() override;
-	uint8_t Init(Scale sensitivity);
-	uint8_t Init(Scale sensitivity, FilterBandwidth filter);
+	ISL_StatusTypeDef Init() override;
+	ISL_StatusTypeDef Init(Scale scale);
+	ISL_StatusTypeDef Init(Scale scale, FilterBandwidth filter);
 
-	void SetScale(Scale sensitivity);
-	void SetFilter(FilterBandwidth filter);
+	ISL_StatusTypeDef SetScale(Scale scale);
+	ISL_StatusTypeDef SetFilter(FilterBandwidth filter);
 
 	int16_t RawX();
 	int16_t RawY();

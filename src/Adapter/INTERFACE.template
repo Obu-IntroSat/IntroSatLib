@@ -1,0 +1,78 @@
+</**
+ * replace <INTERFACE> with interface name in upper-case
+ * replace <interface> with interface name in lower-case
+ * replace <INTERFACE_ARDUINO_CLASS> with corresponding Arduino API class
+ */>
+#ifndef ADAPTER_<INTERFACE>_H_
+#define ADAPTER_<INTERFACE>_H_
+
+// Include general Library definitions
+#include "IntroSatLib_def.h"
+
+#ifdef ARDUINO
+/*********************************/
+/********** Arduino IDE **********/
+/*********************************/
+	#include "Arduino.h"
+	#include <<INTERFACE>.h>
+	namespace IntroSatLib::interfaces {using <INTERFACE>_HANDLE_TYPE = <INTERFACE_ARDUINO_CLASS>;}
+
+#else
+/*********************************/
+/************ Native *************/
+/*********************************/
+	// Resolve platform-dependent <INTERFACE>
+	#if defined(AVR)
+	/************** AVR  **************/
+		//  This is not yet supported, but it is here for future reference.
+		//  AVR-series in Arduino IDE
+		#error "AVR not yet supported"
+
+	#elif defined(USE_HAL_DRIVER)
+	/*****  STM32 and stm32duino ******/
+
+		// Include hal for supported STM32 platforms
+		#include "./STM32/stm32xxyy_hal.h"
+
+		#ifndef HAL_MODULE_ENABLED
+			#error "HAL configuration incorrect"
+		#endif
+
+		#ifdef HAL_<INTERFACE>_MODULE_ENABLED
+			// define STM32-specific handle type for <INTERFACE>
+			namespace IntroSatLib::interfaces {using <INTERFACE>_HANDLE_TYPE = <INTERFACE>_HandleTypeDef;}
+		#elif !defined(INTROSATLIB_INTERNAL)
+			#error "<INTERFACE> not enabled as part of HAL"
+		#endif
+
+	/************** AMUR *************/
+	// #elif defined(AMUR)
+		// #error "AMUR not yet supported"
+	/************ UNKNOWN ************/
+	#else
+	// #ifndef INTROSATLIB_INTERNAL
+		#error "Unsupported system: neither AVR/ARDUINO nor USE_HAL_DRIVER defined. Please check your platform macros."
+		#error "Currently supported systems are: stm32, stm32duino. AVR planned for future support."
+	// #endif
+	#endif
+#endif
+
+#ifdef <INTERFACE>_HANDLE_TYPE
+#define <INTERFACE>_ENABLED
+
+namespace IntroSatLib {
+namespace interfaces {
+
+class <INTERFACE> final {
+	<INTERFACE>_HANDLE_TYPE *_h<interface> = 0;
+public:
+ 	<INTERFACE>(<INTERFACE>_HANDLE_TYPE *h<interface>): _h<interface>(h<interface>) { };
+	
+};
+
+} /* namespace intefaces */
+} /* namespace IntroSatLib */
+
+#endif /* <INTERFACE>_HANDLE_TYPE */
+
+#endif /* ADAPTER_<INTERFACE>_H_ */

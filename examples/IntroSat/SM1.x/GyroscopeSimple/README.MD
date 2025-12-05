@@ -1,0 +1,1 @@
+Описать, примером считать [пример для катушек](/examples/CoilFlyWheel/CoilFlyWheelSimple/README.MD)

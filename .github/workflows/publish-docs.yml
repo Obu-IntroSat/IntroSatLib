@@ -1,0 +1,32 @@
+name: Publish Doxygen documentation
+
+on:
+  push:
+    tags: 
+      - "v*"
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Doxygen files
+        uses: mattnotmitt/doxygen-action@edge
+        with:
+            working-directory: '.'
+            doxyfile-path: './doxygen/doxygen.conf'
+
+      - name: Upload generated docs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'IntroSatLib-docs-${{github.ref_name}}'
+          path: './doxygen/'
+
+      - name: Deploy Doxygen files to GH Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doxygen/html

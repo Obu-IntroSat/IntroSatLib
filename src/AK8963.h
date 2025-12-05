@@ -1,12 +1,12 @@
 #ifndef AK8963_H_
 #define AK8963_H_
 
-#include "I2CDevice.h"
-#include "BaseDevice.h"
+#include "Device/I2CDevice.h"
+//#include "../Device.h"
 
 namespace IntroSatLib {
 
-class AK8963: public BaseDevice {
+class AK8963: private I2CDevice {
 private:
 	static const uint8_t BASE_ADDRESS = 0x0C;
 	static constexpr float _rawmt = 8190.0f / 4912.0f; //microTesla
@@ -18,24 +18,19 @@ private:
 	uint8_t _calY = 0;
 	uint8_t _calZ = 0;
 
-	void ReadCal();
+	ISL_StatusTypeDef ReadCal();
 
 public:
-#ifndef ARDUINO
-	AK8963(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
-#else
-	AK8963(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	AK8963(uint8_t address = BASE_ADDRESS);
-#endif
+	AK8963(const interfaces::I2C &i2c, uint8_t address = BASE_ADDRESS);
 
 	AK8963(const AK8963& other);
 	AK8963& operator=(const AK8963& other);
 	AK8963(AK8963&& other);
 	AK8963& operator=(AK8963&& other);
 
-	uint8_t Init();
+	ISL_StatusTypeDef Init();
 
-	void Read();
+	ISL_StatusTypeDef Read();
 
 	int16_t RawX();
 	int16_t RawY();

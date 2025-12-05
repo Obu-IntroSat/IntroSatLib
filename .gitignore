@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# folder with local tools
+tools/*
+
+# documentation
+doxygen/*
+!doxygen/doxygen-style.css
+!doxygen/doxygen.conf

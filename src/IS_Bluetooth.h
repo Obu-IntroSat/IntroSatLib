@@ -3,22 +3,13 @@
 
 #include <stdint.h>
 
-#ifdef ARDUINO
-#include <Arduino.h>
-#else
-	#if __has_include ("stm32f4xx_hal.h")
-		#include "stm32f4xx_hal.h"
-	#endif
-
-	#if __has_include ("stm32f1xx_hal.h")
-		#include "stm32f1xx_hal.h"
-	#endif
-#endif /* ARDUINO */
+#include "ISL_Bootloader.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+// This method exists for backwards-compatibility
 extern void enter_bootloader();
 
 #ifdef __cplusplus

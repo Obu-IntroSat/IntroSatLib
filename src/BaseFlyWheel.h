@@ -1,11 +1,12 @@
 #ifndef BASEFLYWHEEL_H_
 #define BASEFLYWHEEL_H_
 
-#include "BaseDevice.h"
+//#include "../BaseDevice.h"
+#include "Device/I2CDevice.h"
 
 namespace IntroSatLib {
 
-class BaseFlyWheel: public BaseDevice {
+class BaseFlyWheel: private I2CDevice {
 private:
 
 	enum RegisterMap
@@ -39,37 +40,68 @@ protected:
 	static const uint8_t BASE_ADDRESS = 0x38;
 	uint8_t CheckVersion();
 public:
-#ifndef ARDUINO
-	BaseFlyWheel(I2C_HandleTypeDef *hi2c, uint8_t address = BASE_ADDRESS);
-#else
-	BaseFlyWheel(TwoWire &hi2c, uint8_t address = BASE_ADDRESS);
-	BaseFlyWheel(uint8_t address = BASE_ADDRESS);
-#endif
+	/**
+	 * @brief Создание объекта маховика. 
+	 * @note Только в STM32CubeIDE
+	 * @param hi2c объект @b I2C_HandleTypeDef
+	 * @param address адрес маховика на шине I2C
+	 */
+	BaseFlyWheel(const interfaces::I2C &i2c, uint8_t address = BASE_ADDRESS);
 
-	uint8_t Init() override;
+	/**
+	 * @brief Инициализация маховика
+	 * 
+	 * @returns 0, если инициализация завершена успешно
+	 * @returns 1, если при инициализации возникла ошибка
+	 */
+	ISL_StatusTypeDef Init() override;
 
-	void DirectMode(uint8_t directMode);
+	// TODO @Goldfor Надо описать что все эти методы делают
+	ISL_StatusTypeDef DirectMode(uint8_t directMode);
 	uint8_t DirectMode();
-	void SilentMode(uint8_t silentMode);
+	ISL_StatusTypeDef SilentMode(uint8_t silentMode);
 	uint8_t SilentMode();
-	void MinForceMode(uint8_t minForceMode);
+	ISL_StatusTypeDef MinForceMode(uint8_t minForceMode);
 	uint8_t MinForceMode();
-	void ReverseMode(uint8_t reverceMode);
+	ISL_StatusTypeDef ReverseMode(uint8_t reverceMode);
 	uint8_t ReverseMode();
-	void NeedSpeed(int16_t needSpeed);
+
+	/**
+	 * @brief Установка скорости
+	 * 
+	 * @param needSpeed Жедаемая скорость в об/с
+	 */
+	ISL_StatusTypeDef NeedSpeed(int16_t needSpeed);
+
+	/**
+	 * @brief Чтение установленной скорости
+	 * 
+	 * @return Скорость в об/с
+	 */
 	int16_t NeedSpeed();
+
+	/**
+	 * @brief Чтение реальной скорости
+	 * 
+	 * @return Скорость в об/с
+	 */
 	int16_t CurrentSpeed();
-	void MaxAbsSpeed(uint16_t maxAbsSpeed);
+	ISL_StatusTypeDef MaxAbsSpeed(uint16_t maxAbsSpeed);
 	uint16_t MaxAbsSpeed();
-	void MinForce(uint16_t minForce);
+	ISL_StatusTypeDef MinForce(uint16_t minForce);
 	uint16_t MinForce();
-	void PID_P(float p);
+	ISL_StatusTypeDef PID_P(float p);
 	float PID_P();
-	void PID_I(float i);
+	ISL_StatusTypeDef PID_I(float i);
 	float PID_I();
-	void PID_D(float d);
+	ISL_StatusTypeDef PID_D(float d);
 	float PID_D();
 
+	/**
+	 * @brief Создание объекта маховика как копии другого объекта маховика
+	 * 
+	 * @param other исходный объект для копирования
+	 */
 	BaseFlyWheel(const BaseFlyWheel &other);
 	BaseFlyWheel(BaseFlyWheel &&other);
 	BaseFlyWheel& operator=(const BaseFlyWheel &other);

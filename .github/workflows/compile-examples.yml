@@ -1,0 +1,258 @@
+name: Compile Examples
+
+on:
+  push:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "examples/**"
+      - "src/**"
+    branches: 
+      - main
+      - examples
+      - dev/*
+      - actions
+  pull_request:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "examples/**"
+      - "src/**"
+    branches: 
+      - main
+      - staging
+  schedule:
+    # Run every Tuesday at 8 AM UTC to catch breakage caused by changes to external resources (stm32duino).
+    - cron: "0 8 * * TUE"
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  build-legacy-codes:
+    name: Build Legacy codes in Arduino IDE (F103C8, F103CB)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fqbn:
+          - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
+          - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103CB
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          verbose: false
+          enable-warnings-report: true
+          enable-deltas-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.fqbn }}
+          sketch-paths: 
+            "- legacy_codes"
+          platforms: |
+            - name: STMicroelectronics:stm32
+              source-url: https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+          cli-compile-flags: |
+            - --warnings="default"
+
+      - name: Transform fqbn with awk
+        id: get_fqbn
+        run: |
+          fqbn=$(echo "${{ matrix.fqbn }}" | awk 'gsub(/:/, "_")')
+          echo "fqbn=$fqbn" >> $GITHUB_OUTPUT
+
+      - name: Upload reports of generated sketches
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'introsat-legacy-codes-reports-${{ steps.get_fqbn.outputs.fqbn }}'
+          path: sketches-reports
+
+  build-examples-introsat:
+    name: Build IntroSat examples for Arduino IDE (F103C8)
+    runs-on: ubuntu-latest
+    needs: build-legacy-codes
+    strategy:
+      matrix:
+        fqbn:
+          - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
+          - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103CB
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          verbose: false
+          enable-warnings-report: true
+          enable-deltas-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.fqbn }}
+          sketch-paths: 
+            "- examples/IntroSat"
+          platforms: |
+            - name: STMicroelectronics:stm32
+              source-url: https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+          cli-compile-flags: |
+            - --warnings="default"
+
+      - name: Transform fqbn with awk
+        id: get_fqbn
+        run: |
+          fqbn=$(echo "${{ matrix.fqbn }}" | awk 'gsub(/:/, "_")')
+          echo "fqbn=$fqbn" >> $GITHUB_OUTPUT
+
+      - name: Upload reports of generated sketches
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'introsat-examples-reports-${{ steps.get_fqbn.outputs.fqbn }}'
+          path: sketches-reports
+
+  build-examples-introsat-platform:
+    name: Build IntroSat.Platform examples for Arduino IDE (H750VBx)
+    runs-on: ubuntu-latest
+    needs: build-legacy-codes
+    strategy:
+      matrix:
+        fqbn:
+          - STMicroelectronics:stm32:GenH7:pnum=GENERIC_H750VBTX
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          verbose: false
+          enable-warnings-report: true
+          enable-deltas-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.fqbn }}
+          sketch-paths: 
+            "- examples/IntroSat.Platform"
+          platforms: |
+            - name: STMicroelectronics:stm32
+              source-url: https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+          cli-compile-flags: |
+            - --warnings="default"
+
+      - name: Transform fqbn with awk
+        id: get_fqbn
+        run: |
+          fqbn=$(echo "${{ matrix.fqbn }}" | awk 'gsub(/:/, "_")')
+          echo "fqbn=$fqbn" >> $GITHUB_OUTPUT
+
+      - name: Upload reports of generated sketches
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'introsat-platform-examples-reports-${{ steps.get_fqbn.outputs.fqbn }}'
+          path: sketches-reports
+
+  build-examples-introsat-pico:
+    name: Build IntroSat.Pico examples for Arduino IDE (ATMega328PB)
+    runs-on: ubuntu-latest
+    needs: build-legacy-codes
+    strategy:
+      matrix:
+        fqbn:
+          - arduino:avr:uno
+          - MiniCore:avr:328:variant=modelPB
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          verbose: false
+          enable-warnings-report: true
+          enable-deltas-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.fqbn }}
+          sketch-paths: 
+            "- examples/IntroSat.Pico"
+          platforms: |
+            - name: MiniCore:avr
+              source-url: https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json
+            - name: arduino:avr
+          cli-compile-flags: |
+            - --warnings="default"
+
+      - name: Transform fqbn with awk
+        id: get_fqbn
+        run: |
+          fqbn=$(echo "${{ matrix.fqbn }}" | awk 'gsub(/:/, "_")')
+          echo "fqbn=$fqbn" >> $GITHUB_OUTPUT
+
+      - name: Upload reports of generated sketches
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'introsat-pico-examples-reports-${{ steps.get_fqbn.outputs.fqbn }}'
+          path: sketches-reports
+
+  list-examples-cubeide:
+    name: List available examples for CubeIDE
+    runs-on: ubuntu-latest
+    outputs:
+      folders: ${{ steps.list_examples.outputs.folders }}
+    steps:
+    - name: Checkout Obu-IntroSat/Examples-CubeIDE
+      uses: actions/checkout@v4
+      with:
+        repository: Obu-IntroSat/Examples-CubeIDE
+        token: ${{ secrets.OBU_EXAMPLES_CUBEIDE_TOKEN }}
+  
+    - name: List examples
+      id: list_examples
+      run: |
+        folders=$(find ./ -maxdepth 1 -mindepth 1 -type d ! -name '.*' ! -name 'IntroSatLib' -printf '%P\n' | jq -R -s -c 'split("\n")[:-1]')
+        echo "folders=$folders" >> "$GITHUB_OUTPUT"
+
+  build-examples-cubeide:
+    name: Build available examples for CubeIDE
+    runs-on: ubuntu-latest
+    needs: list-examples-cubeide
+    strategy:
+      matrix:
+        folder: ${{ fromJson(needs.list-examples-cubeide.outputs.folders) }}
+    steps:
+      - name: Checkout Obu-IntroSat/Examples-CubeIDE
+        uses: actions/checkout@v4
+        with:
+          repository: Obu-IntroSat/Examples-CubeIDE
+          token: ${{ secrets.OBU_EXAMPLES_CUBEIDE_TOKEN }}
+
+      - name: Checkout IntroSatLib 
+        uses: actions/checkout@v4
+        with:
+          path: IntroSatLib
+
+      - name: Build example
+        uses: xanderhendriks/action-build-stm32cubeide@v16.0
+        with:
+          project-path: ${{matrix.folder}}
+          project-target: '${{matrix.folder}}'
+
+      - name: Upload compiled binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'Compiled binary for ${{ matrix.folder }}'
+          path: ${{matrix.folder}}/Debug/*.elf
+
+  generate-docs:
+    runs-on: ubuntu-latest
+    needs: 
+      - build-examples-introsat
+      - build-examples-introsat-pico
+      - build-examples-introsat-platform
+      - build-examples-cubeide
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Doxygen files
+        uses: mattnotmitt/doxygen-action@edge
+        with:
+            working-directory: '.'
+            doxyfile-path: './doxygen/doxygen.conf'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 'IntroSatLib-docs'
+          path: './doxygen/'
+      

@@ -2,6 +2,7 @@
 
 #include "string.h"
 #include <stdio.h>
+#include "IntroSatLib_def.h"
 
 void logText(const char *text)
 {
@@ -21,21 +22,21 @@ void logNumber(uint8_t val)
 	sprintf(buf, "%d", val);
 	logText(buf);
 }
-HAL_StatusTypeDef logStatus(HAL_StatusTypeDef status)
+ISL_StatusTypeDef logStatus(ISL_StatusTypeDef status)
 {
 	switch(status)
 	{
-	case HAL_OK:
-		logText("HAL_OK");
+	case ISL_StatusTypeDef::ISL_OK:
+		logText("OK");
 		break;
-	case HAL_ERROR:
-		logText("HAL_ERROR");
+	case ISL_StatusTypeDef::ISL_ERROR:
+		logText("ERROR");
 		break;
-	case HAL_BUSY:
-		logText("HAL_BUSY");
+	case ISL_StatusTypeDef::ISL_BUSY:
+		logText("BUSY");
 		break;
-	case HAL_TIMEOUT:
-		logText("HAL_TIMEOUT");
+	case ISL_StatusTypeDef::ISL_TIMEOUT:
+		logText("TIMEOUT");
 		break;
 	default:
 		logText("NON_STATUS");

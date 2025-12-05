@@ -2,8 +2,9 @@
 #define LOGGER_H_
 
 #include <stdint.h>
+#include "IntroSatLib_def.h"
 
-#define LOGDATA 0
+#define LOGDATA 1
 
 #ifdef ARDUINO
 #include <Arduino.h>
@@ -22,7 +23,7 @@ void __attribute__((weak)) LOGGER(const char *text, uint8_t len);
 void logText(const char *text);
 void logHEX(uint8_t val);
 void logNumber(uint8_t val);
-HAL_StatusTypeDef logStatus(HAL_StatusTypeDef status);
+ISL_StatusTypeDef logStatus(ISL_StatusTypeDef status);
 
 
 #endif /* LOGGER_H_ */
